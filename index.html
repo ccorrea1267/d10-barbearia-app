@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>+D10 Barbearia Premium</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #0d0d1a 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .phone {
+            width: 375px;
+            height: 812px;
+            border: 12px solid #1a1a1a;
+            border-radius: 50px;
+            overflow: hidden;
+            background: #0a0a0f;
+            box-shadow:
+                0 25px 50px rgba(0,0,0,0.9),
+                0 0 100px rgba(212, 175, 55, 0.1),
+                inset 0 1px 0 rgba(255,255,255,0.1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .phone::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40%;
+            height: 30px;
+            background: #1a1a1a;
+            border-radius: 0 0 30px 30px;
+            z-index: 10;
+        }
+
+        .screen-container {
+            display: flex;
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background: linear-gradient(180deg, #000000 0%, #0a0a15 100%);
+            flex-direction: column;
+            scroll-behavior: smooth;
+        }
+
+        .screen {
+            display: none;
+            flex: 1;
+            flex-direction: column;
+            min-height: 100%;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0d0d1a 0%, #0a0a15 100%);
+            padding: 20px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-back {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: #d4af37;
+            font-size: 20px;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+
+        .header-back:hover {
+            background: rgba(212, 175, 55, 0.2);
+            transform: translateX(-2px);
+        }
+
+        .header-title {
+            flex: 1;
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            letter-spacing: 0.5px;
+        }
+
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            scroll-behavior: smooth;
+        }
+
+        .footer {
+            padding: 16px;
+            border-top: 1px solid rgba(212, 175, 55, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(212, 175, 55, 0.5);
+            border-radius: 2px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #d4af37;
+        }
+
+        .btn {
+            padding: 16px;
+            border: none;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            letter-spacing: 0.3px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0d0d1a 0%, #0a0a15 100%);
+            color: white;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-primary:hover {
+            border-color: #d4af37;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, #d4af37 0%, #e5c158 100%);
+            color: #0a0a0f;
+            font-weight: 700;
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-gold:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(212, 175, 55, 0.05);
+            color: #d4af37;
+            border: 2px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: #d4af37;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+            box-shadow: 0 8px 20px rgba(34, 197, 94, 0.3);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(34, 197, 94, 0.4);
+        }
+
+        .card {
+            background: linear-gradient(135deg, rgba(15, 15, 25, 0.8) 0%, rgba(10, 10, 20, 0.8) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            background: linear-gradient(135deg, rgba(25, 25, 40, 0.9) 0%, rgba(15, 15, 30, 0.9) 100%);
+            border-color: rgba(212, 175, 55, 0.3);
+            box-shadow: 0 8px 32px rgba(212, 175, 55, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #d4af37;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .card-subtitle {
+            font-size: 13px;
+            color: #b0b0b0;
+            line-height: 1.5;
+        }
+
+        .logo-circle {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            animation: trainEntry 1.2s cubic-bezier(0.34, 1.56, 0.64, 1), float 3s ease-in-out 1.2s infinite;
+            filter: drop-shadow(0 20px 60px rgba(212, 175, 55, 0.4)) drop-shadow(0 0 40px rgba(212, 175, 55, 0.2));
+        }
+
+        .logo-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes trainEntry {
+            0% {
+                transform: scale(0.1) translateY(80px);
+                opacity: 0;
+                filter: blur(10px);
+            }
+            50% {
+                filter: blur(5px);
+            }
+            100% {
+                transform: scale(1) translateY(0px);
+                opacity: 1;
+                filter: blur(0px);
+            }
+        }
+
+        .template-card {
+            background: linear-gradient(135deg, rgba(15, 15, 25, 0.8) 0%, rgba(10, 10, 20, 0.8) 100%);
+            border: 2px solid rgba(212, 175, 55, 0.15);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: all 0.4s;
+            backdrop-filter: blur(10px);
+        }
+
+        .template-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(212, 175, 55, 0.4);
+            box-shadow: 0 16px 40px rgba(212, 175, 55, 0.15);
+        }
+
+        .template-header {
+            padding: 20px;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .template-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #d4af37, transparent);
+        }
+
+        .template-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        .template-date {
+            font-size: 12px;
+            opacity: 0.8;
+            letter-spacing: 0.3px;
+        }
+
+        .template-preview {
+            padding: 16px;
+            background: rgba(10, 10, 15, 0.4);
+            border-top: 1px solid rgba(212, 175, 55, 0.1);
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+        }
+
+        .template-preview p {
+            font-size: 12px;
+            color: #d0d0d0;
+            line-height: 1.6;
+        }
+
+        .welcome-hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .welcome-hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #d4af37 0%, #e5c158 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .welcome-hero p {
+            color: #b0b0b0;
+            margin-bottom: 16px;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .welcome-hero .subtitle {
+            color: #808080;
+            font-size: 13px;
+            letter-spacing: 1px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid rgba(212, 175, 55, 0.15);
+            border-radius: 12px;
+            font-size: 14px;
+            margin-bottom: 12px;
+            font-family: inherit;
+            background: rgba(10, 10, 20, 0.7);
+            color: #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        .input-field::placeholder {
+            color: #606060;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #d4af37;
+            background: rgba(15, 15, 30, 0.9);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            animation: fadeInModal 0.3s ease-in-out;
+        }
+
+        @keyframes fadeInModal {
+            from {
+                opacity: 0;
+                backdrop-filter: blur(0px);
+            }
+            to {
+                opacity: 1;
+                backdrop-filter: blur(4px);
+            }
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #0d0d1a 0%, #0a0a15 100%);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 20px;
+            padding: 24px;
+            max-width: 90%;
+            width: 320px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8);
+            animation: slideUpModal 0.4s ease-out;
+        }
+
+        @keyframes slideUpModal {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #d4af37;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .modal-text {
+            color: #d0d0d0;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .modal-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-success {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.5);
+        }
+
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.5);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .stat-box {
+            padding: 16px;
+            border-radius: 14px;
+            text-align: center;
+            border: 2px solid rgba(212, 175, 55, 0.15);
+            background: rgba(10, 10, 20, 0.7);
+            transition: all 0.3s;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-4px);
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #808080;
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #d4af37;
+        }
+
+        .tip-box {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0.05) 100%);
+            border: 2px solid rgba(212, 175, 55, 0.2);
+            padding: 14px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+
+        .tip-box p {
+            color: #d4af37;
+            font-size: 12px;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .campaign-gradient-1 {
+            background: linear-gradient(135deg, #1e3a5f 0%, #0f2438 100%);
+        }
+
+        .campaign-gradient-2 {
+            background: linear-gradient(135deg, #3d3d3d 0%, #1a1a1a 100%);
+        }
+
+        .campaign-gradient-3 {
+            background: linear-gradient(135deg, #4a5a2a 0%, #2a3a1a 100%);
+        }
+
+        .time-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .time-slot {
+            padding: 14px;
+            border: 2px solid rgba(212, 175, 55, 0.15);
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            color: #d0d0d0;
+            transition: all 0.3s;
+            background: rgba(10, 10, 20, 0.7);
+        }
+
+        .time-slot:hover {
+            border-color: #d4af37;
+            background: rgba(212, 175, 55, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .time-slot.selected {
+            background: linear-gradient(135deg, #d4af37 0%, #e5c158 100%);
+            color: #0a0a0f;
+            border-color: #d4af37;
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .time-slot.booked {
+            background: rgba(100, 100, 100, 0.2);
+            color: #606060;
+            cursor: not-allowed;
+            border-color: rgba(100, 100, 100, 0.3);
+            opacity: 0.5;
+        }
+
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.2), transparent);
+            margin: 20px 0;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+    </style>
+</head>
+<body>
+    <div class="phone">
+        <div class="screen-container" id="screenContainer">
+            <!-- TELA 1: WELCOME -->
+            <div class="screen active" id="welcome">
+                <div class="content">
+                    <div class="welcome-hero">
+                        <div class="logo-circle">
+                            <img src="logo_d10.png" alt="+D10 Barbearia">
+                        </div>
+                        <h1>+D10 Barbearia</h1>
+                        <p>Primeira vez aqui?</p>
+                        <p class="subtitle">BEM-VINDO AO MELHOR</p>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button class="btn btn-primary" onclick="showScreen('map')">📍 Como Chegar?</button>
+                    <button class="btn btn-gold" onclick="showScreen('agenda')">📅 Marcar Horário</button>
+                    <button class="btn btn-secondary" onclick="showScreen('agenda')">Pular</button>
+                </div>
+            </div>
+
+            <!-- TELA 2: MAPA -->
+            <div class="screen" id="map">
+                <div class="header">
+                    <button class="header-back" onclick="showScreen('welcome')">←</button>
+                    <div class="header-title">Como Chegar</div>
+                    <button class="header-back" onclick="alert('📞 Ligando para +D10...')">📞</button>
+                </div>
+                <div class="content">
+                    <div style="height: 220px; background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; box-shadow: 0 12px 40px rgba(212, 175, 55, 0.2);">
+                        <div style="font-size: 80px;">🗺️</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">📍 LOCALIZAÇÃO</div>
+                        <p class="card-subtitle"><strong>+D10 Barbearia</strong></p>
+                        <p class="card-subtitle">Rua das Flores, 123 • Centro</p>
+                        <p class="card-subtitle">São Paulo - SP | CEP: 01310-100</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">⏰ HORÁRIOS</div>
+                        <p class="card-subtitle">Seg-Sex: 08:00 - 19:00</p>
+                        <p class="card-subtitle">Sábado: 08:00 - 17:00</p>
+                        <p class="card-subtitle" style="color: #ef4444;">Domingo: Fechado</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">🚗 ESTACIONAMENTO</div>
+                        <p class="card-subtitle"><strong>Rua ao lado</strong> • Grátis • ~50m</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">🚌 TRANSPORTE</div>
+                        <p class="card-subtitle">Linha 101 (150m) • Linha 202 (200m)</p>
+                    </div>
+
+                    <div class="tip-box">
+                        <p>💡 Chegue 10 min antes! Café premium te espera 😊</p>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button class="btn btn-success" onclick="alert('🗺️ Abrindo Google Maps...')">↗️ Abrir GPS</button>
+                    <button class="btn btn-secondary" onclick="showScreen('agenda')">Próximo</button>
+                </div>
+            </div>
+
+            <!-- TELA 3: TEMPLATES CAMPANHAS (DIRETO, SEM REDUNDÂNCIA) -->
+            <div class="screen" id="templatesCampanhas">
+                <div class="header">
+                    <div class="header-title">📢 Campanhas Premium</div>
+                </div>
+                <div class="content">
+                    <p style="color: #b0b0b0; font-size: 13px; margin-bottom: 20px; letter-spacing: 0.3px;">CLIQUE EM UM TEMPLATE PARA CUSTOMIZAR</p>
+
+                    <!-- TEMPLATE 1: DIA DAS MÃES -->
+                    <div class="template-card campaign-gradient-1" onclick="editTemplate('mães')">
+                        <div class="template-header">
+                            <p class="template-title">🌸 Dia das Mães</p>
+                            <p class="template-date">MAIO</p>
+                        </div>
+                        <div class="template-preview">
+                            <p>"Toda mãe merece se sentir especial. Corte Premium + Brinde exclusivo. Vagas limitadas! 📅"</p>
+                        </div>
+                    </div>
+
+                    <!-- TEMPLATE 2: DIA DOS PAIS -->
+                    <div class="template-card campaign-gradient-2" onclick="editTemplate('pais')">
+                        <div class="template-header">
+                            <p class="template-title">👨 Dia dos Pais</p>
+                            <p class="template-date">AGOSTO</p>
+                        </div>
+                        <div class="template-preview">
+                            <p>"Pai merece se sentir herói. Corte Executivo + Design personalizado. Reserve já! 💪"</p>
+                        </div>
+                    </div>
+
+                    <!-- TEMPLATE 3: DIA DAS CRIANÇAS -->
+                    <div class="template-card campaign-gradient-3" onclick="editTemplate('criancas')">
+                        <div class="template-header">
+                            <p class="template-title">👦 Dia das Crianças</p>
+                            <p class="template-date">OUTUBRO</p>
+                        </div>
+                        <div class="template-preview">
+                            <p>"Infância é memória especial. Corte Kids + Brincadeira. Crie memórias lindas! 🎉"</p>
+                        </div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- CUSTOM 1 -->
+                    <div class="template-card" onclick="editTemplate('custom1')" style="border: 2px dashed rgba(212, 175, 55, 0.4); background: rgba(212, 175, 55, 0.03);">
+                        <div class="template-header" style="background: transparent;">
+                            <p class="template-title">➕ Criar Personalizada</p>
+                            <p class="template-date">SEU TEMA</p>
+                        </div>
+                        <div class="template-preview" style="background: transparent; border-top: none;">
+                            <p style="color: #808080; text-align: center;">Clique para criar sua própria campanha</p>
+                        </div>
+                    </div>
+
+                    <!-- CUSTOM 2 -->
+                    <div class="template-card" onclick="editTemplate('custom2')" style="border: 2px dashed rgba(212, 175, 55, 0.4); background: rgba(212, 175, 55, 0.03);">
+                        <div class="template-header" style="background: transparent;">
+                            <p class="template-title">➕ Criar Personalizada</p>
+                            <p class="template-date">SEU TEMA</p>
+                        </div>
+                        <div class="template-preview" style="background: transparent; border-top: none;">
+                            <p style="color: #808080; text-align: center;">Clique para criar sua própria campanha</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button class="btn btn-secondary" onclick="showScreen('dashboard')">← Voltar</button>
+                </div>
+            </div>
+
+            <!-- TELA 4: EDITAR TEMPLATE (MODAL) -->
+            <div class="modal" id="editTemplateModal">
+                <div class="modal-content">
+                    <p style="font-size: 11px; color: #808080; text-align: center; margin-bottom: 16px; letter-spacing: 1px;">CUSTOMIZAR CAMPANHA</p>
+                    <input type="text" class="input-field" id="editCampTitle" placeholder="Título da campanha">
+                    <textarea class="input-field" id="editCampMessage" placeholder="Sua mensagem..." style="height: 120px; resize: none;"></textarea>
+                    <div class="tip-box">
+                        <p>💡 Use emojis, urgência e CTAs fortes para converter!</p>
+                    </div>
+                    <div class="modal-buttons">
+                        <button class="btn btn-gold" onclick="saveCampaign()">Enviar para Clientes</button>
+                        <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TELA 5: AGENDA -->
+            <div class="screen" id="agenda">
+                <div class="header">
+                    <div class="header-title">📅 Agenda +D10</div>
+                </div>
+                <div class="content">
+                    <p style="color: #b0b0b0; font-size: 13px; margin-bottom: 20px; letter-spacing: 0.3px;">PRÓXIMOS 7 DIAS</p>
+
+                    <div class="card" onclick="showScreen('horarios')" style="cursor: pointer;">
+                        <div class="card-title">📅 Terça - 25 de Maio</div>
+                        <div class="card-subtitle">✓ 3 horários disponíveis</div>
+                    </div>
+
+                    <div class="card" onclick="showScreen('horarios')" style="cursor: pointer;">
+                        <div class="card-title">📅 Quarta - 26 de Maio</div>
+                        <div class="card-subtitle">✓ 5 horários disponíveis</div>
+                    </div>
+
+                    <div class="card" onclick="showScreen('horarios')" style="cursor: pointer;">
+                        <div class="card-title">📅 Quinta - 27 de Maio</div>
+                        <div class="card-subtitle">✓ 2 horários disponíveis</div>
+                    </div>
+
+                    <div class="card" style="opacity: 0.5; cursor: not-allowed;">
+                        <div class="card-title">📅 Sexta - 28 de Maio</div>
+                        <div class="card-subtitle">✗ Completo</div>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button class="btn btn-secondary" onclick="showScreen('meus')">Meus Agendamentos</button>
+                    <button class="btn btn-secondary" onclick="showScreen('campanhas')">Campanhas</button>
+                    <button class="btn btn-secondary" onclick="showScreen('welcome')">Sair</button>
+                </div>
+            </div>
+
+            <!-- TELA 6: HORÁRIOS -->
+            <div class="screen" id="horarios">
+                <div class="header">
+                    <button class="header-back" onclick="showScreen('agenda')">←</button>
+                    <div class="header-title">Selecione o Horário</div>
+                </div>
+                <div class="content">
+                    <p style="color: #b0b0b0; font-size: 13px; margin-bottom: 20px;">Terça - 25 de Maio</p>
+
+                    <p style="font-size: 12px; color: #808080; margin-bottom: 12px; letter-spacing: 0.3px;">MANHÃ</p>
+                    <div class="time-grid">
+                        <div class="time-slot" onclick="selectTime(this)">08:00</div>
+                        <div class="time-slot" onclick="selectTime(this)">09:00</div>
+                        <div class="time-slot booked">10:00</div>
+                    </div>
+
+                    <p style="font-size: 12px; color: #808080; margin-bottom: 12px; letter-spacing: 0.3px;">TARDE</p>
+                    <div class="time-grid">
+                        <div class="time-slot" onclick="selectTime(this)">14:00</div>
+                        <div class="time-slot" onclick="selectTime(this)">15:00</div>
+                        <div class="time-slot" onclick="selectTime(this)">16:00</div>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button class="btn btn-gold" onclick="showScreen('confirmacao')">Confirmar Horário</button>
+                    <button class="btn btn-secondary" onclick="showScreen('agenda')">Cancelar</button>
+                </div>
+            </div>
+
+            <!-- TELA 7: CONFIRMAÇÃO -->
+            <div class="screen" id="confirmacao">
+                <div class="header">
+                    <button class="header-back" onclick="showScreen('horarios')">←</button>
+                    <div class="header-title">Confirmar Agendamento</div>
+                </div>
+                <div class="content">
+                    <div class="card">
+                        <div class="card-title">📅 Data</div>
+                        <p class="card-subtitle">Terça, 25 de Maio</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">⏰ Horário</div>
+                        <p class="card-subtitle">14:00</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">✂️ Serviço</div>
+                        <select class="input-field" style="margin: 0;">
+                            <option>Corte + Barba</option>
+                            <option>Corte</option>
+                            <option>Barba</option>
+                            <option>Barba Hidratada</option>
+                            <option>Corte Infantil</option>
+                        </select>
+                    </div>
+
+                    <div class="tip-box">
+                        <p>📱 Lembrete no WhatsApp 30 min antes</p>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button class="btn btn-gold" onclick="showScreen('sucesso')">Confirmar</button>
+                    <button class="btn btn-secondary" onclick="showScreen('horarios')">Cancelar</button>
+                </div>
+            </div>
+
+            <!-- TELA 8: SUCESSO -->
+            <div class="screen" id="sucesso">
+                <div class="content" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                    <div style="font-size: 80px; margin-bottom: 24px; animation: pulse 2s ease-in-out infinite;">✅</div>
+                    <h1 style="font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #d4af37 0%, #e5c158 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 12px;">Agendado!</h1>
+                    <p style="color: #b0b0b0; margin-bottom: 32px; text-align: center;">Seu horário foi marcado com sucesso</p>
+
+                    <div class="card" style="text-align: center; width: 100%;">
+                        <p style="color: #b0b0b0; font-size: 13px; margin-bottom: 8px;">📅 Terça, 25 de Maio</p>
+                        <p style="font-size: 36px; font-weight: 700; color: #d4af37; margin-bottom: 8px;">14:00</p>
+                        <p style="color: #b0b0b0; font-size: 13px;">Corte + Barba • 30 min</p>
+                    </div>
+
+                    <p style="color: #808080; font-size: 12px; margin-top: 24px; text-align: center;">Confira o WhatsApp para o lembrete!</p>
+                </div>
+                <div class="footer">
+                    <button class="btn btn-gold" onclick="showScreen('meus')">Ver Meus Agendamentos</button>
+                </div>
+            </div>
+
+            <!-- TELA 9: MEUS AGENDAMENTOS -->
+            <div class="screen" id="meus">
+                <div class="header">
+                    <button class="header-back" onclick="showScreen('agenda')">←</button>
+                    <div class="header-title">Meus Agendamentos</div>
+                </div>
+                <div class="content">
+                    <div class="card" style="border-left: 4px solid #22c55e;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+                            <div class="card-title">Terça, 25 de Maio • 14:00</div>
+                            <span class="badge badge-success">✓ Confirmado</span>
+                        </div>
+                        <p class="card-subtitle">Corte + Barba • 30 min</p>
+                    </div>
+
+                    <div class="card" style="border-left: 4px solid #f59e0b;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+                            <div class="card-title">Sexta, 28 de Maio • 10:00</div>
+                            <span class="badge badge-warning">⏱ Pendente</span>
+                        </div>
+                        <p class="card-subtitle">Barba Hidratada • 20 min</p>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button class="btn btn-secondary" onclick="showScreen('agenda')">← Voltar</button>
+                </div>
+            </div>
+
+            <!-- TELA 10: CAMPANHAS CLIENTE -->
+            <div class="screen" id="campanhas">
+                <div class="header">
+                    <button class="header-back" onclick="showScreen('agenda')">←</button>
+                    <div class="header-title">Campanhas</div>
+                </div>
+                <div class="content">
+                    <div class="template-card campaign-gradient-1">
+                        <div class="template-header">
+                            <p class="template-title">🎉 Desconto 20%</p>
+                        </div>
+                        <div class="template-preview">
+                            <p>Aproveite nosso desconto especial em todos os serviços! Válido até 30/05</p>
+                        </div>
+                    </div>
+
+                    <div class="template-card campaign-gradient-2">
+                        <div class="template-header">
+                            <p class="template-title">⭐ Novo Barbeiro</p>
+                        </div>
+                        <div class="template-preview">
+                            <p>Conheça nosso novo barbeiro especializado em designs premium! Reserve já</p>
+                        </div>
+                    </div>
+
+                    <div class="template-card campaign-gradient-3">
+                        <div class="template-header">
+                            <p class="template-title">🎁 Programa Fidelidade</p>
+                        </div>
+                        <div class="template-preview">
+                            <p>A cada 5 cortes, ganhe 1 grátis! Cadastrado automaticamente</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button class="btn btn-secondary" onclick="showScreen('agenda')">← Voltar</button>
+                </div>
+            </div>
+
+            <!-- TELA 11: LOGIN BARBEARIA -->
+            <div class="screen dark-bg" id="loginBarber">
+                <div class="content">
+                    <div class="welcome-hero">
+                        <div class="logo-circle">
+                            <img src="logo_d10.png" alt="+D10 Barbearia">
+                        </div>
+                        <h1>+D10 Admin</h1>
+                        <p>Gerenciador +D10 Barbearia</p>
+                        <div style="width: 100%; margin-top: 32px;">
+                            <input type="email" class="input-field" placeholder="admin@d10.com" value="admin@d10.com">
+                            <input type="password" class="input-field" placeholder="Senha">
+                        </div>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button class="btn btn-gold" onclick="showScreen('dashboard')">Entrar</button>
+                    <button class="btn btn-secondary" onclick="showScreen('welcome')">← Voltar</button>
+                </div>
+            </div>
+
+            <!-- TELA 12: DASHBOARD -->
+            <div class="screen" id="dashboard">
+                <div class="header">
+                    <div class="header-title">📊 Dashboard</div>
+                </div>
+                <div class="content">
+                    <p style="color: #b0b0b0; font-size: 12px; margin-bottom: 20px; letter-spacing: 0.3px;">TERÇA, 25 DE MAIO</p>
+
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <p class="stat-label">AGENDAMENTOS</p>
+                            <p class="stat-value">8</p>
+                        </div>
+                        <div class="stat-box">
+                            <p class="stat-label">CONFIRMADOS</p>
+                            <p class="stat-value">6</p>
+                        </div>
+                        <div class="stat-box">
+                            <p class="stat-label">PENDENTES</p>
+                            <p class="stat-value">2</p>
+                        </div>
+                        <div class="stat-box">
+                            <p class="stat-label">NÃO VIERAM</p>
+                            <p class="stat-value">1</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">📋 Agendamentos Hoje</div>
+                        <div style="margin-top: 12px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(212, 175, 55, 0.1);">
+                                <div>
+                                    <p class="card-title" style="margin: 0; font-size: 14px;">14:00 - João Silva</p>
+                                    <p class="card-subtitle" style="margin: 0;">Corte + Barba</p>
+                                </div>
+                                <span class="badge badge-success">✓</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0;">
+                                <div>
+                                    <p class="card-title" style="margin: 0; font-size: 14px;">15:00 - Maria Costa</p>
+                                    <p class="card-subtitle" style="margin: 0;">Barba Hidratada</p>
+                                </div>
+                                <span class="badge badge-warning">⏱</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button class="btn btn-secondary" onclick="showScreen('templatesCampanhas')">📢 Campanhas Premium</button>
+                    <button class="btn btn-secondary" onclick="showScreen('gestao')">⚙️ Gestão</button>
+                    <button class="btn btn-secondary" onclick="showScreen('clientes')">👥 Clientes</button>
+                    <button class="btn btn-secondary" onclick="showScreen('welcome')">← Sair</button>
+                </div>
+            </div>
+
+            <!-- TELA 13: GESTÃO -->
+            <div class="screen" id="gestao">
+                <div class="header">
+                    <button class="header-back" onclick="showScreen('dashboard')">←</button>
+                    <div class="header-title">Gestão de Agenda</div>
+                </div>
+                <div class="content">
+                    <div class="card">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+                            <div class="card-title">14:00 - João Silva</div>
+                            <div style="display: flex; gap: 6px;">
+                                <button class="btn" style="padding: 6px 10px; background: #22c55e; color: white; font-size: 12px; font-weight: 700;">✓</button>
+                                <button class="btn" style="padding: 6px 10px; background: #ef4444; color: white; font-size: 12px; font-weight: 700;">✗</button>
+                            </div>
+                        </div>
+                        <p class="card-subtitle">Corte + Barba • 30 min</p>
+                    </div>
+
+                    <div class="card">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+                            <div class="card-title">15:00 - Maria Costa</div>
+                            <div style="display: flex; gap: 6px;">
+                                <button class="btn" style="padding: 6px 10px; background: #22c55e; color: white; font-size: 12px; font-weight: 700;">✓</button>
+                                <button class="btn" style="padding: 6px 10px; background: #ef4444; color: white; font-size: 12px; font-weight: 700;">✗</button>
+                            </div>
+                        </div>
+                        <p class="card-subtitle">Barba Hidratada • 20 min</p>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button class="btn btn-secondary" onclick="showScreen('dashboard')">← Voltar</button>
+                </div>
+            </div>
+
+            <!-- TELA 14: CLIENTES -->
+            <div class="screen" id="clientes">
+                <div class="header">
+                    <button class="header-back" onclick="showScreen('dashboard')">←</button>
+                    <div class="header-title">Lista de Clientes</div>
+                </div>
+                <div class="content">
+                    <div class="card">
+                        <div class="card-title">João Silva</div>
+                        <p class="card-subtitle">(11) 98765-4321 • joao@email.com</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">Maria Costa</div>
+                        <p class="card-subtitle">(11) 99876-5432 • maria@email.com</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">Pedro Santos</div>
+                        <p class="card-subtitle">(11) 97654-3210 • pedro@email.com</p>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button class="btn btn-gold" onclick="alert('📄 PDF gerado: relatorio_clientes.pdf')">📄 Exportar PDF</button>
+                    <button class="btn btn-secondary" onclick="showScreen('dashboard')">← Voltar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const templates = {
+            mães: {
+                title: '🌸 Dia das Mães',
+                message: 'Mãe: A mulher que cria, cuida e se dedica.\n\nNeste dia especial, ela merece se sentir tão linda quanto é.\n\n✨ Corte Premium + Tratamento Barba Hidratada\n💝 Brinde exclusivo + Embrulho Premium\n📅 Agende agora - Vagas limitadas!'
+            },
+            pais: {
+                title: '👨 Dia dos Pais',
+                message: 'Pai: O homem que protege, trabalha e inspira.\n\nEle merece se sentir como o herói que é.\n\n💪 Corte Executivo Premium + Design personalizado\n🥃 Barba Impecável + Tratamento Específico\n🎁 Voucher Extra - Leve um amigo grátis!'
+            },
+            criancas: {
+                title: '👦 Dia das Crianças',
+                message: 'Infância é memória. Faça dela especial.\n\nSeu filho merece um corte que o deixe confiante.\n\n✂️ Corte Kids Premium + Penteado Criativo\n🎉 Brincadeira Surpresa no Final\n🏆 Diploma de "Pequeno Guerreiro" + Brinde!'
+            },
+            custom1: { title: '', message: '' },
+            custom2: { title: '', message: '' }
+        };
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            document.getElementById('screenContainer').scrollTop = 0;
+        }
+
+        function selectTime(element) {
+            document.querySelectorAll('.time-slot:not(.booked)').forEach(s => s.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+
+        function editTemplate(templateId) {
+            const template = templates[templateId];
+            document.getElementById('editCampTitle').value = template.title || '';
+            document.getElementById('editCampMessage').value = template.message || '';
+            document.getElementById('editTemplateModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('editTemplateModal').classList.remove('active');
+        }
+
+        function saveCampaign() {
+            const title = document.getElementById('editCampTitle').value || 'Campanha';
+            alert(`✅ Campanha enviada!\n\n"${title}"\n\nPara 8 clientes via WhatsApp + Push`);
+            closeModal();
+            showScreen('dashboard');
+        }
+    </script>
+</body>
+</html>
