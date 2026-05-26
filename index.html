@@ -300,31 +300,12 @@
             <!-- TELA 3: AGENDA -->
             <div class="screen" id="agenda">
                 <div class="header">
+                    <button class="header-back" onclick="showScreen('welcome')">←</button>
                     <div class="header-title">📅 Agendar Horário</div>
                 </div>
                 <div class="content">
-                    <p style="color:#b0b0b0;font-size:13px;margin-bottom:20px;letter-spacing:0.3px;">PRÓXIMOS 7 DIAS</p>
-
-                    <div class="card" onclick="showScreen('horarios')" style="cursor:pointer;">
-                        <div class="card-title">📅 Terça - 27 de Maio</div>
-                        <div class="card-subtitle">✓ 4 horários disponíveis</div>
-                    </div>
-                    <div class="card" onclick="showScreen('horarios')" style="cursor:pointer;">
-                        <div class="card-title">📅 Quarta - 28 de Maio</div>
-                        <div class="card-subtitle">✓ 5 horários disponíveis</div>
-                    </div>
-                    <div class="card" onclick="showScreen('horarios')" style="cursor:pointer;">
-                        <div class="card-title">📅 Quinta - 29 de Maio</div>
-                        <div class="card-subtitle">✓ 3 horários disponíveis</div>
-                    </div>
-                    <div class="card" style="opacity:0.5;cursor:not-allowed;">
-                        <div class="card-title">📅 Sexta - 30 de Maio</div>
-                        <div class="card-subtitle">✗ Lotado</div>
-                    </div>
-                    <div class="card" onclick="showScreen('horarios')" style="cursor:pointer;">
-                        <div class="card-title">📅 Sábado - 31 de Maio</div>
-                        <div class="card-subtitle">✓ 2 horários disponíveis</div>
-                    </div>
+                    <p style="color:#b0b0b0;font-size:13px;margin-bottom:20px;letter-spacing:0.3px;">PRÓXIMOS DIAS ÚTEIS</p>
+                    <div id="daysContainerClient"></div>
                 </div>
                 <div class="footer">
                     <button class="btn btn-secondary" onclick="showScreen('meus')">Meus Agendamentos</button>
@@ -340,7 +321,7 @@
                     <div class="header-title">Selecione o Horário</div>
                 </div>
                 <div class="content">
-                    <p style="color:#b0b0b0;font-size:13px;margin-bottom:20px;">Terça - 27 de Maio</p>
+                    <p style="color:#b0b0b0;font-size:13px;margin-bottom:20px;" id="selectedDayLabel">Dia Selecionado</p>
 
                     <p style="font-size:12px;color:#808080;margin-bottom:12px;letter-spacing:0.3px;">MANHÃ</p>
                     <div class="time-grid">
@@ -357,7 +338,7 @@
                     </div>
                 </div>
                 <div class="footer">
-                    <button class="btn btn-gold" onclick="showScreen('confirmacao')">Próximo: Escolher Serviço</button>
+                    <button class="btn btn-gold" onclick="goToConfirmation()">Próximo: Escolher Serviço</button>
                     <button class="btn btn-secondary" onclick="showScreen('agenda')">Cancelar</button>
                 </div>
             </div>
@@ -371,7 +352,7 @@
                 <div class="content">
                     <div class="card">
                         <div class="card-title">📅 Data & Hora</div>
-                        <p class="card-subtitle">Terça, 27 de Maio • 14:00</p>
+                        <p class="card-subtitle" id="confirmDateTimeLabel">Dia e Hora Selecionados</p>
                     </div>
 
                     <div class="card">
@@ -408,7 +389,7 @@
                     <p style="color:#b0b0b0;margin-bottom:32px;text-align:center;">Seu horário foi reservado com sucesso</p>
 
                     <div class="card" style="text-align:center;width:100%;">
-                        <p style="color:#b0b0b0;font-size:13px;margin-bottom:8px;">📅 Terça, 27 de Maio</p>
+                        <p style="color:#b0b0b0;font-size:13px;margin-bottom:8px;" id="successDateDisplay">Dia Selecionado</p>
                         <p style="font-size:36px;font-weight:700;color:#d4af37;margin-bottom:8px;" id="successTimeDisplay">14:00</p>
                         <p style="color:#b0b0b0;font-size:13px;">Mireille confirmará a unidade em breve</p>
                     </div>
@@ -602,46 +583,26 @@
                     <div class="stats-grid">
                         <div class="stat-box">
                             <p class="stat-label">AGENDAMENTOS</p>
-                            <p class="stat-value">10</p>
+                            <p class="stat-value" id="statTotalApps">0</p>
                         </div>
                         <div class="stat-box">
                             <p class="stat-label">CONFIRMADOS</p>
-                            <p class="stat-value">7</p>
+                            <p class="stat-value" id="statConfirmedApps">0</p>
                         </div>
                         <div class="stat-box">
                             <p class="stat-label">PENDENTES</p>
-                            <p class="stat-value">2</p>
+                            <p class="stat-value" id="statPendingApps">0</p>
                         </div>
                         <div class="stat-box">
                             <p class="stat-label">FALTARAM</p>
-                            <p class="stat-value">1</p>
+                            <p class="stat-value" id="statMissedApps">0</p>
                         </div>
                     </div>
 
                     <div class="card">
-                        <div class="card-title">📋 Atendimentos Hoje</div>
-                        <div style="margin-top:12px;">
-                            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(212,175,55,0.1);">
-                                <div>
-                                    <p class="card-title" style="margin:0;font-size:14px;">14:00 - Ana Luísa</p>
-                                    <p class="card-subtitle" style="margin:0;">Corte + Escova</p>
-                                </div>
-                                <span class="badge badge-success">✓</span>
-                            </div>
-                            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(212,175,55,0.1);">
-                                <div>
-                                    <p class="card-title" style="margin:0;font-size:14px;">15:30 - Camila Reis</p>
-                                    <p class="card-subtitle" style="margin:0;">Luzes + Hidratação</p>
-                                </div>
-                                <span class="badge badge-warning">⏱</span>
-                            </div>
-                            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;">
-                                <div>
-                                    <p class="card-title" style="margin:0;font-size:14px;">17:00 - Juliana Costa</p>
-                                    <p class="card-subtitle" style="margin:0;">Reflexo</p>
-                                </div>
-                                <span class="badge badge-rose">💇‍♀️</span>
-                            </div>
+                        <div class="card-title">📋 Atendimentos Recentes</div>
+                        <div style="margin-top:12px;" id="dashboardAppointmentsList">
+                            <!-- Inserido dinamicamente via JS -->
                         </div>
                     </div>
 
@@ -680,40 +641,8 @@
                 </div>
                 <div class="content">
                     <p style="color:#b0b0b0;font-size:12px;margin-bottom:16px;letter-spacing:0.3px;">DEFINA A UNIDADE DE ATENDIMENTO</p>
-
-                    <div class="card">
-                        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
-                            <div>
-                                <div class="card-title" style="font-size:14px;">14:00 - Ana Luísa</div>
-                                <p class="card-subtitle">Corte + Escova</p>
-                            </div>
-                            <div style="display:flex;gap:6px;" class="unit-assign-buttons"></div>
-                        </div>
-                        <p class="card-subtitle" style="color:#808080;">📍 <span class="unit-status">Aguardando</span></p>
-                    </div>
-
-                    <div class="card">
-                        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
-                            <div>
-                                <div class="card-title" style="font-size:14px;">15:30 - Camila Reis</div>
-                                <p class="card-subtitle">Luzes + Hidratação</p>
-                            </div>
-                            <div style="display:flex;gap:6px;" class="unit-assign-buttons"></div>
-                        </div>
-                        <p class="card-subtitle" style="color:#808080;">📍 <span class="unit-status">Aguardando</span></p>
-                    </div>
-
-                    <div class="card">
-                        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
-                            <div>
-                                <div class="card-title" style="font-size:14px;">17:00 - Juliana Costa</div>
-                                <p class="card-subtitle">Reflexo</p>
-                            </div>
-                            <div style="display:flex;gap:6px;" class="unit-assign-buttons"></div>
-                        </div>
-                        <p class="card-subtitle" style="color:#808080;">📍 <span class="unit-status">Aguardando</span></p>
-                    </div>
-
+                    <div id="gestaoAppointmentsList"></div>
+                    
                     <div class="tip-box">
                         <p>💡 Ao definir a unidade, a cliente receberá automaticamente a confirmação via WhatsApp com o endereço!</p>
                     </div>
@@ -823,21 +752,8 @@
                     <div class="header-title">👥 Clientes</div>
                 </div>
                 <div class="content">
-                    <div class="card">
-                        <div class="card-title">Ana Luísa Ferreira</div>
-                        <p class="card-subtitle">(11) 98765-4321 • ana@email.com</p>
-                        <p class="card-subtitle" style="color:#d4af37;margin-top:4px;">⭐ 12 atendimentos</p>
-                    </div>
-                    <div class="card">
-                        <div class="card-title">Camila Reis</div>
-                        <p class="card-subtitle">(11) 99876-5432 • camila@email.com</p>
-                        <p class="card-subtitle" style="color:#d4af37;margin-top:4px;">⭐ 8 atendimentos</p>
-                    </div>
-                    <div class="card">
-                        <div class="card-title">Juliana Costa</div>
-                        <p class="card-subtitle">(11) 97654-3210 • juliana@email.com</p>
-                        <p class="card-subtitle" style="color:#d4af37;margin-top:4px;">⭐ 5 atendimentos</p>
-                    </div>
+                    <p style="color:#b0b0b0;font-size:12px;margin-bottom:16px;letter-spacing:0.3px;">CLIENTES CADASTRADAS</p>
+                    <div id="adminClientsList"></div>
                 </div>
                 <div class="footer">
                     <button class="btn btn-gold" onclick="alert('📄 PDF gerado: relatorio_clientes.pdf')">📄 Exportar PDF</button>
@@ -855,7 +771,8 @@
                     <div class="card" id="supportLockCard" style="border-color:#d4af37;background:rgba(212,175,55,0.05);margin-bottom:20px;">
                         <div class="card-title" style="font-size:14px;color:#d4af37;">🔓 Desbloquear Painel de Suporte</div>
                         <p class="card-subtitle" style="margin-bottom:12px;">Digite a senha do Suporte Técnico CConecta para liberar a edição e controle de contas.</p>
-                        <input type="password" class="input-field" id="supportUnlockKey" placeholder="Senha do Suporte" oninput="checkSupportUnlock()">
+                        <input type="password" class="input-field" id="supportUnlockKey" placeholder="Senha do Suporte" onkeydown="if(event.key === 'Enter') unlockSupport()" style="margin-bottom:10px;">
+                        <button class="btn btn-gold" onclick="unlockSupport()">Entrar no Painel</button>
                     </div>
 
                     <div id="supportContent" style="display:none;">
@@ -1099,6 +1016,7 @@
             {
                 clientEmail: 'ana@email.com',
                 clientPhone: '(11) 98765-4321',
+                clientName: 'Ana Luísa Ferreira',
                 dateTime: 'Ter 27/05 • 14:00',
                 services: 'Corte + Escova',
                 unit: 'Centro',
@@ -1107,12 +1025,86 @@
             {
                 clientEmail: 'camila@email.com',
                 clientPhone: '(11) 99876-5432',
+                clientName: 'Camila Reis',
                 dateTime: 'Sex 30/05 • 10:00',
                 services: 'Luzes + Hidratação',
                 unit: 'Aguardando confirmação',
                 status: 'Pendente'
             }
         ];
+
+        // Lógica de Agendamento Dinâmico
+        let selectedDateText = '';
+        let selectedDateValue = ''; // Formato dd/mm
+        let selectedTimeValue = '';
+
+        function renderClientDays() {
+            const container = document.getElementById('daysContainerClient');
+            if (!container) return;
+
+            const daysList = [];
+            const today = new Date();
+            let count = 0;
+            let current = new Date(today);
+
+            // Gerar os próximos 7 dias úteis (terça a sábado)
+            while (count < 7) {
+                current.setDate(current.getDate() + 1);
+                const dayOfWeek = current.getDay(); // 0 = Domingo, 1 = Segunda, 2 = Terça...
+                
+                // Pular domingo (0) e segunda-feira (1)
+                if (dayOfWeek === 0 || dayOfWeek === 1) {
+                    continue;
+                }
+
+                const optionsDayName = { weekday: 'long' };
+                const optionsMonthName = { month: 'long' };
+                
+                let dayName = current.toLocaleDateString('pt-BR', optionsDayName);
+                dayName = dayName.charAt(0).toUpperCase() + dayName.slice(1);
+                
+                const dayNum = current.getDate();
+                const monthName = current.toLocaleDateString('pt-BR', optionsMonthName);
+                const formattedMonth = monthName.charAt(0).toUpperCase() + monthName.slice(1);
+                
+                const dateText = `${dayName} - ${dayNum} de ${formattedMonth}`;
+                
+                const dayStr = String(dayNum).padStart(2, '0');
+                const monthStr = String(current.getMonth() + 1).padStart(2, '0');
+                const dateValue = `${dayStr}/${monthStr}`;
+
+                let slotsText = '✓ 4 horários disponíveis';
+                if (count % 3 === 0) slotsText = '✓ 5 horários disponíveis';
+                if (count % 4 === 0) slotsText = '✓ 3 horários disponíveis';
+
+                daysList.push({
+                    text: dateText,
+                    value: dateValue,
+                    slotsText: slotsText
+                });
+                count++;
+            }
+
+            container.innerHTML = daysList.map(d => `
+                <div class="card" onclick="selectClientDay('${d.text}', '${d.value}')" style="cursor:pointer;">
+                    <div class="card-title">📅 ${d.text}</div>
+                    <div class="card-subtitle">${d.slotsText}</div>
+                </div>
+            `).join('');
+        }
+
+        function selectClientDay(text, value) {
+            selectedDateText = text;
+            selectedDateValue = value;
+            showScreen('horarios');
+        }
+
+        function goToConfirmation() {
+            if (!selectedTimeValue) {
+                return alert('Por favor, selecione um horário disponível.');
+            }
+            showScreen('confirmacao');
+        }
 
         let appointments = localStorage.getItem('studio_appointments')
             ? JSON.parse(localStorage.getItem('studio_appointments'))
@@ -1269,8 +1261,9 @@
         }
 
         function createAppointment() {
-            const selectedSlot = document.querySelector('.time-slot.selected');
-            const time = selectedSlot ? selectedSlot.textContent : '14:00';
+            const time = selectedTimeValue || '14:00';
+            const shortDay = selectedDateValue || '27/05';
+            const weekday = selectedDateText ? selectedDateText.split(' - ')[0].substring(0,3) : 'Ter';
             
             const selectedSvcEls = document.querySelectorAll('.service-tag.selected');
             const svcArray = Array.from(selectedSvcEls).map(el => el.textContent.trim());
@@ -1279,7 +1272,8 @@
             const newApp = {
                 clientEmail: loggedClient ? loggedClient.email : 'anonimo@email.com',
                 clientPhone: loggedClient ? loggedClient.phone : '(11) 99999-9999',
-                dateTime: `Ter 27/05 • ${time}`,
+                clientName: loggedClient ? loggedClient.name : 'Cliente Anônimo',
+                dateTime: `${weekday} ${shortDay} • ${time}`,
                 services: servicesText,
                 unit: 'Aguardando confirmação',
                 status: 'Pendente'
@@ -1290,6 +1284,11 @@
             
             const successTime = document.getElementById('successTimeDisplay');
             if (successTime) successTime.textContent = time;
+            
+            const successDate = document.getElementById('successDateDisplay');
+            if (successDate) {
+                successDate.textContent = selectedDateText || 'Terça, 27 de Maio';
+            }
             
             showScreen('sucesso');
         }
@@ -1333,7 +1332,7 @@
             alert('✅ Configurações de suporte salvas com sucesso!');
         }
 
-        function checkSupportUnlock() {
+        function unlockSupport() {
             const key = document.getElementById('supportUnlockKey').value.trim();
             if (key === 'cconecta2026') {
                 document.getElementById('supportContent').style.display = 'block';
@@ -1344,6 +1343,8 @@
                 renderSupportConfig();
                 renderSupportData();
                 alert('🔓 Acesso de Suporte Técnico Liberado!');
+            } else {
+                alert('❌ Senha do Suporte incorreta!');
             }
         }
 
@@ -1593,6 +1594,15 @@
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
             document.getElementById('screenContainer').scrollTop = 0;
+            if (screenId === 'agenda') renderClientDays();
+            if (screenId === 'horarios') {
+                const label = document.getElementById('selectedDayLabel');
+                if (label) {
+                    label.textContent = selectedDateText || 'Dia Selecionado';
+                }
+                document.querySelectorAll('.time-slot:not(.booked)').forEach(s => s.classList.remove('selected'));
+                selectedTimeValue = '';
+            }
             if (screenId === 'servicos') renderServices();
             if (screenId === 'confirmacao') {
                 renderClientServices();
@@ -1602,10 +1612,17 @@
                     nameInput.value = loggedClient.name;
                     phoneInput.value = loggedClient.phone;
                 }
+                const dateTimeLabel = document.getElementById('confirmDateTimeLabel');
+                if (dateTimeLabel) {
+                    const shortDayText = selectedDateText ? selectedDateText.split(' - ')[1] : 'Sem Data';
+                    dateTimeLabel.textContent = `${shortDayText} • ${selectedTimeValue}`;
+                }
             }
             if (screenId === 'map') renderUnits();
             if (screenId === 'editEnderecos') renderUnits();
-            if (screenId === 'gestao') renderGestaoButtons();
+            if (screenId === 'dashboard') renderDashboard();
+            if (screenId === 'gestao') renderGestao();
+            if (screenId === 'clientes') renderClientsAdmin();
             if (screenId === 'meus') renderClientAppointments();
             if (screenId === 'suporte') {
                 document.getElementById('supportUnlockKey').value = '';
@@ -1613,7 +1630,8 @@
                 document.getElementById('supportLockCard').innerHTML = `
                     <div class="card-title" style="font-size:14px;color:#d4af37;">🔓 Desbloquear Painel de Suporte</div>
                     <p class="card-subtitle" style="margin-bottom:12px;">Digite a senha do Suporte Técnico CConecta para liberar a edição e controle de contas.</p>
-                    <input type="password" class="input-field" id="supportUnlockKey" placeholder="Senha do Suporte" oninput="checkSupportUnlock()">
+                    <input type="password" class="input-field" id="supportUnlockKey" placeholder="Senha do Suporte" onkeydown="if(event.key === 'Enter') unlockSupport()" style="margin-bottom:10px;">
+                    <button class="btn btn-gold" onclick="unlockSupport()">Entrar no Painel</button>
                 `;
             }
         }
@@ -1633,12 +1651,145 @@
             });
         }
 
-        function assignUnit(btn, unit) {
-            const card = btn.closest('.card');
-            const statusEl = card.querySelector('.unit-status');
-            statusEl.textContent = `Unidade ${unit} ✓`;
-            statusEl.style.color = '#22c55e';
-            alert(`✅ Cliente notificada via WhatsApp!\n📍 Unidade: ${unit}`);
+        function renderDashboard() {
+            const total = appointments.length;
+            const confirmed = appointments.filter(a => a.status === 'Confirmado').length;
+            const pending = appointments.filter(a => a.status === 'Pendente').length;
+            const missed = appointments.filter(a => a.status === 'Faltou').length;
+
+            const totalEl = document.getElementById('statTotalApps');
+            const confirmedEl = document.getElementById('statConfirmedApps');
+            const pendingEl = document.getElementById('statPendingApps');
+            const missedEl = document.getElementById('statMissedApps');
+
+            if (totalEl) totalEl.textContent = total;
+            if (confirmedEl) confirmedEl.textContent = confirmed;
+            if (pendingEl) pendingEl.textContent = pending;
+            if (missedEl) missedEl.textContent = missed;
+
+            const listEl = document.getElementById('dashboardAppointmentsList');
+            if (listEl) {
+                if (appointments.length === 0) {
+                    listEl.innerHTML = `<p style="color:#808080;font-size:12px;text-align:center;margin-top:20px;">Nenhum agendamento recente.</p>`;
+                } else {
+                    listEl.innerHTML = appointments.slice(-4).reverse().map(app => {
+                        let badgeClass = 'badge-warning';
+                        let badgeIcon = '⏱';
+                        if (app.status === 'Confirmado') {
+                            badgeClass = 'badge-success';
+                            badgeIcon = '✓';
+                        }
+                        return `
+                            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(212,175,55,0.1);">
+                                <div>
+                                    <p class="card-title" style="margin:0;font-size:14px;">${app.dateTime.includes('•') ? app.dateTime.split(' • ')[1] : app.dateTime} - ${app.clientName || 'Cliente'}</p>
+                                    <p class="card-subtitle" style="margin:0;">${app.services} (${app.dateTime.includes('•') ? app.dateTime.split(' • ')[0] : ''})</p>
+                                </div>
+                                <span class="badge ${badgeClass}" title="${app.status}">${badgeIcon}</span>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            }
+        }
+
+        function renderGestao() {
+            const listEl = document.getElementById('gestaoAppointmentsList');
+            if (!listEl) return;
+
+            if (appointments.length === 0) {
+                listEl.innerHTML = `<p style="color:#808080;font-size:12px;text-align:center;margin-top:40px;">Nenhum agendamento para gerenciar.</p>`;
+            } else {
+                listEl.innerHTML = appointments.map((app, index) => {
+                    let unitStatusHtml = '';
+                    if (app.status === 'Confirmado') {
+                        unitStatusHtml = `<span style="color:#22c55e;">📍 Unidade ${app.unit} ✓</span>`;
+                    } else {
+                        unitStatusHtml = `<span style="color:#808080;">📍 Aguardando</span>`;
+                    }
+
+                    const buttonsHtml = units.map(u => {
+                        const shortName = u.name.split('—')[1]?.trim() || u.name.split('-')[1]?.trim() || u.name.split('Unidade')[1]?.trim() || u.name;
+                        return `
+                            <button class="btn btn-small" style="background:${u.id === 1 ? '#22c55e' : '#3b82f6'};color:white;padding:6px 12px;font-size:10px;width:auto;" onclick="assignUnit(${index}, '${shortName}')">${shortName}</button>
+                        `;
+                    }).join('');
+
+                    return `
+                        <div class="card" style="margin-bottom:12px;">
+                            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
+                                <div>
+                                    <div class="card-title" style="font-size:14px;margin-bottom:2px;">${app.dateTime} - ${app.clientName || 'Cliente'}</div>
+                                    <p class="card-subtitle" style="margin-bottom:2px;">Serviços: ${app.services}</p>
+                                    <p class="card-subtitle" style="font-size:11px;color:#808080;">WhatsApp: ${app.clientPhone}</p>
+                                </div>
+                                <div style="display:flex;gap:4px;">
+                                    ${app.status === 'Pendente' ? buttonsHtml : `<span class="badge badge-success">✓ Confirmado</span>`}
+                                </div>
+                            </div>
+                            <p class="card-subtitle" style="color:#808080;margin-top:6px;">Status: ${unitStatusHtml}</p>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        function assignUnit(index, unitName) {
+            const app = appointments[index];
+            app.status = 'Confirmado';
+            app.unit = unitName;
+            
+            localStorage.setItem('studio_appointments', JSON.stringify(appointments));
+            
+            renderGestao();
+            renderDashboard();
+            
+            const message = encodeURIComponent(`Olá ${app.clientName || 'Cliente'}! Seu agendamento para o Stúdio Mireille Marques foi confirmado com sucesso!\n\n📅 Horário: ${app.dateTime}\n✂️ Serviços: ${app.services}\n📍 Unidade definida: ${unitName}\n\nTe aguardamos com muito carinho! ✨💇‍♀️`);
+            const cleanPhone = app.clientPhone.replace(/\D/g, '');
+            const whatsappLink = `https://api.whatsapp.com/send?phone=55${cleanPhone}&text=${message}`;
+            
+            alert(`✅ Agendamento confirmado na Unidade ${unitName}!\n\nEnviando confirmação no WhatsApp da cliente...`);
+            window.open(whatsappLink, '_blank');
+        }
+
+        function renderClientsAdmin() {
+            const listEl = document.getElementById('adminClientsList');
+            if (!listEl) return;
+
+            const clients = localStorage.getItem('studio_clients')
+                ? JSON.parse(localStorage.getItem('studio_clients'))
+                : [
+                    {
+                        name: 'Ana Luísa Ferreira',
+                        email: 'ana@email.com',
+                        phone: '(11) 98765-4321',
+                        pass: 'ana2026'
+                    },
+                    {
+                        name: 'Camila Reis',
+                        email: 'camila@email.com',
+                        phone: '(11) 99876-5432',
+                        pass: 'camila2026'
+                    }
+                  ];
+            if (!localStorage.getItem('studio_clients')) {
+                localStorage.setItem('studio_clients', JSON.stringify(clients));
+            }
+
+            if (clients.length === 0) {
+                listEl.innerHTML = `<p style="color:#808080;font-size:12px;text-align:center;margin-top:40px;">Nenhuma cliente cadastrada.</p>`;
+            } else {
+                listEl.innerHTML = clients.map(c => {
+                    const count = appointments.filter(app => app.clientEmail.toLowerCase() === c.email.toLowerCase()).length;
+                    return `
+                        <div class="card" style="margin-bottom:12px;">
+                            <div class="card-title">${c.name}</div>
+                            <p class="card-subtitle">${c.phone} • ${c.email}</p>
+                            <p class="card-subtitle" style="color:#d4af37;margin-top:6px;font-weight:600;">⭐ ${count} ${count === 1 ? 'atendimento' : 'atendimentos'}</p>
+                        </div>
+                    `;
+                }).join('');
+            }
         }
 
         function editTemplate(templateId) {
@@ -1683,6 +1834,7 @@
             
             if (user) {
                 alert(`✨ Bem-vinda de volta, ${user.name}!`);
+                renderDashboard();
                 showScreen('dashboard');
                 document.getElementById('adminEmail').value = '';
                 document.getElementById('adminPass').value = '';
@@ -1694,6 +1846,7 @@
         // Inicialização
         document.addEventListener('DOMContentLoaded', () => {
             renderUnits();
+            renderDashboard();
             updateWelcomeHeader();
         });
     </script>
