@@ -925,14 +925,14 @@
             ? JSON.parse(localStorage.getItem('studio_supabase_config'))
             : defaultSupabaseConfig;
 
-        let supabase = null;
+        let supabaseClient = null;
         function initSupabase() {
             const config = localStorage.getItem('studio_supabase_config')
                 ? JSON.parse(localStorage.getItem('studio_supabase_config'))
                 : defaultSupabaseConfig;
             if (config.url && config.anonKey) {
                 try {
-                    supabase = window.supabase.createClient(config.url, config.anonKey);
+                    supabaseClient = window.supabase.createClient(config.url, config.anonKey);
                     
                     const regText = document.getElementById('clientRegInfoText');
                     if (regText) {
@@ -940,10 +940,10 @@
                     }
                 } catch(e) {
                     console.error("Erro ao instanciar Supabase:", e);
-                    supabase = null;
+                    supabaseClient = null;
                 }
             } else {
-                supabase = null;
+                supabaseClient = null;
                 const regText = document.getElementById('clientRegInfoText');
                 if (regText) {
                     regText.textContent = "Preencha seus dados. O suporte irá aprovar seu cadastro e enviar sua senha randômica via WhatsApp para você acessar seu histórico.";
@@ -1195,14 +1195,14 @@
                 return alert('Por favor, preencha o e-mail e a senha.');
             }
 
-            if (supabase) {
+            if (supabaseClient) {
                 try {
                     const btn = document.querySelector('#loginCliente .btn-gold');
                     const originalText = btn.textContent;
                     btn.textContent = 'Acessando...';
                     btn.disabled = true;
 
-                    const { data, error } = await supabase.auth.signInWithPassword({
+                    const { data, error } = await supabaseClient.auth.signInWithPassword({
                         email: email,
                         password: pass
                     });
@@ -1321,7 +1321,7 @@
                 return alert('A senha deve conter no mínimo 6 caracteres.');
             }
 
-            if (supabase) {
+            if (supabaseClient) {
                 try {
                     const originalText = btn ? btn.textContent : 'Criar Conta';
                     if (btn) {
@@ -1329,7 +1329,7 @@
                         btn.disabled = true;
                     }
 
-                    const { data, error } = await supabase.auth.signUp({
+                    const { data, error } = await supabaseClient.auth.signUp({
                         email: email,
                         password: pass,
                         options: {
