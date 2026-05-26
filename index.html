@@ -929,16 +929,30 @@
         let selectedUnitIdForGps = 1;
 
         // ===== INTEGRACAO SUPABASE =====
-        let defaultSupabaseConfig = { url: '', anonKey: '' };
+        let defaultSupabaseConfig = { 
+            url: 'https://zeszwerlddqtrzasoeff.supabase.co', 
+            anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inplc3p3ZXJsZGRxdHJ6YXNvZWZmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NzkyMDQsImV4cCI6MjA5MTM1NTIwNH0.nQ5UCvolacWXcEOD1okVMlX-0CfhfEKmkNeiZvk9jIo' 
+        };
         let supabaseConfig = localStorage.getItem('studio_supabase_config')
             ? JSON.parse(localStorage.getItem('studio_supabase_config'))
             : defaultSupabaseConfig;
 
+        // Sobrescreve localStorage caso esteja vazio
+        if (!supabaseConfig.url || !supabaseConfig.anonKey) {
+            supabaseConfig = defaultSupabaseConfig;
+            localStorage.setItem('studio_supabase_config', JSON.stringify(defaultSupabaseConfig));
+        }
+
         let supabaseClient = null;
         function initSupabase() {
-            const config = localStorage.getItem('studio_supabase_config')
+            let config = localStorage.getItem('studio_supabase_config')
                 ? JSON.parse(localStorage.getItem('studio_supabase_config'))
                 : defaultSupabaseConfig;
+            
+            if (!config.url || !config.anonKey) {
+                config = defaultSupabaseConfig;
+            }
+
             if (config.url && config.anonKey) {
                 try {
                     supabaseClient = window.supabase.createClient(config.url, config.anonKey);
@@ -1334,15 +1348,15 @@
             }
 
             // Obtém a URL base do Supabase configurada pelo admin
-            const supConfig = localStorage.getItem('studio_supabase_config')
+            let supConfig = localStorage.getItem('studio_supabase_config')
                 ? JSON.parse(localStorage.getItem('studio_supabase_config'))
                 : {};
 
-            const supabaseUrl = supConfig.url || '';
-
-            if (!supabaseUrl) {
-                return alert('⚠️ O sistema não está configurado. Contate o suporte.');
+            if (!supConfig.url || !supConfig.anonKey) {
+                supConfig = defaultSupabaseConfig;
             }
+
+            const supabaseUrl = supConfig.url || '';
 
             // URL da Edge Function: deriva automaticamente da URL do Supabase
             const edgeFnUrl = supabaseUrl.replace(/\/+$/, '') + '/functions/v1/register-client';
