@@ -15,10 +15,12 @@
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, #000000 0%, #0d0d1a 100%);
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             padding: 20px;
+            gap: 15px;
         }
 
         .phone {
@@ -578,7 +580,7 @@
                     <button class="header-back" onclick="showScreen('welcome')" title="Sair" style="font-size:14px;">⏻</button>
                 </div>
                 <div class="content">
-                    <p style="color:#b0b0b0;font-size:12px;margin-bottom:20px;letter-spacing:0.3px;">TERÇA, 27 DE MAIO DE 2026</p>
+                    <p style="color:#b0b0b0;font-size:12px;margin-bottom:20px;letter-spacing:0.3px;" id="dashboardDateLabel">TERÇA, 27 DE MAIO DE 2026</p>
 
                     <div class="stats-grid">
                         <div class="stat-box">
@@ -1030,26 +1032,7 @@
             
         let pendingRedirectScreen = null;
 
-        let defaultAppointments = [
-            {
-                clientEmail: 'ana@email.com',
-                clientPhone: '(11) 98765-4321',
-                clientName: 'Ana Luísa Ferreira',
-                dateTime: 'Ter 27/05 • 14:00',
-                services: 'Corte + Escova',
-                unit: 'Centro',
-                status: 'Confirmado'
-            },
-            {
-                clientEmail: 'camila@email.com',
-                clientPhone: '(11) 99876-5432',
-                clientName: 'Camila Reis',
-                dateTime: 'Sex 30/05 • 10:00',
-                services: 'Luzes + Hidratação',
-                unit: 'Aguardando confirmação',
-                status: 'Pendente'
-            }
-        ];
+        let defaultAppointments = [];
 
         // Lógica de Agendamento Dinâmico
         let selectedDateText = '';
@@ -1147,20 +1130,7 @@
             
             const clients = localStorage.getItem('studio_clients')
                 ? JSON.parse(localStorage.getItem('studio_clients'))
-                : [
-                    {
-                        name: 'Ana Luísa Ferreira',
-                        email: 'ana@email.com',
-                        phone: '(11) 98765-4321',
-                        pass: 'ana2026'
-                    },
-                    {
-                        name: 'Camila Reis',
-                        email: 'camila@email.com',
-                        phone: '(11) 99876-5432',
-                        pass: 'camila2026'
-                    }
-                  ];
+                : [];
                   
             const client = clients.find(c => c.email.toLowerCase() === email.toLowerCase() && c.pass === pass);
             
@@ -1522,20 +1492,7 @@
 
             const clients = localStorage.getItem('studio_clients')
                 ? JSON.parse(localStorage.getItem('studio_clients'))
-                : [
-                    {
-                        name: 'Ana Luísa Ferreira',
-                        email: 'ana@email.com',
-                        phone: '(11) 98765-4321',
-                        pass: 'ana2026'
-                    },
-                    {
-                        name: 'Camila Reis',
-                        email: 'camila@email.com',
-                        phone: '(11) 99876-5432',
-                        pass: 'camila2026'
-                    }
-                  ];
+                : [];
             if (!localStorage.getItem('studio_clients')) {
                 localStorage.setItem('studio_clients', JSON.stringify(clients));
             }
@@ -1754,6 +1711,15 @@
             if (pendingEl) pendingEl.textContent = pending;
             if (missedEl) missedEl.textContent = missed;
 
+            const dateEl = document.getElementById('dashboardDateLabel');
+            if (dateEl) {
+                const today = new Date();
+                const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+                let dateStr = today.toLocaleDateString('pt-BR', options);
+                dateStr = dateStr.toUpperCase();
+                dateEl.textContent = dateStr;
+            }
+
             const listEl = document.getElementById('dashboardAppointmentsList');
             if (listEl) {
                 if (appointments.length === 0) {
@@ -1845,20 +1811,7 @@
 
             const clients = localStorage.getItem('studio_clients')
                 ? JSON.parse(localStorage.getItem('studio_clients'))
-                : [
-                    {
-                        name: 'Ana Luísa Ferreira',
-                        email: 'ana@email.com',
-                        phone: '(11) 98765-4321',
-                        pass: 'ana2026'
-                    },
-                    {
-                        name: 'Camila Reis',
-                        email: 'camila@email.com',
-                        phone: '(11) 99876-5432',
-                        pass: 'camila2026'
-                    }
-                  ];
+                : [];
             if (!localStorage.getItem('studio_clients')) {
                 localStorage.setItem('studio_clients', JSON.stringify(clients));
             }
@@ -1937,5 +1890,12 @@
             updateWelcomeHeader();
         });
     </script>
+
+    <div style="text-align: center; font-size: 11px; color: rgba(255,255,255,0.35); display: flex; align-items: center; justify-content: center; gap: 6px; z-index: 10; font-family: 'Poppins', sans-serif;">
+        <span>Desenvolvido por</span>
+        <a href="https://wa.me/5524992486888?text=Olá! Vim pelo site do Stúdio Mireille Marques e gostaria de mais informações." target="_blank" style="display: inline-flex; align-items: center; transition: all 0.3s;" onmouseover="this.style.opacity='0.8'; this.style.transform='scale(1.05)';" onmouseout="this.style.opacity='1'; this.style.transform='scale(1)';">
+            <img src="logo_cconecta.png" alt="CConecta" style="height: 18px; width: auto; object-fit: contain;">
+        </a>
+    </div>
 </body>
 </html>
