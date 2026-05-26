@@ -271,25 +271,11 @@
                     <div class="header-title">Nossas Unidades</div>
                 </div>
                 <div class="content">
-                    <div style="height:180px;background:linear-gradient(135deg,#d4af37,#b8860b);border-radius:16px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;box-shadow:0 12px 40px rgba(212,175,55,0.2);">
-                        <div style="font-size:70px;">💇‍♀️</div>
+                    <div style="height:180px;border-radius:16px;overflow:hidden;margin-bottom:20px;box-shadow:0 12px 40px rgba(212,175,55,0.2);">
+                        <img src="mulher_cabelo.png" alt="Cabelo Salão" style="width:100%;height:100%;object-fit:cover;">
                     </div>
 
-                    <div class="card" onclick="selectAddress(1)" id="addrCard1" style="cursor:pointer;">
-                        <div class="card-title">📍 Unidade 1 — Centro</div>
-                        <p class="card-subtitle"><strong>Stúdio Mireille Marques</strong></p>
-                        <p class="card-subtitle">Rua das Flores, 123 • Centro</p>
-                        <p class="card-subtitle">Seg-Sex: 08:00 - 19:00</p>
-                        <p class="card-subtitle">Sáb: 08:00 - 17:00</p>
-                    </div>
-
-                    <div class="card" onclick="selectAddress(2)" id="addrCard2" style="cursor:pointer;">
-                        <div class="card-title">📍 Unidade 2 — Jardins</div>
-                        <p class="card-subtitle"><strong>Stúdio Mireille Marques</strong></p>
-                        <p class="card-subtitle">Av. dos Ipês, 456 • Jardins</p>
-                        <p class="card-subtitle">Seg-Sex: 09:00 - 20:00</p>
-                        <p class="card-subtitle">Sáb: 09:00 - 16:00</p>
-                    </div>
+                    <div id="unitsContainerClient"></div>
 
                     <div class="card">
                         <div class="card-title">🚗 Estacionamento</div>
@@ -575,13 +561,31 @@
                             </div>
                         </div>
                     </div>
+
+                    <p style="color:#b0b0b0;font-size:12px;margin:24px 0 12px;letter-spacing:0.3px;">MENU ADMINISTRATIVO</p>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                        <button class="btn btn-primary" onclick="showScreen('gestao')" style="padding:12px 8px;font-size:13px;display:flex;flex-direction:column;align-items:center;gap:6px;border-radius:12px;">
+                            <span style="font-size:18px;">📋</span> Gestão Agenda
+                        </button>
+                        <button class="btn btn-primary" onclick="showScreen('templatesCampanhas')" style="padding:12px 8px;font-size:13px;display:flex;flex-direction:column;align-items:center;gap:6px;border-radius:12px;">
+                            <span style="font-size:18px;">📢</span> Campanhas
+                        </button>
+                        <button class="btn btn-primary" onclick="showScreen('servicos')" style="padding:12px 8px;font-size:13px;display:flex;flex-direction:column;align-items:center;gap:6px;border-radius:12px;">
+                            <span style="font-size:18px;">✂️</span> Serviços
+                        </button>
+                        <button class="btn btn-primary" onclick="showScreen('editEnderecos')" style="padding:12px 8px;font-size:13px;display:flex;flex-direction:column;align-items:center;gap:6px;border-radius:12px;">
+                            <span style="font-size:18px;">📍</span> Endereços
+                        </button>
+                        <button class="btn btn-primary" onclick="showScreen('clientes')" style="padding:12px 8px;font-size:13px;display:flex;flex-direction:column;align-items:center;gap:6px;border-radius:12px;">
+                            <span style="font-size:18px;">👥</span> Clientes
+                        </button>
+                        <button class="btn btn-primary" onclick="showScreen('suporte')" style="padding:12px 8px;font-size:13px;display:flex;flex-direction:column;align-items:center;gap:6px;border-radius:12px;">
+                            <span style="font-size:18px;">🔧</span> Sup. Técnico
+                        </button>
+                    </div>
                 </div>
                 <div class="footer">
-                    <button class="btn btn-secondary" onclick="showScreen('gestao')">📋 Gestão de Agenda</button>
-                    <button class="btn btn-secondary" onclick="showScreen('templatesCampanhas')">📢 Campanhas</button>
-                    <button class="btn btn-secondary" onclick="showScreen('servicos')">✂️ Serviços</button>
-                    <button class="btn btn-secondary" onclick="showScreen('clientes')">👥 Clientes</button>
-                    <button class="btn btn-secondary" onclick="showScreen('suporte')">🔧 Suporte Técnico</button>
+                    <button class="btn btn-secondary" onclick="showScreen('welcome')">Sair do Painel ⏻</button>
                 </div>
             </div>
 
@@ -600,10 +604,7 @@
                                 <div class="card-title" style="font-size:14px;">14:00 - Ana Luísa</div>
                                 <p class="card-subtitle">Corte + Escova</p>
                             </div>
-                            <div style="display:flex;gap:6px;">
-                                <button class="btn btn-small" style="background:#22c55e;color:white;" onclick="assignUnit(this,'Centro')">Centro</button>
-                                <button class="btn btn-small" style="background:#3b82f6;color:white;" onclick="assignUnit(this,'Jardins')">Jardins</button>
-                            </div>
+                            <div style="display:flex;gap:6px;" class="unit-assign-buttons"></div>
                         </div>
                         <p class="card-subtitle" style="color:#808080;">📍 <span class="unit-status">Aguardando</span></p>
                     </div>
@@ -614,10 +615,7 @@
                                 <div class="card-title" style="font-size:14px;">15:30 - Camila Reis</div>
                                 <p class="card-subtitle">Luzes + Hidratação</p>
                             </div>
-                            <div style="display:flex;gap:6px;">
-                                <button class="btn btn-small" style="background:#22c55e;color:white;" onclick="assignUnit(this,'Centro')">Centro</button>
-                                <button class="btn btn-small" style="background:#3b82f6;color:white;" onclick="assignUnit(this,'Jardins')">Jardins</button>
-                            </div>
+                            <div style="display:flex;gap:6px;" class="unit-assign-buttons"></div>
                         </div>
                         <p class="card-subtitle" style="color:#808080;">📍 <span class="unit-status">Aguardando</span></p>
                     </div>
@@ -628,10 +626,7 @@
                                 <div class="card-title" style="font-size:14px;">17:00 - Juliana Costa</div>
                                 <p class="card-subtitle">Reflexo</p>
                             </div>
-                            <div style="display:flex;gap:6px;">
-                                <button class="btn btn-small" style="background:#22c55e;color:white;" onclick="assignUnit(this,'Centro')">Centro</button>
-                                <button class="btn btn-small" style="background:#3b82f6;color:white;" onclick="assignUnit(this,'Jardins')">Jardins</button>
-                            </div>
+                            <div style="display:flex;gap:6px;" class="unit-assign-buttons"></div>
                         </div>
                         <p class="card-subtitle" style="color:#808080;">📍 <span class="unit-status">Aguardando</span></p>
                     </div>
@@ -837,16 +832,124 @@
                 </div>
             </div>
 
+            <!-- TELA 15: EDITAR ENDEREÇOS -->
+            <div class="screen" id="editEnderecos">
+                <div class="header">
+                    <button class="header-back" onclick="showScreen('dashboard')">←</button>
+                    <div class="header-title">📍 Editar Endereços</div>
+                </div>
+                <div class="content">
+                    <p style="color:#b0b0b0;font-size:12px;margin-bottom:16px;letter-spacing:0.3px;">ATUALIZAR UNIDADES DO SALÃO</p>
+                    <div id="unitsListEdit"></div>
+                </div>
+                <div class="footer">
+                    <button class="btn btn-gold" onclick="saveUnits()">Salvar Alterações</button>
+                    <button class="btn btn-secondary" onclick="showScreen('dashboard')">Cancelar</button>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <script>
+        // ===== UNIDADES DINÂMICAS =====
+        let defaultUnits = [
+            {
+                id: 1,
+                name: 'Unidade 1 — Centro',
+                address: 'Rua das Flores, 123 • Centro',
+                weekdayHours: 'Seg-Sex: 08:00 - 19:00',
+                satHours: 'Sáb: 08:00 - 17:00'
+            },
+            {
+                id: 2,
+                name: 'Unidade 2 — Jardins',
+                address: 'Av. dos Ipês, 456 • Jardins',
+                weekdayHours: 'Seg-Sex: 09:00 - 20:00',
+                satHours: 'Sáb: 09:00 - 16:00'
+            }
+        ];
+
+        let units = localStorage.getItem('studio_units')
+            ? JSON.parse(localStorage.getItem('studio_units'))
+            : defaultUnits;
+
+        function renderUnits() {
+            // Renderiza na tela do cliente
+            const containerClient = document.getElementById('unitsContainerClient');
+            if (containerClient) {
+                containerClient.innerHTML = units.map(u => `
+                    <div class="card" onclick="selectAddress(${u.id})" id="addrCard${u.id}" style="cursor:pointer;">
+                        <div class="card-title">📍 ${u.name}</div>
+                        <p class="card-subtitle"><strong>Stúdio Mireille Marques</strong></p>
+                        <p class="card-subtitle">${u.address}</p>
+                        <p class="card-subtitle">${u.weekdayHours}</p>
+                        <p class="card-subtitle">${u.satHours}</p>
+                    </div>
+                `).join('');
+            }
+
+            // Renderiza na tela de edição da profissional
+            const containerEdit = document.getElementById('unitsListEdit');
+            if (containerEdit) {
+                containerEdit.innerHTML = units.map(u => `
+                    <div class="card" style="margin-bottom: 16px;">
+                        <div class="card-title" style="font-size: 14px; margin-bottom: 12px; color:#d4af37; border-bottom:1px solid rgba(212,175,55,0.2); padding-bottom:6px;">✏️ Unidade ${u.id}</div>
+                        
+                        <label style="color:#808080;font-size:10px;letter-spacing:0.3px;display:block;margin-bottom:4px;font-weight:600;">NOME DA UNIDADE</label>
+                        <input type="text" class="input-field" id="editUnitName_${u.id}" value="${u.name}" style="margin-bottom:10px;">
+                        
+                        <label style="color:#808080;font-size:10px;letter-spacing:0.3px;display:block;margin-bottom:4px;font-weight:600;">ENDEREÇO</label>
+                        <input type="text" class="input-field" id="editUnitAddr_${u.id}" value="${u.address}" style="margin-bottom:10px;">
+                        
+                        <label style="color:#808080;font-size:10px;letter-spacing:0.3px;display:block;margin-bottom:4px;font-weight:600;">HORÁRIO SEG-SEX</label>
+                        <input type="text" class="input-field" id="editUnitWeekday_${u.id}" value="${u.weekdayHours}" style="margin-bottom:10px;">
+                        
+                        <label style="color:#808080;font-size:10px;letter-spacing:0.3px;display:block;margin-bottom:4px;font-weight:600;">HORÁRIO SÁBADO</label>
+                        <input type="text" class="input-field" id="editUnitSat_${u.id}" value="${u.satHours}" style="margin-bottom:6px;">
+                    </div>
+                `).join('');
+            }
+        }
+
+        function saveUnits() {
+            units = units.map(u => {
+                return {
+                    id: u.id,
+                    name: document.getElementById(`editUnitName_${u.id}`).value.trim() || u.name,
+                    address: document.getElementById(`editUnitAddr_${u.id}`).value.trim() || u.address,
+                    weekdayHours: document.getElementById(`editUnitWeekday_${u.id}`).value.trim() || u.weekdayHours,
+                    satHours: document.getElementById(`editUnitSat_${u.id}`).value.trim() || u.satHours
+                };
+            });
+            localStorage.setItem('studio_units', JSON.stringify(units));
+            renderUnits();
+            alert('✅ Endereços atualizados com sucesso!');
+            showScreen('dashboard');
+        }
+
+        function renderGestaoButtons() {
+            const containers = document.querySelectorAll('.unit-assign-buttons');
+            containers.forEach(container => {
+                container.innerHTML = units.map(u => {
+                    const shortName = u.name.split('—')[1]?.trim() || u.name.split('-')[1]?.trim() || u.name.split('Unidade')[1]?.trim() || u.name;
+                    return `
+                        <button class="btn btn-small" style="background:${u.id === 1 ? '#22c55e' : '#3b82f6'};color:white;padding:6px 12px;" onclick="assignUnit(this,'${shortName}')">${shortName}</button>
+                    `;
+                }).join('');
+            });
+        }
+
         // ===== SERVIÇOS DINÂMICOS =====
-        let services = [
+        let defaultServices = [
             'Corte', 'Escova', 'Corte + Escova', 'Reflexo', 'Luzes',
             'Hidratação Profunda', 'Tratamento Capilar', 'Coloração',
             'Design de Sobrancelha', 'Maquiagem Social'
         ];
+
+        let services = localStorage.getItem('studio_services')
+            ? JSON.parse(localStorage.getItem('studio_services'))
+            : defaultServices;
 
         function renderServices() {
             const list = document.getElementById('servicesList');
@@ -865,6 +968,7 @@
             if (!name) return alert('Digite o nome do serviço.');
             if (services.includes(name)) return alert('Serviço já existe.');
             services.push(name);
+            localStorage.setItem('studio_services', JSON.stringify(services));
             input.value = '';
             renderServices();
             renderClientServices();
@@ -875,6 +979,7 @@
             const name = services[index];
             if (confirm(`Remover o serviço "${name}"?`)) {
                 services.splice(index, 1);
+                localStorage.setItem('studio_services', JSON.stringify(services));
                 renderServices();
                 renderClientServices();
             }
@@ -916,6 +1021,9 @@
             document.getElementById('screenContainer').scrollTop = 0;
             if (screenId === 'servicos') renderServices();
             if (screenId === 'confirmacao') renderClientServices();
+            if (screenId === 'map') renderUnits();
+            if (screenId === 'editEnderecos') renderUnits();
+            if (screenId === 'gestao') renderGestaoButtons();
         }
 
         function selectTime(element) {
@@ -924,10 +1032,13 @@
         }
 
         function selectAddress(num) {
-            document.getElementById('addrCard1').style.borderColor = num === 1 ? '#d4af37' : 'rgba(212,175,55,0.15)';
-            document.getElementById('addrCard2').style.borderColor = num === 2 ? '#d4af37' : 'rgba(212,175,55,0.15)';
-            document.getElementById('addrCard1').style.boxShadow = num === 1 ? '0 0 15px rgba(212,175,55,0.2)' : 'none';
-            document.getElementById('addrCard2').style.boxShadow = num === 2 ? '0 0 15px rgba(212,175,55,0.2)' : 'none';
+            units.forEach(u => {
+                const card = document.getElementById(`addrCard${u.id}`);
+                if (card) {
+                    card.style.borderColor = u.id === num ? '#d4af37' : 'rgba(212,175,55,0.15)';
+                    card.style.boxShadow = u.id === num ? '0 0 15px rgba(212,175,55,0.2)' : 'none';
+                }
+            });
         }
 
         function assignUnit(btn, unit) {
@@ -959,6 +1070,11 @@
         function loginAdmin() {
             showScreen('dashboard');
         }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            renderUnits();
+        });
     </script>
 </body>
 </html>
