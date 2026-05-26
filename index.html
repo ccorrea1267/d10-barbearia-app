@@ -570,7 +570,7 @@
                 <div class="content">
                     <div class="card" style="margin-bottom:16px;text-align:center;">
                         <div class="card-title">🌸 Criar Conta de Cliente</div>
-                        <p class="card-subtitle" style="font-size:12px;margin-top:6px;" id="clientRegInfoText">Preencha seus dados. Um link de confirmação será enviado para seu e-mail. Após confirmar, sua conta estará ativa e liberada para login!</p>
+                        <p class="card-subtitle" style="font-size:12px;margin-top:6px;" id="clientRegInfoText">Preencha seus dados. Vamos gerar uma senha automática e enviar para o seu e-mail junto ao link de ativação! 🔑</p>
                     </div>
 
                     <div class="card">
@@ -581,10 +581,7 @@
                         <input type="email" class="input-field" id="clientRegEmail" placeholder="seuemail@exemplo.com" style="margin-bottom:12px;">
 
                         <label style="color:#808080;font-size:11px;letter-spacing:0.3px;display:block;margin-bottom:4px;font-weight:600;">WHATSAPP COM DDD</label>
-                        <input type="tel" class="input-field" id="clientRegPhone" placeholder="Ex: (11) 99999-9999" style="margin-bottom:12px;">
-
-                        <label style="color:#808080;font-size:11px;letter-spacing:0.3px;display:block;margin-bottom:4px;font-weight:600;">SENHA DE ACESSO</label>
-                        <input type="password" class="input-field" id="clientRegPass" placeholder="Mínimo 6 caracteres" style="margin-bottom:4px;">
+                        <input type="tel" class="input-field" id="clientRegPhone" placeholder="Ex: (11) 99999-9999" style="margin-bottom:4px;">
                     </div>
                 </div>
                 <div class="footer">
@@ -825,6 +822,18 @@
                             </div>
                         </div>
 
+                        <!-- EMAIL DISPARO (RESEND) -->
+                        <div style="margin-bottom:16px;">
+                            <div class="card">
+                                <div class="card-title">📧 Disparo de E-mail (Resend API)</div>
+                                <label style="color:#808080;font-size:10px;display:block;margin-bottom:4px;font-weight:600;">RESEND API KEY</label>
+                                <input type="password" class="input-field" id="supResendApiKey" placeholder="re_xxxxxxxxxxxxxxxxxxxxxxxx">
+                                
+                                <label style="color:#808080;font-size:10px;display:block;margin-bottom:4px;font-weight:600;">REMETENTE (Opcional - ex: onboarding@resend.dev)</label>
+                                <input type="text" class="input-field" id="supResendFrom" placeholder="Studio Mireille Marques <onboarding@resend.dev>">
+                            </div>
+                        </div>
+
                         <!-- GERADOR DE SENHAS -->
                         <div style="margin-bottom:16px;">
                             <div class="card" style="border-color:rgba(212,175,55,0.25);">
@@ -951,7 +960,11 @@
             }
         }
 
+        // Funções de geração de senha e envio de email movidas para a Edge Function 'register-client'
+
+
         function renderUnits() {
+
             // Renderiza na tela do cliente
             const containerClient = document.getElementById('unitsContainerClient');
             if (containerClient) {
@@ -1219,7 +1232,7 @@
 
                     if (data.user) {
                         loggedClient = {
-                            name: data.user.user_metadata.name || data.user.email.split('@')[0],
+                            name: data.user.user_metadata.full_name || data.user.user_metadata.name || data.user.email.split('@')[0],
                             email: data.user.email,
                             phone: data.user.user_metadata.phone || ''
                         };
@@ -1311,78 +1324,61 @@
             const name = document.getElementById('clientRegName').value.trim();
             const email = document.getElementById('clientRegEmail').value.trim();
             const phone = document.getElementById('clientRegPhone').value.trim();
-            const pass = document.getElementById('clientRegPass').value.trim();
 
-            if (!name || !email || !phone || !pass) {
-                return alert('Por favor, preencha todos os campos, incluindo a senha.');
+            if (!name || !email || !phone) {
+                return alert('Por favor, preencha todos os campos: nome, e-mail e WhatsApp.');
             }
 
-            if (pass.length < 6) {
-                return alert('A senha deve conter no mínimo 6 caracteres.');
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                return alert('Por favor, insira um e-mail válido.');
             }
 
-            if (supabaseClient) {
-                try {
-                    const originalText = btn ? btn.textContent : 'Criar Conta';
-                    if (btn) {
-                        btn.textContent = 'Cadastrando...';
-                        btn.disabled = true;
-                    }
+            // Obtém a URL base do Supabase configurada pelo admin
+            const supConfig = localStorage.getItem('studio_supabase_config')
+                ? JSON.parse(localStorage.getItem('studio_supabase_config'))
+                : {};
 
-                    const { data, error } = await supabaseClient.auth.signUp({
-                        email: email,
-                        password: pass,
-                        options: {
-                            data: {
-                                name: name,
-                                phone: phone
-                            }
-                        }
-                    });
+            const supabaseUrl = supConfig.url || '';
 
-                    if (btn) {
-                        btn.textContent = originalText;
-                        btn.disabled = false;
-                    }
+            if (!supabaseUrl) {
+                return alert('⚠️ O sistema não está configurado. Contate o suporte.');
+            }
 
-                    if (error) {
-                        return alert('❌ Erro ao cadastrar: ' + error.message);
-                    }
+            // URL da Edge Function: deriva automaticamente da URL do Supabase
+            const edgeFnUrl = supabaseUrl.replace(/\/+$/, '') + '/functions/v1/register-client';
 
-                    alert(`✅ Cadastro realizado com sucesso!\n\nUm link de confirmação foi enviado para ${email}. Confirme o cadastro clicando no link recebido e em seguida faça o login.`);
-                    
-                    document.getElementById('clientRegName').value = '';
-                    document.getElementById('clientRegEmail').value = '';
-                    document.getElementById('clientRegPhone').value = '';
-                    document.getElementById('clientRegPass').value = '';
-                    
-                    showScreen('loginCliente');
-                } catch (err) {
-                    if (btn) {
-                        btn.textContent = 'Criar Conta';
-                        btn.disabled = false;
-                    }
-                    alert('❌ Ocorreu um erro no cadastro: ' + err.message);
-                }
-            } else {
-                // Modo offline
-                const requests = localStorage.getItem('studio_client_requests')
-                    ? JSON.parse(localStorage.getItem('studio_client_requests'))
-                    : [];
+            const originalText = btn ? btn.textContent : 'Criar Conta';
+            if (btn) { btn.textContent = '⏳ Cadastrando...'; btn.disabled = true; }
 
-                if (requests.some(r => r.email.toLowerCase() === email.toLowerCase())) {
-                    return alert('Já existe uma solicitação pendente para este e-mail.');
+            try {
+                const res = await fetch(edgeFnUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, phone })
+                });
+
+                const result = await res.json();
+
+                if (btn) { btn.textContent = originalText; btn.disabled = false; }
+
+                if (!res.ok) {
+                    return alert('❌ ' + (result.error || 'Erro ao cadastrar. Tente novamente.'));
                 }
 
-                requests.push({ name, email, phone, pass });
-                localStorage.setItem('studio_client_requests', JSON.stringify(requests));
-
+                // Limpa os campos
                 document.getElementById('clientRegName').value = '';
                 document.getElementById('clientRegEmail').value = '';
                 document.getElementById('clientRegPhone').value = '';
-                document.getElementById('clientRegPass').value = '';
 
-                alert('✅ Solicitação de cadastro enviada com sucesso!\n\nO suporte irá liberar seu acesso e enviar a senha via WhatsApp.');
+                const msg = `✅ Cadastro realizado com sucesso!
+
+📧 E-mail: ${email}
+
+📩 Sua senha provisória e o link de ativação foram enviados para o seu e-mail!
+⚠️ Importante: Verifique também a pasta de SPAM ou Lixo Eletrônico.
+
+Após clicar no link de ativação enviado, faça login com o seu e-mail e a senha recebida!`;
+                alert(msg);
                 showScreen('loginCliente');
             }
         }
@@ -1453,6 +1449,11 @@
             ? JSON.parse(localStorage.getItem('studio_support_config'))
             : defaultSupportConfig;
 
+        let defaultResendConfig = { apiKey: '', from: '' };
+        let resendConfig = localStorage.getItem('studio_resend_config')
+            ? JSON.parse(localStorage.getItem('studio_resend_config'))
+            : defaultResendConfig;
+
         function renderSupportConfig() {
             document.getElementById('supGoogleClientId').value = supportConfig.googleClientId;
             document.getElementById('supGoogleClientSecret').value = supportConfig.googleClientSecret;
@@ -1463,6 +1464,12 @@
                 : defaultSupabaseConfig;
             document.getElementById('supSupabaseUrl').value = supConfig.url || '';
             document.getElementById('supSupabaseAnonKey').value = supConfig.anonKey || '';
+
+            const resConfig = localStorage.getItem('studio_resend_config')
+                ? JSON.parse(localStorage.getItem('studio_resend_config'))
+                : defaultResendConfig;
+            document.getElementById('supResendApiKey').value = resConfig.apiKey || '';
+            document.getElementById('supResendFrom').value = resConfig.from || '';
         }
 
         function saveSupportConfig() {
@@ -1481,6 +1488,14 @@
             };
             localStorage.setItem('studio_supabase_config', JSON.stringify(supConfig));
             initSupabase();
+
+            const resendApiKeyVal = document.getElementById('supResendApiKey').value.trim();
+            const resendFromVal = document.getElementById('supResendFrom').value.trim();
+            const resConfig = {
+                apiKey: resendApiKeyVal,
+                from: resendFromVal
+            };
+            localStorage.setItem('studio_resend_config', JSON.stringify(resConfig));
 
             alert('✅ Configurações de suporte salvas com sucesso!');
         }
