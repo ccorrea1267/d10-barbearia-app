@@ -496,14 +496,52 @@
                         <h1 style="font-size:28px;">Mireille Marques</h1>
                         <p style="font-size:13px;">Painel da Profissional</p>
                         <div style="width:100%;margin-top:24px;">
-                            <input type="email" class="input-field" id="adminEmail" placeholder="mireille@studio.com">
-                            <input type="password" class="input-field" id="adminPass" placeholder="Senha">
+                            <input type="email" class="input-field" id="adminEmail" placeholder="E-mail profissional" value="mireille@studio.com">
+                            <input type="password" class="input-field" id="adminPass" placeholder="Senha de Acesso">
                         </div>
+                        <p style="margin-top: 20px; font-size: 13px; color: #808080;">
+                            Ainda não tem acesso? <a href="#" onclick="showScreen('cadastroProfissional')" style="color: #d4af37; text-decoration: none; font-weight: 600;">Solicitar Acesso</a>
+                        </p>
                     </div>
                 </div>
                 <div class="footer">
                     <button class="btn btn-gold" onclick="loginAdmin()">Entrar</button>
                     <button class="btn btn-secondary" onclick="showScreen('welcome')">← Voltar</button>
+                </div>
+            </div>
+
+            <!-- TELA 16: SOLICITAR ACESSO / CADASTRO -->
+            <div class="screen" id="cadastroProfissional">
+                <div class="header">
+                    <button class="header-back" onclick="showScreen('loginAdmin')">←</button>
+                    <div class="header-title">Solicitar Acesso</div>
+                </div>
+                <div class="content">
+                    <div class="card" style="margin-bottom:16px;text-align:center;">
+                        <div class="card-title">🔑 Solicitação de Cadastro</div>
+                        <p class="card-subtitle" style="font-size:12px;margin-top:6px;">Preencha os dados abaixo. Sua senha randômica de acesso será liberada pelo suporte CConecta.</p>
+                    </div>
+
+                    <div class="card">
+                        <label style="color:#808080;font-size:11px;letter-spacing:0.3px;display:block;margin-bottom:4px;font-weight:600;">NOME COMPLETO</label>
+                        <input type="text" class="input-field" id="regName" placeholder="Ex: Mireille Marques" style="margin-bottom:12px;">
+
+                        <label style="color:#808080;font-size:11px;letter-spacing:0.3px;display:block;margin-bottom:4px;font-weight:600;">E-MAIL PROFISSIONAL</label>
+                        <input type="email" class="input-field" id="regEmail" placeholder="Ex: mireille@studio.com" style="margin-bottom:12px;">
+
+                        <label style="color:#808080;font-size:11px;letter-spacing:0.3px;display:block;margin-bottom:4px;font-weight:600;">WHATSAPP</label>
+                        <input type="tel" class="input-field" id="regPhone" placeholder="Ex: (11) 99999-9999" style="margin-bottom:12px;">
+
+                        <label style="color:#808080;font-size:11px;letter-spacing:0.3px;display:block;margin-bottom:4px;font-weight:600;">UNIDADE PREFERENCIAL</label>
+                        <select class="input-field" id="regUnit" style="margin-bottom:4px;">
+                            <option value="Unidade 1 — Centro">Unidade 1 — Centro</option>
+                            <option value="Unidade 2 — Jardins">Unidade 2 — Jardins</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button class="btn btn-gold" onclick="submitAccessRequest()">Enviar Solicitação</button>
+                    <button class="btn btn-secondary" onclick="showScreen('loginAdmin')">Voltar ao Login</button>
                 </div>
             </div>
 
@@ -769,56 +807,64 @@
                     <div class="header-title">🔧 Suporte Técnico</div>
                 </div>
                 <div class="content">
-                    <div class="tip-box" style="border-color:rgba(239,68,68,0.3);background:linear-gradient(135deg,rgba(239,68,68,0.1),rgba(239,68,68,0.05));">
-                        <p style="color:#ef4444;">🔒 Área restrita ao suporte técnico CConecta. Solicite acesso pelo WhatsApp.</p>
+                    <div class="card" id="supportLockCard" style="border-color:#d4af37;background:rgba(212,175,55,0.05);margin-bottom:20px;">
+                        <div class="card-title" style="font-size:14px;color:#d4af37;">🔓 Desbloquear Painel de Suporte</div>
+                        <p class="card-subtitle" style="margin-bottom:12px;">Digite a senha do Suporte Técnico CConecta para liberar a edição e controle de contas.</p>
+                        <input type="password" class="input-field" id="supportUnlockKey" placeholder="Senha do Suporte" oninput="checkSupportUnlock()">
                     </div>
 
-                    <!-- GOOGLE CALENDAR -->
-                    <div style="position:relative;margin-bottom:16px;">
-                        <div class="blur-overlay">
-                            <span>🔐 ACESSO RESTRITO</span>
-                        </div>
-                        <div class="card blurred-section">
-                            <div class="card-title">📅 Google Calendar API</div>
-                            <input type="text" class="input-field" placeholder="Client ID" value="xxxxxxxxx.apps.googleusercontent.com" disabled>
-                            <input type="text" class="input-field" placeholder="Client Secret" value="GOCSPX-xxxxxxxxxxxxxxx" disabled>
-                            <input type="text" class="input-field" placeholder="Calendar ID" value="studio.mireille@gmail.com" disabled>
-                            <div style="display:flex;gap:8px;">
-                                <span class="badge badge-success">✓ Conectado</span>
-                                <span class="badge badge-warning">Sincronização: 5min</span>
+                    <div id="supportContent" style="display:none;">
+                        <!-- GOOGLE CALENDAR -->
+                        <div style="margin-bottom:16px;">
+                            <div class="card">
+                                <div class="card-title">📅 Google Calendar API</div>
+                                <label style="color:#808080;font-size:10px;display:block;margin-bottom:4px;font-weight:600;">CLIENT ID</label>
+                                <input type="text" class="input-field" id="supGoogleClientId" placeholder="Client ID">
+                                
+                                <label style="color:#808080;font-size:10px;display:block;margin-bottom:4px;font-weight:600;">CLIENT SECRET</label>
+                                <input type="text" class="input-field" id="supGoogleClientSecret" placeholder="Client Secret">
+                                
+                                <label style="color:#808080;font-size:10px;display:block;margin-bottom:4px;font-weight:600;">CALENDAR ID</label>
+                                <input type="text" class="input-field" id="supGoogleCalendarId" placeholder="Calendar ID">
                             </div>
                         </div>
-                    </div>
 
-                    <!-- EVOLUTION API -->
-                    <div style="position:relative;margin-bottom:16px;">
-                        <div class="blur-overlay">
-                            <span>🔐 ACESSO RESTRITO</span>
-                        </div>
-                        <div class="card blurred-section">
-                            <div class="card-title">📱 EvolutionAPI (WhatsApp)</div>
-                            <input type="text" class="input-field" placeholder="URL da Instância" value="https://api.evolution.xxxx.com" disabled>
-                            <input type="text" class="input-field" placeholder="API Key" value="evo_xxxxxxxxxxxxxxxxxx" disabled>
-                            <input type="text" class="input-field" placeholder="Nome da Instância" value="mireille-studio" disabled>
-                            <div style="display:flex;gap:8px;">
-                                <span class="badge badge-success">✓ Online</span>
-                                <span class="badge badge-rose">WhatsApp: +55 11 9xxxx</span>
+                        <!-- EVOLUTION API -->
+                        <div style="margin-bottom:16px;">
+                            <div class="card">
+                                <div class="card-title">📱 EvolutionAPI (WhatsApp)</div>
+                                <label style="color:#808080;font-size:10px;display:block;margin-bottom:4px;font-weight:600;">URL DA INSTÂNCIA</label>
+                                <input type="text" class="input-field" id="supEvolutionUrl" placeholder="URL da Instância">
+                                
+                                <label style="color:#808080;font-size:10px;display:block;margin-bottom:4px;font-weight:600;">API KEY</label>
+                                <input type="text" class="input-field" id="supEvolutionApiKey" placeholder="API Key">
+                                
+                                <label style="color:#808080;font-size:10px;display:block;margin-bottom:4px;font-weight:600;">NOME DA INSTÂNCIA</label>
+                                <input type="text" class="input-field" id="supEvolutionInstanceName" placeholder="Nome da Instância">
                             </div>
                         </div>
-                    </div>
 
-                    <!-- WEBHOOK -->
-                    <div style="position:relative;margin-bottom:16px;">
-                        <div class="blur-overlay">
-                            <span>🔐 ACESSO RESTRITO</span>
-                        </div>
-                        <div class="card blurred-section">
-                            <div class="card-title">🔗 Webhooks & Notificações</div>
-                            <input type="text" class="input-field" placeholder="Webhook URL" value="https://n8n.xxxxx.com/webhook/mireille" disabled>
-                            <div style="display:flex;gap:8px;">
-                                <span class="badge badge-success">✓ Ativo</span>
+                        <!-- WEBHOOK -->
+                        <div style="margin-bottom:16px;">
+                            <div class="card">
+                                <div class="card-title">🔗 Webhooks & Notificações</div>
+                                <label style="color:#808080;font-size:10px;display:block;margin-bottom:4px;font-weight:600;">WEBHOOK URL</label>
+                                <input type="text" class="input-field" id="supWebhookUrl" placeholder="Webhook URL">
                             </div>
                         </div>
+
+                        <!-- CONTAS E SOLICITAÇÕES -->
+                        <div class="card" style="margin-bottom:16px;">
+                            <div class="card-title" style="color:#d4af37;border-bottom:1px solid rgba(212,175,55,0.2);padding-bottom:6px;margin-bottom:12px;">🔑 Solicitações de Acesso</div>
+                            <div id="supportRequestsList"></div>
+                        </div>
+
+                        <div class="card" style="margin-bottom:16px;">
+                            <div class="card-title" style="color:#d4af37;border-bottom:1px solid rgba(212,175,55,0.2);padding-bottom:6px;margin-bottom:12px;">👥 Profissionais Cadastrados</div>
+                            <div id="supportProfessionalsList"></div>
+                        </div>
+
+                        <button class="btn btn-gold" id="saveSupportConfigBtn" onclick="saveSupportConfig()" style="width:100%;margin-bottom:12px;">💾 Salvar Configurações</button>
                     </div>
 
                     <div class="card" style="border-color:rgba(212,175,55,0.3);">
@@ -997,6 +1043,196 @@
             el.classList.toggle('selected');
         }
 
+        // ===== CONFIGURAÇÃO DE SUPORTE DINÂMICA =====
+        let defaultSupportConfig = {
+            googleClientId: 'xxxxxxxxx.apps.googleusercontent.com',
+            googleClientSecret: 'GOCSPX-xxxxxxxxxxxxxxx',
+            googleCalendarId: 'studio.mireille@gmail.com',
+            evolutionUrl: 'https://api.evolution.xxxx.com',
+            evolutionApiKey: 'evo_xxxxxxxxxxxxxxxxxx',
+            evolutionInstanceName: 'mireille-studio',
+            webhookUrl: 'https://n8n.xxxxx.com/webhook/mireille'
+        };
+
+        let supportConfig = localStorage.getItem('studio_support_config')
+            ? JSON.parse(localStorage.getItem('studio_support_config'))
+            : defaultSupportConfig;
+
+        function renderSupportConfig() {
+            document.getElementById('supGoogleClientId').value = supportConfig.googleClientId;
+            document.getElementById('supGoogleClientSecret').value = supportConfig.googleClientSecret;
+            document.getElementById('supGoogleCalendarId').value = supportConfig.googleCalendarId;
+            document.getElementById('supEvolutionUrl').value = supportConfig.evolutionUrl;
+            document.getElementById('supEvolutionApiKey').value = supportConfig.evolutionApiKey;
+            document.getElementById('supEvolutionInstanceName').value = supportConfig.evolutionInstanceName;
+            document.getElementById('supWebhookUrl').value = supportConfig.webhookUrl;
+        }
+
+        function saveSupportConfig() {
+            supportConfig = {
+                googleClientId: document.getElementById('supGoogleClientId').value.trim(),
+                googleClientSecret: document.getElementById('supGoogleClientSecret').value.trim(),
+                googleCalendarId: document.getElementById('supGoogleCalendarId').value.trim(),
+                evolutionUrl: document.getElementById('supEvolutionUrl').value.trim(),
+                evolutionApiKey: document.getElementById('supEvolutionApiKey').value.trim(),
+                evolutionInstanceName: document.getElementById('supEvolutionInstanceName').value.trim(),
+                webhookUrl: document.getElementById('supWebhookUrl').value.trim()
+            };
+            localStorage.setItem('studio_support_config', JSON.stringify(supportConfig));
+            alert('✅ Configurações de suporte salvas com sucesso!');
+        }
+
+        function checkSupportUnlock() {
+            const key = document.getElementById('supportUnlockKey').value.trim();
+            if (key === 'cconecta2026') {
+                document.getElementById('supportContent').style.display = 'block';
+                document.getElementById('supportLockCard').innerHTML = `
+                    <div class="card-title" style="font-size:14px;color:#22c55e;">🔓 Painel de Suporte Desbloqueado</div>
+                    <p class="card-subtitle">As permissões de escrita, edição de credenciais e controle de acessos estão liberadas.</p>
+                `;
+                renderSupportConfig();
+                renderSupportData();
+                alert('🔓 Acesso de Suporte Técnico Liberado!');
+            }
+        }
+
+        // ===== SOLICITAÇÃO E CADASTRO DE PROFISSIONAIS =====
+        function submitAccessRequest() {
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+            const unit = document.getElementById('regUnit').value;
+
+            if (!name || !email || !phone) {
+                return alert('Por favor, preencha todos os campos.');
+            }
+
+            const requests = localStorage.getItem('studio_requests')
+                ? JSON.parse(localStorage.getItem('studio_requests'))
+                : [];
+
+            const professionals = localStorage.getItem('studio_professionals')
+                ? JSON.parse(localStorage.getItem('studio_professionals'))
+                : [];
+
+            if (professionals.some(p => p.email.toLowerCase() === email.toLowerCase())) {
+                return alert('Este e-mail já possui uma conta ativa.');
+            }
+
+            if (requests.some(r => r.email.toLowerCase() === email.toLowerCase())) {
+                return alert('Já existe uma solicitação pendente para este e-mail.');
+            }
+
+            requests.push({ name, email, phone, unit });
+            localStorage.setItem('studio_requests', JSON.stringify(requests));
+
+            document.getElementById('regName').value = '';
+            document.getElementById('regEmail').value = '';
+            document.getElementById('regPhone').value = '';
+
+            alert('✅ Solicitação enviada com sucesso!\n\nAguarde o suporte técnico CConecta liberar e enviar sua senha randômica.');
+            showScreen('loginAdmin');
+        }
+
+        function renderSupportData() {
+            const reqList = document.getElementById('supportRequestsList');
+            const profList = document.getElementById('supportProfessionalsList');
+            if (!reqList || !profList) return;
+
+            const requests = localStorage.getItem('studio_requests')
+                ? JSON.parse(localStorage.getItem('studio_requests'))
+                : [];
+                
+            if (requests.length === 0) {
+                reqList.innerHTML = `<p style="color:#606060;font-size:12px;text-align:center;">Nenhuma solicitação pendente.</p>`;
+            } else {
+                reqList.innerHTML = requests.map((r, i) => `
+                    <div class="card" style="background:rgba(255,255,255,0.02);padding:12px;margin-bottom:8px;border-color:rgba(212,175,55,0.15);">
+                        <p style="color:white;font-size:13px;font-weight:600;">${r.name}</p>
+                        <p style="color:#b0b0b0;font-size:11px;margin:2px 0;">Email: ${r.email}</p>
+                        <p style="color:#b0b0b0;font-size:11px;margin:2px 0;">WhatsApp: ${r.phone}</p>
+                        <p style="color:#808080;font-size:11px;">Unidade: ${r.unit}</p>
+                        <button class="btn btn-small btn-gold" onclick="approveRequest(${i})" style="margin-top:8px;width:100%;padding:8px 0;font-size:11px;">✔️ Aprovar & Gerar Senha</button>
+                    </div>
+                `).join('');
+            }
+
+            const professionals = localStorage.getItem('studio_professionals')
+                ? JSON.parse(localStorage.getItem('studio_professionals'))
+                : [
+                    {
+                        name: 'Mireille Marques',
+                        email: 'mireille@studio.com',
+                        phone: '(11) 99999-9999',
+                        unit: 'Unidade 1 — Centro',
+                        pass: 'mireille2026'
+                    }
+                  ];
+            if (!localStorage.getItem('studio_professionals')) {
+                localStorage.setItem('studio_professionals', JSON.stringify(professionals));
+            }
+
+            profList.innerHTML = professionals.map((p, i) => `
+                <div class="card" style="background:rgba(255,255,255,0.02);padding:12px;margin-bottom:8px;border-color:rgba(212,175,55,0.15);">
+                    <p style="color:white;font-size:13px;font-weight:600;">${p.name}</p>
+                    <p style="color:#b0b0b0;font-size:11px;margin:2px 0;">Email: ${p.email}</p>
+                    <p style="color:#d4af37;font-size:12px;font-weight:600;margin-top:4px;">Senha: <span style="font-family:monospace;background:rgba(0,0,0,0.3);padding:2px 6px;border-radius:4px;color:#e5c158;">${p.pass}</span></p>
+                    ${p.email !== 'mireille@studio.com' ? `<button class="btn btn-small btn-danger" onclick="deleteProfessional(${i})" style="margin-top:8px;padding:4px 8px;font-size:10px;">Excluir Conta</button>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function approveRequest(index) {
+            const requests = JSON.parse(localStorage.getItem('studio_requests') || '[]');
+            const r = requests[index];
+            
+            const randomCode = Math.floor(1000 + Math.random() * 9000);
+            const generatedPassword = `MM-${randomCode}`;
+            
+            const professionals = localStorage.getItem('studio_professionals')
+                ? JSON.parse(localStorage.getItem('studio_professionals'))
+                : [
+                    {
+                        name: 'Mireille Marques',
+                        email: 'mireille@studio.com',
+                        phone: '(11) 99999-9999',
+                        unit: 'Unidade 1 — Centro',
+                        pass: 'mireille2026'
+                    }
+                  ];
+            
+            professionals.push({
+                name: r.name,
+                email: r.email,
+                phone: r.phone,
+                unit: r.unit,
+                pass: generatedPassword
+            });
+            localStorage.setItem('studio_professionals', JSON.stringify(professionals));
+            
+            requests.splice(index, 1);
+            localStorage.setItem('studio_requests', JSON.stringify(requests));
+            
+            renderSupportData();
+            
+            const message = encodeURIComponent(`Olá ${r.name}! Sua solicitação de acesso para o Stúdio Mireille Marques foi aprovada com sucesso!\n\nSeus dados de login são:\n📧 E-mail: ${r.email}\n🔑 Senha: ${generatedPassword}\n\nAcesse no link do app! 💇‍♀️✨`);
+            const cleanPhone = r.phone.replace(/\D/g, '');
+            const whatsappLink = `https://api.whatsapp.com/send?phone=55${cleanPhone}&text=${message}`;
+            
+            alert(`✅ Acesso Aprovado!\n\nSenha Gerada: ${generatedPassword}\n\nEnviando dados via WhatsApp...`);
+            window.open(whatsappLink, '_blank');
+        }
+
+        function deleteProfessional(index) {
+            const professionals = JSON.parse(localStorage.getItem('studio_professionals') || '[]');
+            const name = professionals[index].name;
+            if (confirm(`Tem certeza que deseja excluir a conta de ${name}?`)) {
+                professionals.splice(index, 1);
+                localStorage.setItem('studio_professionals', JSON.stringify(professionals));
+                renderSupportData();
+            }
+        }
+
         // ===== TEMPLATES DE CAMPANHA =====
         const templates = {
             beleza: {
@@ -1024,6 +1260,15 @@
             if (screenId === 'map') renderUnits();
             if (screenId === 'editEnderecos') renderUnits();
             if (screenId === 'gestao') renderGestaoButtons();
+            if (screenId === 'suporte') {
+                document.getElementById('supportUnlockKey').value = '';
+                document.getElementById('supportContent').style.display = 'none';
+                document.getElementById('supportLockCard').innerHTML = `
+                    <div class="card-title" style="font-size:14px;color:#d4af37;">🔓 Desbloquear Painel de Suporte</div>
+                    <p class="card-subtitle" style="margin-bottom:12px;">Digite a senha do Suporte Técnico CConecta para liberar a edição e controle de contas.</p>
+                    <input type="password" class="input-field" id="supportUnlockKey" placeholder="Senha do Suporte" oninput="checkSupportUnlock()">
+                `;
+            }
         }
 
         function selectTime(element) {
@@ -1068,7 +1313,35 @@
         }
 
         function loginAdmin() {
-            showScreen('dashboard');
+            const email = document.getElementById('adminEmail').value.trim();
+            const pass = document.getElementById('adminPass').value.trim();
+            
+            if (!email || !pass) {
+                return alert('Por favor, preencha o e-mail e a senha.');
+            }
+            
+            const professionals = localStorage.getItem('studio_professionals')
+                ? JSON.parse(localStorage.getItem('studio_professionals'))
+                : [
+                    {
+                        name: 'Mireille Marques',
+                        email: 'mireille@studio.com',
+                        phone: '(11) 99999-9999',
+                        unit: 'Unidade 1 — Centro',
+                        pass: 'mireille2026'
+                    }
+                  ];
+                  
+            const user = professionals.find(p => p.email.toLowerCase() === email.toLowerCase() && p.pass === pass);
+            
+            if (user) {
+                alert(`✨ Bem-vinda de volta, ${user.name}!`);
+                showScreen('dashboard');
+                document.getElementById('adminEmail').value = '';
+                document.getElementById('adminPass').value = '';
+            } else {
+                alert('❌ E-mail ou senha incorretos, ou acesso ainda não liberado pelo suporte.');
+            }
         }
 
         // Inicialização
