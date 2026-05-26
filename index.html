@@ -248,6 +248,10 @@
             <div class="screen active" id="welcome">
                 <div class="content">
                     <div class="welcome-hero">
+                        <div id="clientUserInfo" style="display:none;width:100%;margin-bottom:20px;align-items:center;justify-content:space-between;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.2);padding:10px 14px;border-radius:12px;">
+                            <span style="font-size:12px;color:#d4af37;font-weight:600;">Olá, <span id="loggedClientName">Cliente</span>! ✨</span>
+                            <a href="#" onclick="logoutClient()" style="font-size:11px;color:#ef4444;text-decoration:none;font-weight:600;">Sair</a>
+                        </div>
                         <div class="logo-circle">
                             <img src="logo_mireille.png" alt="Stúdio Mireille Marques" id="logoImg">
                         </div>
@@ -258,9 +262,10 @@
                     </div>
                 </div>
                 <div class="footer">
+                    <button class="btn btn-gold" onclick="checkClientLogin('agenda')">📅 Agendar Horário</button>
+                    <button class="btn btn-secondary" onclick="checkClientLogin('meus')">👤 Meu Histórico</button>
                     <button class="btn btn-primary" onclick="showScreen('map')">📍 Nossas Unidades</button>
-                    <button class="btn btn-gold" onclick="showScreen('agenda')">📅 Agendar Horário</button>
-                    <button class="btn btn-secondary" onclick="showScreen('loginAdmin')">🔐 Acesso Profissional</button>
+                    <button class="btn btn-secondary" style="border-color:rgba(255,255,255,0.08);color:#808080;" onclick="showScreen('loginAdmin')">🔐 Acesso Profissional</button>
                 </div>
             </div>
 
@@ -381,8 +386,8 @@
 
                     <div class="card">
                         <div class="card-title">👤 Seus Dados</div>
-                        <input type="text" class="input-field" placeholder="Seu nome completo">
-                        <input type="tel" class="input-field" placeholder="WhatsApp (11) 99999-9999">
+                        <input type="text" class="input-field" id="confClientName" placeholder="Seu nome completo" disabled>
+                        <input type="tel" class="input-field" id="confClientPhone" placeholder="WhatsApp (11) 99999-9999" disabled>
                     </div>
 
                     <div class="tip-box">
@@ -390,7 +395,7 @@
                     </div>
                 </div>
                 <div class="footer">
-                    <button class="btn btn-gold" onclick="showScreen('sucesso')">✨ Confirmar Agendamento</button>
+                    <button class="btn btn-gold" onclick="createAppointment()">✨ Confirmar Agendamento</button>
                     <button class="btn btn-secondary" onclick="showScreen('horarios')">← Voltar</button>
                 </div>
             </div>
@@ -404,14 +409,14 @@
 
                     <div class="card" style="text-align:center;width:100%;">
                         <p style="color:#b0b0b0;font-size:13px;margin-bottom:8px;">📅 Terça, 27 de Maio</p>
-                        <p style="font-size:36px;font-weight:700;color:#d4af37;margin-bottom:8px;">14:00</p>
+                        <p style="font-size:36px;font-weight:700;color:#d4af37;margin-bottom:8px;" id="successTimeDisplay">14:00</p>
                         <p style="color:#b0b0b0;font-size:13px;">Mireille confirmará a unidade em breve</p>
                     </div>
 
                     <p style="color:#808080;font-size:12px;margin-top:24px;text-align:center;">Fique de olho no WhatsApp! 💛</p>
                 </div>
                 <div class="footer">
-                    <button class="btn btn-gold" onclick="showScreen('meus')">Ver Meus Agendamentos</button>
+                    <button class="btn btn-gold" onclick="showScreen('meus')">Ver Meu Histórico</button>
                     <button class="btn btn-secondary" onclick="showScreen('welcome')">← Início</button>
                 </div>
             </div>
@@ -419,30 +424,14 @@
             <!-- TELA 7: MEUS AGENDAMENTOS -->
             <div class="screen" id="meus">
                 <div class="header">
-                    <button class="header-back" onclick="showScreen('agenda')">←</button>
-                    <div class="header-title">Meus Agendamentos</div>
+                    <button class="header-back" onclick="showScreen('welcome')">←</button>
+                    <div class="header-title">Meu Histórico</div>
                 </div>
-                <div class="content">
-                    <div class="card" style="border-left:4px solid #22c55e;">
-                        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
-                            <div class="card-title">Ter 27/05 • 14:00</div>
-                            <span class="badge badge-success">✓ Confirmado</span>
-                        </div>
-                        <p class="card-subtitle">Corte + Escova • 45 min</p>
-                        <p class="card-subtitle" style="color:#d4af37;margin-top:4px;">📍 Unidade Centro</p>
-                    </div>
-
-                    <div class="card" style="border-left:4px solid #f59e0b;">
-                        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
-                            <div class="card-title">Sex 30/05 • 10:00</div>
-                            <span class="badge badge-warning">⏱ Pendente</span>
-                        </div>
-                        <p class="card-subtitle">Luzes + Hidratação • 2h</p>
-                        <p class="card-subtitle" style="color:#f59e0b;margin-top:4px;">📍 Aguardando confirmação de unidade</p>
-                    </div>
+                <div class="content" id="clientAppointmentsList">
+                    <!-- Inserido dinamicamente via JS -->
                 </div>
                 <div class="footer">
-                    <button class="btn btn-secondary" onclick="showScreen('agenda')">← Voltar</button>
+                    <button class="btn btn-secondary" onclick="showScreen('welcome')">← Voltar</button>
                 </div>
             </div>
 
@@ -542,6 +531,62 @@
                 <div class="footer">
                     <button class="btn btn-gold" onclick="submitAccessRequest()">Enviar Solicitação</button>
                     <button class="btn btn-secondary" onclick="showScreen('loginAdmin')">Voltar ao Login</button>
+                </div>
+            </div>
+
+            <!-- TELA 17: LOGIN CLIENTE -->
+            <div class="screen" id="loginCliente">
+                <div class="content">
+                    <div class="welcome-hero">
+                        <div class="logo-circle" style="width:120px;height:120px;">
+                            <img src="logo_mireille.png" alt="Stúdio Mireille Marques">
+                        </div>
+                        <p class="studio-label">A C E S S O  C L I E N T E</p>
+                        <h1 style="font-size:28px;">Minha Conta</h1>
+                        <p style="font-size:13px;color:#808080;">Acesse para agendar e ver seu histórico</p>
+                        
+                        <div style="width:100%;margin-top:24px;">
+                            <input type="email" class="input-field" id="clientLoginEmail" placeholder="Seu e-mail">
+                            <input type="password" class="input-field" id="clientLoginPass" placeholder="Sua senha de acesso">
+                        </div>
+                        
+                        <p style="margin-top: 20px; font-size: 13px; color: #808080;">
+                            Não tem uma conta? <a href="#" onclick="showScreen('cadastroCliente')" style="color: #d4af37; text-decoration: none; font-weight: 600;">Solicitar Cadastro</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button class="btn btn-gold" onclick="loginCliente()">Entrar</button>
+                    <button class="btn btn-secondary" onclick="showScreen('welcome')">← Início</button>
+                </div>
+            </div>
+
+            <!-- TELA 18: CADASTRO CLIENTE -->
+            <div class="screen" id="cadastroCliente">
+                <div class="header">
+                    <button class="header-back" onclick="showScreen('loginCliente')">←</button>
+                    <div class="header-title">Solicitar Cadastro</div>
+                </div>
+                <div class="content">
+                    <div class="card" style="margin-bottom:16px;text-align:center;">
+                        <div class="card-title">🌸 Criar Conta de Cliente</div>
+                        <p class="card-subtitle" style="font-size:12px;margin-top:6px;">Preencha seus dados. O suporte irá aprovar seu cadastro e enviar sua senha randômica via WhatsApp para você acessar seu histórico.</p>
+                    </div>
+
+                    <div class="card">
+                        <label style="color:#808080;font-size:11px;letter-spacing:0.3px;display:block;margin-bottom:4px;font-weight:600;">NOME COMPLETO</label>
+                        <input type="text" class="input-field" id="clientRegName" placeholder="Seu nome completo" style="margin-bottom:12px;">
+
+                        <label style="color:#808080;font-size:11px;letter-spacing:0.3px;display:block;margin-bottom:4px;font-weight:600;">E-MAIL</label>
+                        <input type="email" class="input-field" id="clientRegEmail" placeholder="seuemail@exemplo.com" style="margin-bottom:12px;">
+
+                        <label style="color:#808080;font-size:11px;letter-spacing:0.3px;display:block;margin-bottom:4px;font-weight:600;">WHATSAPP COM DDD</label>
+                        <input type="tel" class="input-field" id="clientRegPhone" placeholder="Ex: (11) 99999-9999" style="margin-bottom:4px;">
+                    </div>
+                </div>
+                <div class="footer">
+                    <button class="btn btn-gold" onclick="submitClientAccessRequest()">Solicitar Acesso</button>
+                    <button class="btn btn-secondary" onclick="showScreen('loginCliente')">Voltar ao Login</button>
                 </div>
             </div>
 
@@ -1043,6 +1088,212 @@
             el.classList.toggle('selected');
         }
 
+        // ===== CLIENTE LOGADA & AGENDAMENTOS =====
+        let loggedClient = localStorage.getItem('logged_client')
+            ? JSON.parse(localStorage.getItem('logged_client'))
+            : null;
+            
+        let pendingRedirectScreen = null;
+
+        let defaultAppointments = [
+            {
+                clientEmail: 'ana@email.com',
+                clientPhone: '(11) 98765-4321',
+                dateTime: 'Ter 27/05 • 14:00',
+                services: 'Corte + Escova',
+                unit: 'Centro',
+                status: 'Confirmado'
+            },
+            {
+                clientEmail: 'camila@email.com',
+                clientPhone: '(11) 99876-5432',
+                dateTime: 'Sex 30/05 • 10:00',
+                services: 'Luzes + Hidratação',
+                unit: 'Aguardando confirmação',
+                status: 'Pendente'
+            }
+        ];
+
+        let appointments = localStorage.getItem('studio_appointments')
+            ? JSON.parse(localStorage.getItem('studio_appointments'))
+            : defaultAppointments;
+
+        function checkClientLogin(targetScreen) {
+            if (!loggedClient) {
+                pendingRedirectScreen = targetScreen;
+                showScreen('loginCliente');
+            } else {
+                showScreen(targetScreen);
+            }
+        }
+
+        function loginCliente() {
+            const email = document.getElementById('clientLoginEmail').value.trim();
+            const pass = document.getElementById('clientLoginPass').value.trim();
+            
+            if (!email || !pass) {
+                return alert('Por favor, preencha o e-mail e a senha.');
+            }
+            
+            const clients = localStorage.getItem('studio_clients')
+                ? JSON.parse(localStorage.getItem('studio_clients'))
+                : [
+                    {
+                        name: 'Ana Luísa Ferreira',
+                        email: 'ana@email.com',
+                        phone: '(11) 98765-4321',
+                        pass: 'ana2026'
+                    },
+                    {
+                        name: 'Camila Reis',
+                        email: 'camila@email.com',
+                        phone: '(11) 99876-5432',
+                        pass: 'camila2026'
+                    }
+                  ];
+                  
+            const client = clients.find(c => c.email.toLowerCase() === email.toLowerCase() && c.pass === pass);
+            
+            if (client) {
+                loggedClient = client;
+                localStorage.setItem('logged_client', JSON.stringify(loggedClient));
+                alert(`✨ Bem-vinda, ${client.name}!`);
+                
+                document.getElementById('clientLoginEmail').value = '';
+                document.getElementById('clientLoginPass').value = '';
+                
+                updateWelcomeHeader();
+                
+                if (pendingRedirectScreen) {
+                    const screenTo = pendingRedirectScreen;
+                    pendingRedirectScreen = null;
+                    showScreen(screenTo);
+                } else {
+                    showScreen('welcome');
+                }
+            } else {
+                alert('❌ E-mail ou senha incorretos, ou cadastro pendente de aprovação.');
+            }
+        }
+
+        function logoutClient() {
+            loggedClient = null;
+            localStorage.removeItem('logged_client');
+            updateWelcomeHeader();
+            alert('Você saiu da sua conta.');
+            showScreen('welcome');
+        }
+
+        function updateWelcomeHeader() {
+            const userInfo = document.getElementById('clientUserInfo');
+            const nameEl = document.getElementById('loggedClientName');
+            if (loggedClient) {
+                if (userInfo && nameEl) {
+                    userInfo.style.display = 'flex';
+                    nameEl.textContent = loggedClient.name.split(' ')[0];
+                }
+            } else {
+                if (userInfo) userInfo.style.display = 'none';
+            }
+        }
+
+        function submitClientAccessRequest() {
+            const name = document.getElementById('clientRegName').value.trim();
+            const email = document.getElementById('clientRegEmail').value.trim();
+            const phone = document.getElementById('clientRegPhone').value.trim();
+            
+            if (!name || !email || !phone) {
+                return alert('Por favor, preencha todos os campos.');
+            }
+            
+            const requests = localStorage.getItem('studio_client_requests')
+                ? JSON.parse(localStorage.getItem('studio_client_requests'))
+                : [];
+                
+            const clients = localStorage.getItem('studio_clients')
+                ? JSON.parse(localStorage.getItem('studio_clients'))
+                : [
+                    {
+                        name: 'Ana Luísa Ferreira',
+                        email: 'ana@email.com',
+                        phone: '(11) 98765-4321',
+                        pass: 'ana2026'
+                    },
+                    {
+                        name: 'Camila Reis',
+                        email: 'camila@email.com',
+                        phone: '(11) 99876-5432',
+                        pass: 'camila2026'
+                    }
+                  ];
+                
+            if (clients.some(c => c.email.toLowerCase() === email.toLowerCase())) {
+                return alert('Este e-mail já possui uma conta ativa.');
+            }
+            
+            if (requests.some(r => r.email.toLowerCase() === email.toLowerCase())) {
+                return alert('Já existe uma solicitação de cadastro pendente para este e-mail.');
+            }
+            
+            requests.push({ name, email, phone });
+            localStorage.setItem('studio_client_requests', JSON.stringify(requests));
+            
+            document.getElementById('clientRegName').value = '';
+            document.getElementById('clientRegEmail').value = '';
+            document.getElementById('clientRegPhone').value = '';
+            
+            alert('✅ Solicitação de cadastro enviada com sucesso!\n\nO suporte irá liberar seu acesso e enviar a senha via WhatsApp.');
+            showScreen('loginCliente');
+        }
+
+        function renderClientAppointments() {
+            const container = document.getElementById('clientAppointmentsList');
+            if (!container || !loggedClient) return;
+            
+            const myApps = appointments.filter(app => app.clientEmail.toLowerCase() === loggedClient.email.toLowerCase());
+            
+            if (myApps.length === 0) {
+                container.innerHTML = `<p style="color:#808080;font-size:13px;text-align:center;margin-top:40px;">Você ainda não possui atendimentos no histórico. ✨</p>`;
+            } else {
+                container.innerHTML = myApps.map(app => `
+                    <div class="card" style="border-left:4px solid ${app.status === 'Confirmado' ? '#22c55e' : '#f59e0b'};">
+                        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
+                            <div class="card-title">${app.dateTime}</div>
+                            <span class="badge ${app.status === 'Confirmado' ? 'badge-success' : 'badge-warning'}">${app.status === 'Confirmado' ? '✓ Confirmado' : '⏱ Pendente'}</span>
+                        </div>
+                        <p class="card-subtitle">${app.services}</p>
+                        <p class="card-subtitle" style="color:${app.status === 'Confirmado' ? '#d4af37' : '#f59e0b'};margin-top:4px;">📍 Unidade: ${app.unit}</p>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function createAppointment() {
+            const selectedSlot = document.querySelector('.time-slot.selected');
+            const time = selectedSlot ? selectedSlot.textContent : '14:00';
+            
+            const selectedSvcEls = document.querySelectorAll('.service-tag.selected');
+            const svcArray = Array.from(selectedSvcEls).map(el => el.textContent.trim());
+            const servicesText = svcArray.length > 0 ? svcArray.join(', ') : 'Serviço Personalizado';
+            
+            const newApp = {
+                clientEmail: loggedClient ? loggedClient.email : 'anonimo@email.com',
+                clientPhone: loggedClient ? loggedClient.phone : '(11) 99999-9999',
+                dateTime: `Ter 27/05 • ${time}`,
+                services: servicesText,
+                unit: 'Aguardando confirmação',
+                status: 'Pendente'
+            };
+            
+            appointments.push(newApp);
+            localStorage.setItem('studio_appointments', JSON.stringify(appointments));
+            
+            const successTime = document.getElementById('successTimeDisplay');
+            if (successTime) successTime.textContent = time;
+            
+            showScreen('sucesso');
+        }
+
         // ===== CONFIGURAÇÃO DE SUPORTE DINÂMICA =====
         let defaultSupportConfig = {
             googleClientId: 'xxxxxxxxx.apps.googleusercontent.com',
@@ -1139,23 +1390,42 @@
             const profList = document.getElementById('supportProfessionalsList');
             if (!reqList || !profList) return;
 
-            const requests = localStorage.getItem('studio_requests')
+            const requestsProf = localStorage.getItem('studio_requests')
                 ? JSON.parse(localStorage.getItem('studio_requests'))
                 : [];
+            const requestsClient = localStorage.getItem('studio_client_requests')
+                ? JSON.parse(localStorage.getItem('studio_client_requests'))
+                : [];
                 
-            if (requests.length === 0) {
-                reqList.innerHTML = `<p style="color:#606060;font-size:12px;text-align:center;">Nenhuma solicitação pendente.</p>`;
+            let reqHtml = '';
+            if (requestsProf.length === 0 && requestsClient.length === 0) {
+                reqHtml = `<p style="color:#606060;font-size:12px;text-align:center;">Nenhuma solicitação pendente.</p>`;
             } else {
-                reqList.innerHTML = requests.map((r, i) => `
-                    <div class="card" style="background:rgba(255,255,255,0.02);padding:12px;margin-bottom:8px;border-color:rgba(212,175,55,0.15);">
-                        <p style="color:white;font-size:13px;font-weight:600;">${r.name}</p>
-                        <p style="color:#b0b0b0;font-size:11px;margin:2px 0;">Email: ${r.email}</p>
-                        <p style="color:#b0b0b0;font-size:11px;margin:2px 0;">WhatsApp: ${r.phone}</p>
-                        <p style="color:#808080;font-size:11px;">Unidade: ${r.unit}</p>
-                        <button class="btn btn-small btn-gold" onclick="approveRequest(${i})" style="margin-top:8px;width:100%;padding:8px 0;font-size:11px;">✔️ Aprovar & Gerar Senha</button>
-                    </div>
-                `).join('');
+                if (requestsProf.length > 0) {
+                    reqHtml += `<p style="color:#d4af37;font-size:11px;font-weight:600;margin-bottom:6px;">PROFISSIONAIS:</p>`;
+                    reqHtml += requestsProf.map((r, i) => `
+                        <div class="card" style="background:rgba(255,255,255,0.02);padding:10px;margin-bottom:8px;border-color:rgba(212,175,55,0.15);">
+                            <p style="color:white;font-size:12px;font-weight:600;">${r.name}</p>
+                            <p style="color:#b0b0b0;font-size:10px;margin:2px 0;">Email: ${r.email}</p>
+                            <p style="color:#b0b0b0;font-size:10px;margin:2px 0;">WhatsApp: ${r.phone}</p>
+                            <p style="color:#808080;font-size:10px;">Unidade: ${r.unit}</p>
+                            <button class="btn btn-small btn-gold" onclick="approveRequest(${i})" style="margin-top:6px;width:100%;padding:6px 0;font-size:10px;">✔️ Aprovar Profissional</button>
+                        </div>
+                    `).join('');
+                }
+                if (requestsClient.length > 0) {
+                    reqHtml += `<p style="color:#d4af37;font-size:11px;font-weight:600;margin-top:10px;margin-bottom:6px;">CLIENTES:</p>`;
+                    reqHtml += requestsClient.map((c, i) => `
+                        <div class="card" style="background:rgba(255,255,255,0.02);padding:10px;margin-bottom:8px;border-color:rgba(212,175,55,0.15);">
+                            <p style="color:white;font-size:12px;font-weight:600;">${c.name}</p>
+                            <p style="color:#b0b0b0;font-size:10px;margin:2px 0;">Email: ${c.email}</p>
+                            <p style="color:#b0b0b0;font-size:10px;margin:2px 0;">WhatsApp: ${c.phone}</p>
+                            <button class="btn btn-small btn-gold" onclick="approveClientRequest(${i})" style="margin-top:6px;width:100%;padding:6px 0;font-size:10px;">✔️ Aprovar Cliente</button>
+                        </div>
+                    `).join('');
+                }
             }
+            reqList.innerHTML = reqHtml;
 
             const professionals = localStorage.getItem('studio_professionals')
                 ? JSON.parse(localStorage.getItem('studio_professionals'))
@@ -1172,14 +1442,48 @@
                 localStorage.setItem('studio_professionals', JSON.stringify(professionals));
             }
 
-            profList.innerHTML = professionals.map((p, i) => `
-                <div class="card" style="background:rgba(255,255,255,0.02);padding:12px;margin-bottom:8px;border-color:rgba(212,175,55,0.15);">
-                    <p style="color:white;font-size:13px;font-weight:600;">${p.name}</p>
-                    <p style="color:#b0b0b0;font-size:11px;margin:2px 0;">Email: ${p.email}</p>
-                    <p style="color:#d4af37;font-size:12px;font-weight:600;margin-top:4px;">Senha: <span style="font-family:monospace;background:rgba(0,0,0,0.3);padding:2px 6px;border-radius:4px;color:#e5c158;">${p.pass}</span></p>
-                    ${p.email !== 'mireille@studio.com' ? `<button class="btn btn-small btn-danger" onclick="deleteProfessional(${i})" style="margin-top:8px;padding:4px 8px;font-size:10px;">Excluir Conta</button>` : ''}
+            const clients = localStorage.getItem('studio_clients')
+                ? JSON.parse(localStorage.getItem('studio_clients'))
+                : [
+                    {
+                        name: 'Ana Luísa Ferreira',
+                        email: 'ana@email.com',
+                        phone: '(11) 98765-4321',
+                        pass: 'ana2026'
+                    },
+                    {
+                        name: 'Camila Reis',
+                        email: 'camila@email.com',
+                        phone: '(11) 99876-5432',
+                        pass: 'camila2026'
+                    }
+                  ];
+            if (!localStorage.getItem('studio_clients')) {
+                localStorage.setItem('studio_clients', JSON.stringify(clients));
+            }
+
+            let activeHtml = '';
+            activeHtml += `<p style="color:#d4af37;font-size:11px;font-weight:600;margin-bottom:6px;">PROFISSIONAIS CADASTRADOS:</p>`;
+            activeHtml += professionals.map((p, i) => `
+                <div class="card" style="background:rgba(255,255,255,0.02);padding:10px;margin-bottom:6px;border-color:rgba(212,175,55,0.15);">
+                    <p style="color:white;font-size:12px;font-weight:600;">${p.name}</p>
+                    <p style="color:#b0b0b0;font-size:10px;margin:2px 0;">Email: ${p.email}</p>
+                    <p style="color:#d4af37;font-size:11px;font-weight:600;margin-top:2px;">Senha: <span style="font-family:monospace;background:rgba(0,0,0,0.3);padding:2px 4px;border-radius:4px;color:#e5c158;">${p.pass}</span></p>
+                    ${p.email !== 'mireille@studio.com' ? `<button class="btn btn-small btn-danger" onclick="deleteProfessional(${i})" style="margin-top:4px;padding:2px 6px;font-size:9px;">Excluir</button>` : ''}
                 </div>
             `).join('');
+
+            activeHtml += `<p style="color:#d4af37;font-size:11px;font-weight:600;margin-top:10px;margin-bottom:6px;">CLIENTES CADASTRADOS:</p>`;
+            activeHtml += clients.map((c, i) => `
+                <div class="card" style="background:rgba(255,255,255,0.02);padding:10px;margin-bottom:6px;border-color:rgba(212,175,55,0.15);">
+                    <p style="color:white;font-size:12px;font-weight:600;">${c.name}</p>
+                    <p style="color:#b0b0b0;font-size:10px;margin:2px 0;">Email: ${c.email}</p>
+                    <p style="color:#d4af37;font-size:11px;font-weight:600;margin-top:2px;">Senha: <span style="font-family:monospace;background:rgba(0,0,0,0.3);padding:2px 4px;border-radius:4px;color:#e5c158;">${c.pass}</span></p>
+                    <button class="btn btn-small btn-danger" onclick="deleteClient(${i})" style="margin-top:4px;padding:2px 6px;font-size:9px;">Excluir</button>
+                </div>
+            `).join('');
+
+            profList.innerHTML = activeHtml;
         }
 
         function approveRequest(index) {
@@ -1191,15 +1495,7 @@
             
             const professionals = localStorage.getItem('studio_professionals')
                 ? JSON.parse(localStorage.getItem('studio_professionals'))
-                : [
-                    {
-                        name: 'Mireille Marques',
-                        email: 'mireille@studio.com',
-                        phone: '(11) 99999-9999',
-                        unit: 'Unidade 1 — Centro',
-                        pass: 'mireille2026'
-                    }
-                  ];
+                : [];
             
             professionals.push({
                 name: r.name,
@@ -1223,12 +1519,54 @@
             window.open(whatsappLink, '_blank');
         }
 
+        function approveClientRequest(index) {
+            const requests = JSON.parse(localStorage.getItem('studio_client_requests') || '[]');
+            const r = requests[index];
+            
+            const randomCode = Math.floor(1000 + Math.random() * 9000);
+            const generatedPassword = `CLIENT-${randomCode}`;
+            
+            const clients = localStorage.getItem('studio_clients')
+                ? JSON.parse(localStorage.getItem('studio_clients'))
+                : [];
+            
+            clients.push({
+                name: r.name,
+                email: r.email,
+                phone: r.phone,
+                pass: generatedPassword
+            });
+            localStorage.setItem('studio_clients', JSON.stringify(clients));
+            
+            requests.splice(index, 1);
+            localStorage.setItem('studio_client_requests', JSON.stringify(requests));
+            
+            renderSupportData();
+            
+            const message = encodeURIComponent(`Olá ${r.name}! Seu cadastro de cliente no Stúdio Mireille Marques foi aprovada com sucesso!\n\nSeus dados de login são:\n📧 E-mail: ${r.email}\n🔑 Senha: ${generatedPassword}\n\nAcesse no link do app para agendar e ver seu histórico! ✨`);
+            const cleanPhone = r.phone.replace(/\D/g, '');
+            const whatsappLink = `https://api.whatsapp.com/send?phone=55${cleanPhone}&text=${message}`;
+            
+            alert(`✅ Acesso Aprovado!\n\nSenha Gerada: ${generatedPassword}\n\nEnviando dados via WhatsApp...`);
+            window.open(whatsappLink, '_blank');
+        }
+
         function deleteProfessional(index) {
             const professionals = JSON.parse(localStorage.getItem('studio_professionals') || '[]');
             const name = professionals[index].name;
             if (confirm(`Tem certeza que deseja excluir a conta de ${name}?`)) {
                 professionals.splice(index, 1);
                 localStorage.setItem('studio_professionals', JSON.stringify(professionals));
+                renderSupportData();
+            }
+        }
+
+        function deleteClient(index) {
+            const clients = JSON.parse(localStorage.getItem('studio_clients') || '[]');
+            const name = clients[index].name;
+            if (confirm(`Tem certeza que deseja excluir a conta de ${name}?`)) {
+                clients.splice(index, 1);
+                localStorage.setItem('studio_clients', JSON.stringify(clients));
                 renderSupportData();
             }
         }
@@ -1245,7 +1583,7 @@
             },
             maes: {
                 title: '🌷 Dia das Mães',
-                message: 'Mãe merece o mundo!\n\nMimo Especial:\n✨ Hidratação Profunda + Escova + Mimo Premium\n💐 Café & ambiente especial\n📅 Agende agora - Vagas limitadíssimas!'
+                message: 'Mãe merece o world!\n\nMimo Especial:\n✨ Hidratação Profunda + Escova + Mimo Premium\n💐 Café & ambiente especial\n📅 Agende agora - Vagas limitadíssimas!'
             },
             custom: { title: '', message: '' }
         };
@@ -1256,10 +1594,19 @@
             document.getElementById(screenId).classList.add('active');
             document.getElementById('screenContainer').scrollTop = 0;
             if (screenId === 'servicos') renderServices();
-            if (screenId === 'confirmacao') renderClientServices();
+            if (screenId === 'confirmacao') {
+                renderClientServices();
+                const nameInput = document.getElementById('confClientName');
+                const phoneInput = document.getElementById('confClientPhone');
+                if (nameInput && phoneInput && loggedClient) {
+                    nameInput.value = loggedClient.name;
+                    phoneInput.value = loggedClient.phone;
+                }
+            }
             if (screenId === 'map') renderUnits();
             if (screenId === 'editEnderecos') renderUnits();
             if (screenId === 'gestao') renderGestaoButtons();
+            if (screenId === 'meus') renderClientAppointments();
             if (screenId === 'suporte') {
                 document.getElementById('supportUnlockKey').value = '';
                 document.getElementById('supportContent').style.display = 'none';
@@ -1347,6 +1694,7 @@
         // Inicialização
         document.addEventListener('DOMContentLoaded', () => {
             renderUnits();
+            updateWelcomeHeader();
         });
     </script>
 </body>
