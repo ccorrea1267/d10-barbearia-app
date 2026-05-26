@@ -3,16 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>+D10 Salão & Beleza Premium</title>
+    <title>Stúdio Mireille Marques</title>
+    <meta name="description" content="Stúdio Mireille Marques - Salão de Beleza Premium. Agende seu horário online.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Poppins', sans-serif;
@@ -25,748 +22,698 @@
         }
 
         .phone {
-            width: 375px;
-            height: 812px;
-            border: 12px solid #1a1a1a;
-            border-radius: 50px;
-            overflow: hidden;
-            background: #0a0a0f;
-            box-shadow:
-                0 25px 50px rgba(0,0,0,0.9),
-                0 0 100px rgba(212, 175, 55, 0.1),
-                inset 0 1px 0 rgba(255,255,255,0.1);
-            display: flex;
-            flex-direction: column;
-            position: relative;
+            width: 375px; height: 812px;
+            border: 12px solid #1a1a1a; border-radius: 50px;
+            overflow: hidden; background: #0a0a0f;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.9), 0 0 100px rgba(212,175,55,0.1), inset 0 1px 0 rgba(255,255,255,0.1);
+            display: flex; flex-direction: column; position: relative;
         }
-
         .phone::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 40%;
-            height: 30px;
-            background: #1a1a1a;
-            border-radius: 0 0 30px 30px;
-            z-index: 10;
+            content:''; position:absolute; top:0; left:50%; transform:translateX(-50%);
+            width:40%; height:30px; background:#1a1a1a; border-radius:0 0 30px 30px; z-index:10;
         }
 
         .screen-container {
-            display: flex;
-            flex: 1;
-            overflow-y: auto;
-            overflow-x: hidden;
-            background: linear-gradient(180deg, #000000 0%, #0a0a15 100%);
-            flex-direction: column;
-            scroll-behavior: smooth;
+            display:flex; flex:1; overflow-y:auto; overflow-x:hidden;
+            background:linear-gradient(180deg,#000 0%,#0a0a15 100%);
+            flex-direction:column; scroll-behavior:smooth;
         }
-
-        .screen {
-            display: none;
-            flex: 1;
-            flex-direction: column;
-            min-height: 100%;
-            animation: fadeIn 0.4s ease-in-out;
-        }
-
-        .screen.active {
-            display: flex;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+        .screen { display:none; flex:1; flex-direction:column; min-height:100%; animation:fadeIn 0.4s ease-in-out; }
+        .screen.active { display:flex; }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
 
         .header {
-            background: linear-gradient(135deg, #0d0d1a 0%, #0a0a15 100%);
-            padding: 20px 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-            backdrop-filter: blur(10px);
+            background:linear-gradient(135deg,#0d0d1a,#0a0a15); padding:20px 16px;
+            display:flex; align-items:center; gap:12px;
+            border-bottom:1px solid rgba(212,175,55,0.2); backdrop-filter:blur(10px);
         }
-
         .header-back {
-            background: rgba(212, 175, 55, 0.1);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            color: #d4af37;
-            font-size: 20px;
-            cursor: pointer;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 12px;
-            transition: all 0.3s;
+            background:rgba(212,175,55,0.1); border:1px solid rgba(212,175,55,0.3);
+            color:#d4af37; font-size:20px; cursor:pointer; width:36px; height:36px;
+            display:flex; align-items:center; justify-content:center; border-radius:12px; transition:all 0.3s;
         }
+        .header-back:hover { background:rgba(212,175,55,0.2); transform:translateX(-2px); }
+        .header-title { flex:1; font-size:17px; font-weight:600; color:white; letter-spacing:0.5px; }
 
-        .header-back:hover {
-            background: rgba(212, 175, 55, 0.2);
-            transform: translateX(-2px);
-        }
-
-        .header-title {
-            flex: 1;
-            font-size: 18px;
-            font-weight: 600;
-            color: white;
-            letter-spacing: 0.5px;
-        }
-
-        .content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            scroll-behavior: smooth;
-        }
-
+        .content { flex:1; overflow-y:auto; padding:20px; scroll-behavior:smooth; }
         .footer {
-            padding: 16px;
-            border-top: 1px solid rgba(212, 175, 55, 0.1);
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            background: rgba(10, 10, 15, 0.8);
-            backdrop-filter: blur(10px);
+            padding:16px; border-top:1px solid rgba(212,175,55,0.1);
+            display:flex; flex-direction:column; gap:10px;
+            background:rgba(10,10,15,0.8); backdrop-filter:blur(10px);
         }
 
-        ::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: rgba(212, 175, 55, 0.5);
-            border-radius: 2px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #d4af37;
-        }
+        ::-webkit-scrollbar { width:4px; }
+        ::-webkit-scrollbar-track { background:transparent; }
+        ::-webkit-scrollbar-thumb { background:rgba(212,175,55,0.5); border-radius:2px; }
 
         .btn {
-            padding: 16px;
-            border: none;
-            border-radius: 14px;
-            font-weight: 600;
-            font-size: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-            width: 100%;
-            letter-spacing: 0.3px;
-            position: relative;
-            overflow: hidden;
+            padding:16px; border:none; border-radius:14px; font-weight:600; font-size:15px;
+            cursor:pointer; transition:all 0.3s; width:100%; letter-spacing:0.3px;
+            position:relative; overflow:hidden; font-family:inherit;
         }
-
         .btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(255,255,255,0.2);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
+            content:''; position:absolute; top:50%; left:50%; width:0; height:0;
+            background:rgba(255,255,255,0.2); border-radius:50%;
+            transform:translate(-50%,-50%); transition:width 0.6s,height 0.6s;
         }
-
-        .btn:hover::before {
-            width: 300px;
-            height: 300px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #0d0d1a 0%, #0a0a15 100%);
-            color: white;
-            border: 2px solid rgba(212, 175, 55, 0.3);
-        }
-
-        .btn-primary:hover {
-            border-color: #d4af37;
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .btn-gold {
-            background: linear-gradient(135deg, #d4af37 0%, #e5c158 100%);
-            color: #0a0a0f;
-            font-weight: 700;
-            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
-        }
-
-        .btn-gold:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 30px rgba(212, 175, 55, 0.4);
-        }
-
-        .btn-secondary {
-            background: rgba(212, 175, 55, 0.05);
-            color: #d4af37;
-            border: 2px solid rgba(212, 175, 55, 0.2);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(212, 175, 55, 0.1);
-            border-color: #d4af37;
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-            color: white;
-            box-shadow: 0 8px 20px rgba(34, 197, 94, 0.3);
-        }
-
-        .btn-success:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 30px rgba(34, 197, 94, 0.4);
-        }
+        .btn:hover::before { width:300px; height:300px; }
+        .btn-primary { background:linear-gradient(135deg,#0d0d1a,#0a0a15); color:white; border:2px solid rgba(212,175,55,0.3); }
+        .btn-primary:hover { border-color:#d4af37; box-shadow:0 0 20px rgba(212,175,55,0.3); transform:translateY(-2px); }
+        .btn-gold { background:linear-gradient(135deg,#d4af37,#e5c158); color:#0a0a0f; font-weight:700; box-shadow:0 8px 20px rgba(212,175,55,0.3); }
+        .btn-gold:hover { transform:translateY(-3px); box-shadow:0 12px 30px rgba(212,175,55,0.4); }
+        .btn-secondary { background:rgba(212,175,55,0.05); color:#d4af37; border:2px solid rgba(212,175,55,0.2); }
+        .btn-secondary:hover { background:rgba(212,175,55,0.1); border-color:#d4af37; }
+        .btn-success { background:linear-gradient(135deg,#22c55e,#16a34a); color:white; box-shadow:0 8px 20px rgba(34,197,94,0.3); }
+        .btn-success:hover { transform:translateY(-3px); box-shadow:0 12px 30px rgba(34,197,94,0.4); }
+        .btn-danger { background:linear-gradient(135deg,#ef4444,#dc2626); color:white; }
+        .btn-small { padding:8px 14px; font-size:12px; width:auto; }
 
         .card {
-            background: linear-gradient(135deg, rgba(15, 15, 25, 0.8) 0%, rgba(10, 10, 20, 0.8) 100%);
-            border: 1px solid rgba(212, 175, 55, 0.15);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 16px;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s;
+            background:linear-gradient(135deg,rgba(15,15,25,0.8),rgba(10,10,20,0.8));
+            border:1px solid rgba(212,175,55,0.15); border-radius:16px;
+            padding:20px; margin-bottom:16px; backdrop-filter:blur(10px); transition:all 0.3s;
         }
-
         .card:hover {
-            background: linear-gradient(135deg, rgba(25, 25, 40, 0.9) 0%, rgba(15, 15, 30, 0.9) 100%);
-            border-color: rgba(212, 175, 55, 0.3);
-            box-shadow: 0 8px 32px rgba(212, 175, 55, 0.1);
-            transform: translateY(-4px);
+            background:linear-gradient(135deg,rgba(25,25,40,0.9),rgba(15,15,30,0.9));
+            border-color:rgba(212,175,55,0.3); box-shadow:0 8px 32px rgba(212,175,55,0.1); transform:translateY(-4px);
         }
-
-        .card-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: #d4af37;
-            margin-bottom: 6px;
-            letter-spacing: 0.5px;
-        }
-
-        .card-subtitle {
-            font-size: 13px;
-            color: #b0b0b0;
-            line-height: 1.5;
-        }
+        .card-title { font-size:16px; font-weight:700; color:#d4af37; margin-bottom:6px; letter-spacing:0.5px; }
+        .card-subtitle { font-size:13px; color:#b0b0b0; line-height:1.5; }
 
         .logo-circle {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 24px;
-            animation: trainEntry 1.2s cubic-bezier(0.34, 1.56, 0.64, 1), float 3s ease-in-out 1.2s infinite;
-            filter: drop-shadow(0 20px 60px rgba(212, 175, 55, 0.4)) drop-shadow(0 0 40px rgba(212, 175, 55, 0.2));
+            width:160px; height:160px; border-radius:24px; display:flex; align-items:center; justify-content:center;
+            margin:0 auto 24px;
+            animation:trainEntry 1.2s cubic-bezier(0.34,1.56,0.64,1), float 3s ease-in-out 1.2s infinite;
+            filter:drop-shadow(0 20px 60px rgba(212,175,55,0.4)) drop-shadow(0 0 40px rgba(212,175,55,0.2));
         }
-
-        .logo-circle img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            border-radius: 50%;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-
+        .logo-circle img { width:100%; height:100%; object-fit:contain; border-radius:24px; }
+        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
         @keyframes trainEntry {
-            0% {
-                transform: scale(0.1) translateY(80px);
-                opacity: 0;
-                filter: blur(10px);
-            }
-            50% {
-                filter: blur(5px);
-            }
-            100% {
-                transform: scale(1) translateY(0px);
-                opacity: 1;
-                filter: blur(0px);
-            }
-        }
-
-        .template-card {
-            background: linear-gradient(135deg, rgba(15, 15, 25, 0.8) 0%, rgba(10, 10, 20, 0.8) 100%);
-            border: 2px solid rgba(212, 175, 55, 0.15);
-            border-radius: 16px;
-            overflow: hidden;
-            margin-bottom: 16px;
-            cursor: pointer;
-            transition: all 0.4s;
-            backdrop-filter: blur(10px);
-        }
-
-        .template-card:hover {
-            transform: translateY(-8px);
-            border-color: rgba(212, 175, 55, 0.4);
-            box-shadow: 0 16px 40px rgba(212, 175, 55, 0.15);
-        }
-
-        .template-header {
-            padding: 20px;
-            color: white;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .template-header::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, #d4af37, transparent);
-        }
-
-        .template-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 4px;
-            letter-spacing: 0.5px;
-        }
-
-        .template-date {
-            font-size: 12px;
-            opacity: 0.8;
-            letter-spacing: 0.3px;
-        }
-
-        .template-preview {
-            padding: 16px;
-            background: rgba(10, 10, 15, 0.4);
-            border-top: 1px solid rgba(212, 175, 55, 0.1);
-            min-height: 120px;
-            display: flex;
-            align-items: center;
-        }
-
-        .template-preview p {
-            font-size: 12px;
-            color: #d0d0d0;
-            line-height: 1.6;
+            0%{transform:scale(0.1) translateY(80px);opacity:0;filter:blur(10px)}
+            50%{filter:blur(5px)}
+            100%{transform:scale(1) translateY(0);opacity:1;filter:blur(0)}
         }
 
         .welcome-hero {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            text-align: center;
-            padding: 40px 20px;
+            display:flex; flex-direction:column; align-items:center; justify-content:center;
+            height:100%; text-align:center; padding:40px 20px;
         }
-
         .welcome-hero h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 36px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            background: linear-gradient(135deg, #d4af37 0%, #e5c158 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -0.5px;
+            font-family:'Cormorant Garamond',serif; font-size:34px; font-weight:700;
+            margin-bottom:4px;
+            background:linear-gradient(135deg,#d4af37,#e5c158);
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+            letter-spacing:1px;
         }
-
-        .welcome-hero p {
-            color: #b0b0b0;
-            margin-bottom: 16px;
-            font-size: 15px;
-            line-height: 1.6;
+        .welcome-hero .studio-label {
+            font-family:'Poppins',sans-serif; font-size:11px; font-weight:500;
+            color:#d4af37; letter-spacing:4px; text-transform:uppercase; margin-bottom:16px;
         }
-
-        .welcome-hero .subtitle {
-            color: #808080;
-            font-size: 13px;
-            letter-spacing: 1px;
-        }
+        .welcome-hero p { color:#b0b0b0; margin-bottom:16px; font-size:15px; line-height:1.6; }
+        .welcome-hero .subtitle { color:#808080; font-size:13px; letter-spacing:1px; }
 
         .input-field {
-            width: 100%;
-            padding: 14px 16px;
-            border: 2px solid rgba(212, 175, 55, 0.15);
-            border-radius: 12px;
-            font-size: 14px;
-            margin-bottom: 12px;
-            font-family: inherit;
-            background: rgba(10, 10, 20, 0.7);
-            color: #e0e0e0;
-            transition: all 0.3s;
+            width:100%; padding:14px 16px; border:2px solid rgba(212,175,55,0.15);
+            border-radius:12px; font-size:14px; margin-bottom:12px; font-family:inherit;
+            background:rgba(10,10,20,0.7); color:#e0e0e0; transition:all 0.3s;
         }
-
-        .input-field::placeholder {
-            color: #606060;
-        }
-
-        .input-field:focus {
-            outline: none;
-            border-color: #d4af37;
-            background: rgba(15, 15, 30, 0.9);
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
-        }
+        .input-field::placeholder { color:#606060; }
+        .input-field:focus { outline:none; border-color:#d4af37; background:rgba(15,15,30,0.9); box-shadow:0 0 20px rgba(212,175,55,0.2); }
+        select.input-field { appearance:none; cursor:pointer; }
 
         .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(4px);
-            z-index: 100;
-            align-items: center;
-            justify-content: center;
-            animation: fadeInModal 0.3s ease-in-out;
+            display:none; position:fixed; top:0; left:0; right:0; bottom:0;
+            background:rgba(0,0,0,0.7); backdrop-filter:blur(4px); z-index:100;
+            align-items:center; justify-content:center; animation:fadeInModal 0.3s ease-in-out;
         }
-
-        @keyframes fadeInModal {
-            from {
-                opacity: 0;
-                backdrop-filter: blur(0px);
-            }
-            to {
-                opacity: 1;
-                backdrop-filter: blur(4px);
-            }
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
+        @keyframes fadeInModal { from{opacity:0} to{opacity:1} }
+        .modal.active { display:flex; }
         .modal-content {
-            background: linear-gradient(135deg, #0d0d1a 0%, #0a0a15 100%);
-            border: 2px solid rgba(212, 175, 55, 0.3);
-            border-radius: 20px;
-            padding: 24px;
-            max-width: 90%;
-            width: 320px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8);
-            animation: slideUpModal 0.4s ease-out;
+            background:linear-gradient(135deg,#0d0d1a,#0a0a15); border:2px solid rgba(212,175,55,0.3);
+            border-radius:20px; padding:24px; max-width:90%; width:320px;
+            box-shadow:0 25px 50px rgba(0,0,0,0.8); animation:slideUpModal 0.4s ease-out;
+            max-height:80vh; overflow-y:auto;
         }
+        @keyframes slideUpModal { from{transform:translateY(30px);opacity:0} to{transform:translateY(0);opacity:1} }
+        .modal-title { font-size:20px; font-weight:700; color:#d4af37; margin-bottom:12px; text-align:center; }
+        .modal-text { color:#d0d0d0; font-size:14px; line-height:1.6; margin-bottom:20px; text-align:center; }
+        .modal-buttons { display:flex; flex-direction:column; gap:10px; }
 
-        @keyframes slideUpModal {
-            from {
-                transform: translateY(30px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
+        .badge { display:inline-block; padding:6px 12px; border-radius:20px; font-size:11px; font-weight:600; letter-spacing:0.3px; }
+        .badge-success { background:rgba(34,197,94,0.2); color:#22c55e; border:1px solid rgba(34,197,94,0.5); }
+        .badge-warning { background:rgba(245,158,11,0.2); color:#f59e0b; border:1px solid rgba(245,158,11,0.5); }
+        .badge-rose { background:rgba(244,114,182,0.2); color:#f472b6; border:1px solid rgba(244,114,182,0.5); }
 
-        .modal-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #d4af37;
-            margin-bottom: 12px;
-            text-align: center;
-        }
-
-        .modal-text {
-            color: #d0d0d0;
-            font-size: 14px;
-            line-height: 1.6;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .modal-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.3px;
-        }
-
-        .badge-success {
-            background: rgba(34, 197, 94, 0.2);
-            color: #22c55e;
-            border: 1px solid rgba(34, 197, 94, 0.5);
-        }
-
-        .badge-warning {
-            background: rgba(245, 158, 11, 0.2);
-            color: #f59e0b;
-            border: 1px solid rgba(245, 158, 11, 0.5);
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
+        .stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
         .stat-box {
-            padding: 16px;
-            border-radius: 14px;
-            text-align: center;
-            border: 2px solid rgba(212, 175, 55, 0.15);
-            background: rgba(10, 10, 20, 0.7);
-            transition: all 0.3s;
+            padding:16px; border-radius:14px; text-align:center;
+            border:2px solid rgba(212,175,55,0.15); background:rgba(10,10,20,0.7); transition:all 0.3s;
         }
-
-        .stat-box:hover {
-            transform: translateY(-4px);
-            border-color: rgba(212, 175, 55, 0.3);
-        }
-
-        .stat-label {
-            font-size: 11px;
-            color: #808080;
-            margin-bottom: 6px;
-            letter-spacing: 0.3px;
-        }
-
-        .stat-value {
-            font-size: 28px;
-            font-weight: 700;
-            color: #d4af37;
-        }
+        .stat-box:hover { transform:translateY(-4px); border-color:rgba(212,175,55,0.3); }
+        .stat-label { font-size:11px; color:#808080; margin-bottom:6px; letter-spacing:0.3px; }
+        .stat-value { font-size:28px; font-weight:700; color:#d4af37; }
 
         .tip-box {
-            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0.05) 100%);
-            border: 2px solid rgba(212, 175, 55, 0.2);
-            padding: 14px;
-            border-radius: 12px;
-            margin-bottom: 16px;
+            background:linear-gradient(135deg,rgba(212,175,55,0.1),rgba(212,175,55,0.05));
+            border:2px solid rgba(212,175,55,0.2); padding:14px; border-radius:12px; margin-bottom:16px;
         }
+        .tip-box p { color:#d4af37; font-size:12px; margin:0; line-height:1.6; }
 
-        .tip-box p {
-            color: #d4af37;
-            font-size: 12px;
-            margin: 0;
-            line-height: 1.6;
+        .template-card {
+            background:linear-gradient(135deg,rgba(15,15,25,0.8),rgba(10,10,20,0.8));
+            border:2px solid rgba(212,175,55,0.15); border-radius:16px;
+            overflow:hidden; margin-bottom:16px; cursor:pointer; transition:all 0.4s; backdrop-filter:blur(10px);
         }
+        .template-card:hover { transform:translateY(-8px); border-color:rgba(212,175,55,0.4); box-shadow:0 16px 40px rgba(212,175,55,0.15); }
+        .template-header { padding:20px; color:white; text-align:center; position:relative; overflow:hidden; }
+        .template-header::after { content:''; position:absolute; bottom:0; left:0; right:0; height:3px; background:linear-gradient(90deg,transparent,#d4af37,transparent); }
+        .template-title { font-size:18px; font-weight:700; margin-bottom:4px; letter-spacing:0.5px; }
+        .template-date { font-size:12px; opacity:0.8; letter-spacing:0.3px; }
+        .template-preview { padding:16px; background:rgba(10,10,15,0.4); border-top:1px solid rgba(212,175,55,0.1); min-height:100px; display:flex; align-items:center; }
+        .template-preview p { font-size:12px; color:#d0d0d0; line-height:1.6; }
 
-        .campaign-gradient-1 {
-            background: linear-gradient(135deg, #1e3a5f 0%, #0f2438 100%);
-        }
+        .campaign-gradient-1 { background:linear-gradient(135deg,#3d1f3f 0%,#1a0f1a 100%); }
+        .campaign-gradient-2 { background:linear-gradient(135deg,#1e3a5f 0%,#0f2438 100%); }
+        .campaign-gradient-3 { background:linear-gradient(135deg,#4a5a2a 0%,#2a3a1a 100%); }
 
-        .campaign-gradient-2 {
-            background: linear-gradient(135deg, #3d3d3d 0%, #1a1a1a 100%);
-        }
-
-        .campaign-gradient-3 {
-            background: linear-gradient(135deg, #4a5a2a 0%, #2a3a1a 100%);
-        }
-
-        .time-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-
+        .time-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:16px; }
         .time-slot {
-            padding: 14px;
-            border: 2px solid rgba(212, 175, 55, 0.15);
-            border-radius: 12px;
-            text-align: center;
-            cursor: pointer;
-            font-weight: 600;
-            color: #d0d0d0;
-            transition: all 0.3s;
-            background: rgba(10, 10, 20, 0.7);
+            padding:14px; border:2px solid rgba(212,175,55,0.15); border-radius:12px;
+            text-align:center; cursor:pointer; font-weight:600; color:#d0d0d0;
+            transition:all 0.3s; background:rgba(10,10,20,0.7);
         }
+        .time-slot:hover { border-color:#d4af37; background:rgba(212,175,55,0.1); transform:translateY(-2px); }
+        .time-slot.selected { background:linear-gradient(135deg,#d4af37,#e5c158); color:#0a0a0f; border-color:#d4af37; box-shadow:0 8px 20px rgba(212,175,55,0.3); }
+        .time-slot.booked { background:rgba(100,100,100,0.2); color:#606060; cursor:not-allowed; border-color:rgba(100,100,100,0.3); opacity:0.5; }
 
-        .time-slot:hover {
-            border-color: #d4af37;
-            background: rgba(212, 175, 55, 0.1);
-            transform: translateY(-2px);
-        }
+        .section-divider { height:1px; background:linear-gradient(90deg,transparent,rgba(212,175,55,0.2),transparent); margin:20px 0; }
 
-        .time-slot.selected {
-            background: linear-gradient(135deg, #d4af37 0%, #e5c158 100%);
-            color: #0a0a0f;
-            border-color: #d4af37;
-            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+        .address-option {
+            padding:16px; border:2px solid rgba(212,175,55,0.15); border-radius:14px;
+            margin-bottom:10px; cursor:pointer; transition:all 0.3s; background:rgba(10,10,20,0.7);
         }
+        .address-option:hover { border-color:rgba(212,175,55,0.4); background:rgba(212,175,55,0.05); }
+        .address-option.selected { border-color:#d4af37; background:rgba(212,175,55,0.1); box-shadow:0 0 15px rgba(212,175,55,0.2); }
+        .address-option .addr-name { font-size:14px; font-weight:700; color:#d4af37; margin-bottom:4px; }
+        .address-option .addr-detail { font-size:12px; color:#b0b0b0; line-height:1.5; }
 
-        .time-slot.booked {
-            background: rgba(100, 100, 100, 0.2);
-            color: #606060;
-            cursor: not-allowed;
-            border-color: rgba(100, 100, 100, 0.3);
-            opacity: 0.5;
+        .service-tag {
+            display:inline-flex; align-items:center; gap:6px;
+            padding:8px 14px; border-radius:20px; font-size:12px; font-weight:600;
+            background:rgba(212,175,55,0.08); color:#d4af37; border:1px solid rgba(212,175,55,0.2);
+            margin:4px; cursor:pointer; transition:all 0.3s;
         }
+        .service-tag:hover { background:rgba(212,175,55,0.15); }
+        .service-tag.selected { background:rgba(212,175,55,0.2); border-color:#d4af37; }
+        .service-tag .remove-svc { color:#ef4444; font-weight:700; cursor:pointer; margin-left:4px; }
 
-        .section-divider {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.2), transparent);
-            margin: 20px 0;
+        .blurred-section {
+            filter:blur(6px); pointer-events:none; user-select:none; position:relative;
         }
+        .blur-overlay {
+            position:absolute; top:0; left:0; right:0; bottom:0; z-index:5;
+            display:flex; align-items:center; justify-content:center; flex-direction:column;
+            background:rgba(0,0,0,0.3); border-radius:16px;
+        }
+        .blur-overlay span { color:#d4af37; font-size:12px; font-weight:600; letter-spacing:0.5px; }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
+        @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
     </style>
 </head>
 <body>
     <div class="phone">
         <div class="screen-container" id="screenContainer">
+
             <!-- TELA 1: WELCOME -->
             <div class="screen active" id="welcome">
                 <div class="content">
                     <div class="welcome-hero">
                         <div class="logo-circle">
-                            <img src="logo_d10.png" alt="+D10 Salão & Beleza">
+                            <img src="logo_mireille.png" alt="Stúdio Mireille Marques" id="logoImg">
                         </div>
-                        <h1>+D10 Salão & Beleza</h1>
-                        <p>Primeira vez aqui?</p>
-                        <p class="subtitle">BEM-VINDO AO MELHOR</p>
+                        <p class="studio-label">S T Ú D I O</p>
+                        <h1>Mireille Marques</h1>
+                        <p>Beleza que transforma ✨</p>
+                        <p class="subtitle">BEM-VINDA AO SEU ESPAÇO</p>
                     </div>
                 </div>
                 <div class="footer">
-                    <button class="btn btn-primary" onclick="showScreen('map')">📍 Como Chegar?</button>
-                    <button class="btn btn-gold" onclick="showScreen('agenda')">📅 Marcar Horário</button>
-                    <button class="btn btn-secondary" onclick="showScreen('agenda')">Pular</button>
+                    <button class="btn btn-primary" onclick="showScreen('map')">📍 Nossas Unidades</button>
+                    <button class="btn btn-gold" onclick="showScreen('agenda')">📅 Agendar Horário</button>
+                    <button class="btn btn-secondary" onclick="showScreen('loginAdmin')">🔐 Acesso Profissional</button>
                 </div>
             </div>
 
-            <!-- TELA 2: MAPA -->
+            <!-- TELA 2: MAPA / UNIDADES -->
             <div class="screen" id="map">
                 <div class="header">
                     <button class="header-back" onclick="showScreen('welcome')">←</button>
-                    <div class="header-title">Como Chegar</div>
-                    <button class="header-back" onclick="alert('📞 Ligando para +D10 Salão & Beleza...')">📞</button>
+                    <div class="header-title">Nossas Unidades</div>
                 </div>
                 <div class="content">
-                    <div style="height: 220px; background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; box-shadow: 0 12px 40px rgba(212, 175, 55, 0.2);">
-                        <div style="font-size: 80px;">🗺️</div>
+                    <div style="height:180px;background:linear-gradient(135deg,#d4af37,#b8860b);border-radius:16px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;box-shadow:0 12px 40px rgba(212,175,55,0.2);">
+                        <div style="font-size:70px;">💇‍♀️</div>
                     </div>
 
-                    <div class="card">
-                        <div class="card-title">📍 LOCALIZAÇÃO</div>
-                        <p class="card-subtitle"><strong>+D10 Salão & Beleza</strong></p>
+                    <div class="card" onclick="selectAddress(1)" id="addrCard1" style="cursor:pointer;">
+                        <div class="card-title">📍 Unidade 1 — Centro</div>
+                        <p class="card-subtitle"><strong>Stúdio Mireille Marques</strong></p>
                         <p class="card-subtitle">Rua das Flores, 123 • Centro</p>
-                        <p class="card-subtitle">São Paulo - SP | CEP: 01310-100</p>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-title">⏰ HORÁRIOS</div>
                         <p class="card-subtitle">Seg-Sex: 08:00 - 19:00</p>
-                        <p class="card-subtitle">Sábado: 08:00 - 17:00</p>
-                        <p class="card-subtitle" style="color: #ef4444;">Domingo: Fechado</p>
+                        <p class="card-subtitle">Sáb: 08:00 - 17:00</p>
+                    </div>
+
+                    <div class="card" onclick="selectAddress(2)" id="addrCard2" style="cursor:pointer;">
+                        <div class="card-title">📍 Unidade 2 — Jardins</div>
+                        <p class="card-subtitle"><strong>Stúdio Mireille Marques</strong></p>
+                        <p class="card-subtitle">Av. dos Ipês, 456 • Jardins</p>
+                        <p class="card-subtitle">Seg-Sex: 09:00 - 20:00</p>
+                        <p class="card-subtitle">Sáb: 09:00 - 16:00</p>
                     </div>
 
                     <div class="card">
-                        <div class="card-title">🚗 ESTACIONAMENTO</div>
-                        <p class="card-subtitle"><strong>Rua ao lado</strong> • Grátis • ~50m</p>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-title">🚌 TRANSPORTE</div>
-                        <p class="card-subtitle">Linha 101 (150m) • Linha 202 (200m)</p>
+                        <div class="card-title">🚗 Estacionamento</div>
+                        <p class="card-subtitle">Ambas as unidades possuem estacionamento gratuito</p>
                     </div>
 
                     <div class="tip-box">
-                        <p>💡 Chegue 10 min antes! Café premium te espera 😊</p>
+                        <p>💡 A profissional Mireille definirá a unidade ideal para seu atendimento na confirmação!</p>
                     </div>
                 </div>
                 <div class="footer">
                     <button class="btn btn-success" onclick="alert('🗺️ Abrindo Google Maps...')">↗️ Abrir GPS</button>
-                    <button class="btn btn-secondary" onclick="showScreen('agenda')">Próximo</button>
+                    <button class="btn btn-secondary" onclick="showScreen('agenda')">Agendar →</button>
                 </div>
             </div>
 
-            <!-- TELA 3: TEMPLATES CAMPANHAS (DIRETO, SEM REDUNDÂNCIA) -->
-            <div class="screen" id="templatesCampanhas">
+            <!-- TELA 3: AGENDA -->
+            <div class="screen" id="agenda">
                 <div class="header">
-                    <div class="header-title">📢 Campanhas Premium</div>
+                    <div class="header-title">📅 Agendar Horário</div>
                 </div>
                 <div class="content">
-                    <p style="color: #b0b0b0; font-size: 13px; margin-bottom: 20px; letter-spacing: 0.3px;">CLIQUE EM UM TEMPLATE PARA CUSTOMIZAR</p>
+                    <p style="color:#b0b0b0;font-size:13px;margin-bottom:20px;letter-spacing:0.3px;">PRÓXIMOS 7 DIAS</p>
 
-                    <!-- TEMPLATE 1: DIA DAS MÃES -->
-                    <div class="template-card campaign-gradient-1" onclick="editTemplate('mães')">
+                    <div class="card" onclick="showScreen('horarios')" style="cursor:pointer;">
+                        <div class="card-title">📅 Terça - 27 de Maio</div>
+                        <div class="card-subtitle">✓ 4 horários disponíveis</div>
+                    </div>
+                    <div class="card" onclick="showScreen('horarios')" style="cursor:pointer;">
+                        <div class="card-title">📅 Quarta - 28 de Maio</div>
+                        <div class="card-subtitle">✓ 5 horários disponíveis</div>
+                    </div>
+                    <div class="card" onclick="showScreen('horarios')" style="cursor:pointer;">
+                        <div class="card-title">📅 Quinta - 29 de Maio</div>
+                        <div class="card-subtitle">✓ 3 horários disponíveis</div>
+                    </div>
+                    <div class="card" style="opacity:0.5;cursor:not-allowed;">
+                        <div class="card-title">📅 Sexta - 30 de Maio</div>
+                        <div class="card-subtitle">✗ Lotado</div>
+                    </div>
+                    <div class="card" onclick="showScreen('horarios')" style="cursor:pointer;">
+                        <div class="card-title">📅 Sábado - 31 de Maio</div>
+                        <div class="card-subtitle">✓ 2 horários disponíveis</div>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button class="btn btn-secondary" onclick="showScreen('meus')">Meus Agendamentos</button>
+                    <button class="btn btn-secondary" onclick="showScreen('campanhas')">Promoções</button>
+                    <button class="btn btn-secondary" onclick="showScreen('welcome')">← Voltar</button>
+                </div>
+            </div>
+
+            <!-- TELA 4: HORÁRIOS -->
+            <div class="screen" id="horarios">
+                <div class="header">
+                    <button class="header-back" onclick="showScreen('agenda')">←</button>
+                    <div class="header-title">Selecione o Horário</div>
+                </div>
+                <div class="content">
+                    <p style="color:#b0b0b0;font-size:13px;margin-bottom:20px;">Terça - 27 de Maio</p>
+
+                    <p style="font-size:12px;color:#808080;margin-bottom:12px;letter-spacing:0.3px;">MANHÃ</p>
+                    <div class="time-grid">
+                        <div class="time-slot" onclick="selectTime(this)">08:00</div>
+                        <div class="time-slot" onclick="selectTime(this)">09:00</div>
+                        <div class="time-slot booked">10:00</div>
+                    </div>
+
+                    <p style="font-size:12px;color:#808080;margin-bottom:12px;letter-spacing:0.3px;">TARDE</p>
+                    <div class="time-grid">
+                        <div class="time-slot" onclick="selectTime(this)">14:00</div>
+                        <div class="time-slot" onclick="selectTime(this)">15:00</div>
+                        <div class="time-slot" onclick="selectTime(this)">16:00</div>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button class="btn btn-gold" onclick="showScreen('confirmacao')">Próximo: Escolher Serviço</button>
+                    <button class="btn btn-secondary" onclick="showScreen('agenda')">Cancelar</button>
+                </div>
+            </div>
+
+            <!-- TELA 5: CONFIRMAÇÃO -->
+            <div class="screen" id="confirmacao">
+                <div class="header">
+                    <button class="header-back" onclick="showScreen('horarios')">←</button>
+                    <div class="header-title">Confirmar Agendamento</div>
+                </div>
+                <div class="content">
+                    <div class="card">
+                        <div class="card-title">📅 Data & Hora</div>
+                        <p class="card-subtitle">Terça, 27 de Maio • 14:00</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">✂️ Serviço</div>
+                        <div id="serviceTagsClient" style="display:flex;flex-wrap:wrap;margin-top:8px;"></div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">📍 Unidade (a confirmar)</div>
+                        <p class="card-subtitle" style="color:#f59e0b;">A profissional Mireille confirmará a unidade ideal para o seu atendimento via WhatsApp</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">👤 Seus Dados</div>
+                        <input type="text" class="input-field" placeholder="Seu nome completo">
+                        <input type="tel" class="input-field" placeholder="WhatsApp (11) 99999-9999">
+                    </div>
+
+                    <div class="tip-box">
+                        <p>📱 Você receberá a confirmação da unidade e um lembrete no WhatsApp 30 min antes!</p>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button class="btn btn-gold" onclick="showScreen('sucesso')">✨ Confirmar Agendamento</button>
+                    <button class="btn btn-secondary" onclick="showScreen('horarios')">← Voltar</button>
+                </div>
+            </div>
+
+            <!-- TELA 6: SUCESSO -->
+            <div class="screen" id="sucesso">
+                <div class="content" style="display:flex;flex-direction:column;align-items:center;justify-content:center;">
+                    <div style="font-size:80px;margin-bottom:24px;animation:pulse 2s ease-in-out infinite;">✅</div>
+                    <h1 style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:700;background:linear-gradient(135deg,#d4af37,#e5c158);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px;">Agendado!</h1>
+                    <p style="color:#b0b0b0;margin-bottom:32px;text-align:center;">Seu horário foi reservado com sucesso</p>
+
+                    <div class="card" style="text-align:center;width:100%;">
+                        <p style="color:#b0b0b0;font-size:13px;margin-bottom:8px;">📅 Terça, 27 de Maio</p>
+                        <p style="font-size:36px;font-weight:700;color:#d4af37;margin-bottom:8px;">14:00</p>
+                        <p style="color:#b0b0b0;font-size:13px;">Mireille confirmará a unidade em breve</p>
+                    </div>
+
+                    <p style="color:#808080;font-size:12px;margin-top:24px;text-align:center;">Fique de olho no WhatsApp! 💛</p>
+                </div>
+                <div class="footer">
+                    <button class="btn btn-gold" onclick="showScreen('meus')">Ver Meus Agendamentos</button>
+                    <button class="btn btn-secondary" onclick="showScreen('welcome')">← Início</button>
+                </div>
+            </div>
+
+            <!-- TELA 7: MEUS AGENDAMENTOS -->
+            <div class="screen" id="meus">
+                <div class="header">
+                    <button class="header-back" onclick="showScreen('agenda')">←</button>
+                    <div class="header-title">Meus Agendamentos</div>
+                </div>
+                <div class="content">
+                    <div class="card" style="border-left:4px solid #22c55e;">
+                        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
+                            <div class="card-title">Ter 27/05 • 14:00</div>
+                            <span class="badge badge-success">✓ Confirmado</span>
+                        </div>
+                        <p class="card-subtitle">Corte + Escova • 45 min</p>
+                        <p class="card-subtitle" style="color:#d4af37;margin-top:4px;">📍 Unidade Centro</p>
+                    </div>
+
+                    <div class="card" style="border-left:4px solid #f59e0b;">
+                        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
+                            <div class="card-title">Sex 30/05 • 10:00</div>
+                            <span class="badge badge-warning">⏱ Pendente</span>
+                        </div>
+                        <p class="card-subtitle">Luzes + Hidratação • 2h</p>
+                        <p class="card-subtitle" style="color:#f59e0b;margin-top:4px;">📍 Aguardando confirmação de unidade</p>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button class="btn btn-secondary" onclick="showScreen('agenda')">← Voltar</button>
+                </div>
+            </div>
+
+            <!-- TELA 8: PROMOÇÕES CLIENTE -->
+            <div class="screen" id="campanhas">
+                <div class="header">
+                    <button class="header-back" onclick="showScreen('agenda')">←</button>
+                    <div class="header-title">Promoções</div>
+                </div>
+                <div class="content">
+                    <div class="template-card campaign-gradient-1">
                         <div class="template-header">
-                            <p class="template-title">🌸 Dia das Mães</p>
-                            <p class="template-date">MAIO</p>
+                            <p class="template-title">🌸 Dia da Beleza</p>
                         </div>
                         <div class="template-preview">
-                            <p>"Toda mãe merece se sentir especial. Corte Premium + Brinde exclusivo. Vagas limitadas! 📅"</p>
+                            <p>Combo especial: Corte + Escova + Hidratação Profunda com 25% de desconto! Válido até 15/06</p>
                         </div>
                     </div>
 
-                    <!-- TEMPLATE 2: DIA DOS NAMORADOS -->
-                    <div class="template-card campaign-gradient-2" onclick="editTemplate('pais')">
+                    <div class="template-card campaign-gradient-2">
+                        <div class="template-header">
+                            <p class="template-title">⭐ Indicou, Ganhou!</p>
+                        </div>
+                        <div class="template-preview">
+                            <p>Indique uma amiga e ganhe 15% de desconto no seu próximo procedimento. Ela também ganha!</p>
+                        </div>
+                    </div>
+
+                    <div class="template-card campaign-gradient-3">
+                        <div class="template-header">
+                            <p class="template-title">💝 Programa Fidelidade</p>
+                        </div>
+                        <div class="template-preview">
+                            <p>A cada 5 procedimentos, ganhe uma Hidratação Profunda grátis! Pontos acumulados automaticamente</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button class="btn btn-secondary" onclick="showScreen('agenda')">← Voltar</button>
+                </div>
+            </div>
+
+            <!-- TELA 9: LOGIN ADMIN -->
+            <div class="screen" id="loginAdmin">
+                <div class="content">
+                    <div class="welcome-hero">
+                        <div class="logo-circle" style="width:120px;height:120px;">
+                            <img src="logo_mireille.png" alt="Stúdio Mireille Marques">
+                        </div>
+                        <p class="studio-label">A D M I N</p>
+                        <h1 style="font-size:28px;">Mireille Marques</h1>
+                        <p style="font-size:13px;">Painel da Profissional</p>
+                        <div style="width:100%;margin-top:24px;">
+                            <input type="email" class="input-field" id="adminEmail" placeholder="mireille@studio.com">
+                            <input type="password" class="input-field" id="adminPass" placeholder="Senha">
+                        </div>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button class="btn btn-gold" onclick="loginAdmin()">Entrar</button>
+                    <button class="btn btn-secondary" onclick="showScreen('welcome')">← Voltar</button>
+                </div>
+            </div>
+
+            <!-- TELA 10: DASHBOARD -->
+            <div class="screen" id="dashboard">
+                <div class="header">
+                    <div class="header-title">📊 Dashboard</div>
+                    <button class="header-back" onclick="showScreen('welcome')" title="Sair" style="font-size:14px;">⏻</button>
+                </div>
+                <div class="content">
+                    <p style="color:#b0b0b0;font-size:12px;margin-bottom:20px;letter-spacing:0.3px;">TERÇA, 27 DE MAIO DE 2026</p>
+
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <p class="stat-label">AGENDAMENTOS</p>
+                            <p class="stat-value">10</p>
+                        </div>
+                        <div class="stat-box">
+                            <p class="stat-label">CONFIRMADOS</p>
+                            <p class="stat-value">7</p>
+                        </div>
+                        <div class="stat-box">
+                            <p class="stat-label">PENDENTES</p>
+                            <p class="stat-value">2</p>
+                        </div>
+                        <div class="stat-box">
+                            <p class="stat-label">FALTARAM</p>
+                            <p class="stat-value">1</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">📋 Atendimentos Hoje</div>
+                        <div style="margin-top:12px;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(212,175,55,0.1);">
+                                <div>
+                                    <p class="card-title" style="margin:0;font-size:14px;">14:00 - Ana Luísa</p>
+                                    <p class="card-subtitle" style="margin:0;">Corte + Escova</p>
+                                </div>
+                                <span class="badge badge-success">✓</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(212,175,55,0.1);">
+                                <div>
+                                    <p class="card-title" style="margin:0;font-size:14px;">15:30 - Camila Reis</p>
+                                    <p class="card-subtitle" style="margin:0;">Luzes + Hidratação</p>
+                                </div>
+                                <span class="badge badge-warning">⏱</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;">
+                                <div>
+                                    <p class="card-title" style="margin:0;font-size:14px;">17:00 - Juliana Costa</p>
+                                    <p class="card-subtitle" style="margin:0;">Reflexo</p>
+                                </div>
+                                <span class="badge badge-rose">💇‍♀️</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button class="btn btn-secondary" onclick="showScreen('gestao')">📋 Gestão de Agenda</button>
+                    <button class="btn btn-secondary" onclick="showScreen('templatesCampanhas')">📢 Campanhas</button>
+                    <button class="btn btn-secondary" onclick="showScreen('servicos')">✂️ Serviços</button>
+                    <button class="btn btn-secondary" onclick="showScreen('clientes')">👥 Clientes</button>
+                    <button class="btn btn-secondary" onclick="showScreen('suporte')">🔧 Suporte Técnico</button>
+                </div>
+            </div>
+
+            <!-- TELA 11: GESTÃO -->
+            <div class="screen" id="gestao">
+                <div class="header">
+                    <button class="header-back" onclick="showScreen('dashboard')">←</button>
+                    <div class="header-title">Gestão de Agenda</div>
+                </div>
+                <div class="content">
+                    <p style="color:#b0b0b0;font-size:12px;margin-bottom:16px;letter-spacing:0.3px;">DEFINA A UNIDADE DE ATENDIMENTO</p>
+
+                    <div class="card">
+                        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
+                            <div>
+                                <div class="card-title" style="font-size:14px;">14:00 - Ana Luísa</div>
+                                <p class="card-subtitle">Corte + Escova</p>
+                            </div>
+                            <div style="display:flex;gap:6px;">
+                                <button class="btn btn-small" style="background:#22c55e;color:white;" onclick="assignUnit(this,'Centro')">Centro</button>
+                                <button class="btn btn-small" style="background:#3b82f6;color:white;" onclick="assignUnit(this,'Jardins')">Jardins</button>
+                            </div>
+                        </div>
+                        <p class="card-subtitle" style="color:#808080;">📍 <span class="unit-status">Aguardando</span></p>
+                    </div>
+
+                    <div class="card">
+                        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
+                            <div>
+                                <div class="card-title" style="font-size:14px;">15:30 - Camila Reis</div>
+                                <p class="card-subtitle">Luzes + Hidratação</p>
+                            </div>
+                            <div style="display:flex;gap:6px;">
+                                <button class="btn btn-small" style="background:#22c55e;color:white;" onclick="assignUnit(this,'Centro')">Centro</button>
+                                <button class="btn btn-small" style="background:#3b82f6;color:white;" onclick="assignUnit(this,'Jardins')">Jardins</button>
+                            </div>
+                        </div>
+                        <p class="card-subtitle" style="color:#808080;">📍 <span class="unit-status">Aguardando</span></p>
+                    </div>
+
+                    <div class="card">
+                        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
+                            <div>
+                                <div class="card-title" style="font-size:14px;">17:00 - Juliana Costa</div>
+                                <p class="card-subtitle">Reflexo</p>
+                            </div>
+                            <div style="display:flex;gap:6px;">
+                                <button class="btn btn-small" style="background:#22c55e;color:white;" onclick="assignUnit(this,'Centro')">Centro</button>
+                                <button class="btn btn-small" style="background:#3b82f6;color:white;" onclick="assignUnit(this,'Jardins')">Jardins</button>
+                            </div>
+                        </div>
+                        <p class="card-subtitle" style="color:#808080;">📍 <span class="unit-status">Aguardando</span></p>
+                    </div>
+
+                    <div class="tip-box">
+                        <p>💡 Ao definir a unidade, a cliente receberá automaticamente a confirmação via WhatsApp com o endereço!</p>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button class="btn btn-secondary" onclick="showScreen('dashboard')">← Voltar</button>
+                </div>
+            </div>
+
+            <!-- TELA 12: GERENCIAR SERVIÇOS -->
+            <div class="screen" id="servicos">
+                <div class="header">
+                    <button class="header-back" onclick="showScreen('dashboard')">←</button>
+                    <div class="header-title">✂️ Serviços</div>
+                </div>
+                <div class="content">
+                    <p style="color:#b0b0b0;font-size:12px;margin-bottom:16px;letter-spacing:0.3px;">SERVIÇOS ATIVOS</p>
+
+                    <div id="servicesList"></div>
+
+                    <div class="section-divider"></div>
+
+                    <p style="color:#b0b0b0;font-size:12px;margin-bottom:12px;letter-spacing:0.3px;">ADICIONAR NOVO SERVIÇO</p>
+                    <input type="text" class="input-field" id="newServiceName" placeholder="Nome do serviço (ex: Progressiva)">
+                    <button class="btn btn-gold" onclick="addService()">+ Adicionar Serviço</button>
+                </div>
+                <div class="footer">
+                    <button class="btn btn-secondary" onclick="showScreen('dashboard')">← Voltar</button>
+                </div>
+            </div>
+
+            <!-- TELA 13: CAMPANHAS ADMIN -->
+            <div class="screen" id="templatesCampanhas">
+                <div class="header">
+                    <button class="header-back" onclick="showScreen('dashboard')">←</button>
+                    <div class="header-title">📢 Campanhas</div>
+                </div>
+                <div class="content">
+                    <p style="color:#b0b0b0;font-size:13px;margin-bottom:20px;letter-spacing:0.3px;">CLIQUE PARA CUSTOMIZAR</p>
+
+                    <div class="template-card campaign-gradient-1" onclick="editTemplate('beleza')">
+                        <div class="template-header">
+                            <p class="template-title">🌸 Dia da Beleza</p>
+                            <p class="template-date">ESPECIAL</p>
+                        </div>
+                        <div class="template-preview">
+                            <p>"Você merece se sentir radiante. Combo Beleza: Corte + Escova + Hidratação com 25% OFF! ✨"</p>
+                        </div>
+                    </div>
+
+                    <div class="template-card campaign-gradient-2" onclick="editTemplate('namorados')">
                         <div class="template-header">
                             <p class="template-title">💝 Dia dos Namorados</p>
                             <p class="template-date">JUNHO</p>
                         </div>
                         <div class="template-preview">
-                            <p>"Surpreenda quem você ama. Combo Love: Hidratação + Escova + Manicure. Reserve já! 💑"</p>
+                            <p>"Surpreenda! Combo Love: Escova + Manicure + Maquiagem. Fique deslumbrante! 💑"</p>
                         </div>
                     </div>
 
-                    <!-- TEMPLATE 3: DIA DAS CRIANÇAS -->
-                    <div class="template-card campaign-gradient-3" onclick="editTemplate('criancas')">
+                    <div class="template-card campaign-gradient-3" onclick="editTemplate('maes')">
                         <div class="template-header">
-                            <p class="template-title">👦 Dia das Crianças</p>
-                            <p class="template-date">OUTUBRO</p>
+                            <p class="template-title">🌷 Dia das Mães</p>
+                            <p class="template-date">MAIO</p>
                         </div>
                         <div class="template-preview">
-                            <p>"Infância é memória especial. Corte Kids + Brincadeira. Crie memórias lindas! 🎉"</p>
+                            <p>"Mãe merece o mundo. Hidratação + Escova + Mimo Premium. Vagas limitadas! 🌷"</p>
                         </div>
                     </div>
 
                     <div class="section-divider"></div>
 
-                    <!-- CUSTOM 1 -->
-                    <div class="template-card" onclick="editTemplate('custom1')" style="border: 2px dashed rgba(212, 175, 55, 0.4); background: rgba(212, 175, 55, 0.03);">
-                        <div class="template-header" style="background: transparent;">
+                    <div class="template-card" onclick="editTemplate('custom')" style="border:2px dashed rgba(212,175,55,0.4);background:rgba(212,175,55,0.03);">
+                        <div class="template-header" style="background:transparent;">
                             <p class="template-title">➕ Criar Personalizada</p>
-                            <p class="template-date">SEU TEMA</p>
                         </div>
-                        <div class="template-preview" style="background: transparent; border-top: none;">
-                            <p style="color: #808080; text-align: center;">Clique para criar sua própria campanha</p>
-                        </div>
-                    </div>
-
-                    <!-- CUSTOM 2 -->
-                    <div class="template-card" onclick="editTemplate('custom2')" style="border: 2px dashed rgba(212, 175, 55, 0.4); background: rgba(212, 175, 55, 0.03);">
-                        <div class="template-header" style="background: transparent;">
-                            <p class="template-title">➕ Criar Personalizada</p>
-                            <p class="template-date">SEU TEMA</p>
-                        </div>
-                        <div class="template-preview" style="background: transparent; border-top: none;">
-                            <p style="color: #808080; text-align: center;">Clique para criar sua própria campanha</p>
+                        <div class="template-preview" style="background:transparent;border-top:none;">
+                            <p style="color:#808080;text-align:center;">Clique para criar sua própria campanha</p>
                         </div>
                     </div>
                 </div>
@@ -775,12 +722,12 @@
                 </div>
             </div>
 
-            <!-- TELA 4: EDITAR TEMPLATE (MODAL) -->
+            <!-- MODAL: EDITAR TEMPLATE -->
             <div class="modal" id="editTemplateModal">
                 <div class="modal-content">
-                    <p style="font-size: 11px; color: #808080; text-align: center; margin-bottom: 16px; letter-spacing: 1px;">CUSTOMIZAR CAMPANHA</p>
+                    <p style="font-size:11px;color:#808080;text-align:center;margin-bottom:16px;letter-spacing:1px;">CUSTOMIZAR CAMPANHA</p>
                     <input type="text" class="input-field" id="editCampTitle" placeholder="Título da campanha">
-                    <textarea class="input-field" id="editCampMessage" placeholder="Sua mensagem..." style="height: 120px; resize: none;"></textarea>
+                    <textarea class="input-field" id="editCampMessage" placeholder="Sua mensagem..." style="height:120px;resize:none;"></textarea>
                     <div class="tip-box">
                         <p>💡 Use emojis, urgência e CTAs fortes para converter!</p>
                     </div>
@@ -791,325 +738,27 @@
                 </div>
             </div>
 
-            <!-- TELA 5: AGENDA -->
-            <div class="screen" id="agenda">
-                <div class="header">
-                    <div class="header-title">📅 Agenda +D10 Salão & Beleza</div>
-                </div>
-                <div class="content">
-                    <p style="color: #b0b0b0; font-size: 13px; margin-bottom: 20px; letter-spacing: 0.3px;">PRÓXIMOS 7 DIAS</p>
-
-                    <div class="card" onclick="showScreen('horarios')" style="cursor: pointer;">
-                        <div class="card-title">📅 Terça - 25 de Maio</div>
-                        <div class="card-subtitle">✓ 3 horários disponíveis</div>
-                    </div>
-
-                    <div class="card" onclick="showScreen('horarios')" style="cursor: pointer;">
-                        <div class="card-title">📅 Quarta - 26 de Maio</div>
-                        <div class="card-subtitle">✓ 5 horários disponíveis</div>
-                    </div>
-
-                    <div class="card" onclick="showScreen('horarios')" style="cursor: pointer;">
-                        <div class="card-title">📅 Quinta - 27 de Maio</div>
-                        <div class="card-subtitle">✓ 2 horários disponíveis</div>
-                    </div>
-
-                    <div class="card" style="opacity: 0.5; cursor: not-allowed;">
-                        <div class="card-title">📅 Sexta - 28 de Maio</div>
-                        <div class="card-subtitle">✗ Completo</div>
-                    </div>
-                </div>
-                <div class="footer">
-                    <button class="btn btn-secondary" onclick="showScreen('meus')">Meus Agendamentos</button>
-                    <button class="btn btn-secondary" onclick="showScreen('campanhas')">Campanhas</button>
-                    <button class="btn btn-secondary" onclick="showScreen('welcome')">Sair</button>
-                </div>
-            </div>
-
-            <!-- TELA 6: HORÁRIOS -->
-            <div class="screen" id="horarios">
-                <div class="header">
-                    <button class="header-back" onclick="showScreen('agenda')">←</button>
-                    <div class="header-title">Selecione o Horário</div>
-                </div>
-                <div class="content">
-                    <p style="color: #b0b0b0; font-size: 13px; margin-bottom: 20px;">Terça - 25 de Maio</p>
-
-                    <p style="font-size: 12px; color: #808080; margin-bottom: 12px; letter-spacing: 0.3px;">MANHÃ</p>
-                    <div class="time-grid">
-                        <div class="time-slot" onclick="selectTime(this)">08:00</div>
-                        <div class="time-slot" onclick="selectTime(this)">09:00</div>
-                        <div class="time-slot booked">10:00</div>
-                    </div>
-
-                    <p style="font-size: 12px; color: #808080; margin-bottom: 12px; letter-spacing: 0.3px;">TARDE</p>
-                    <div class="time-grid">
-                        <div class="time-slot" onclick="selectTime(this)">14:00</div>
-                        <div class="time-slot" onclick="selectTime(this)">15:00</div>
-                        <div class="time-slot" onclick="selectTime(this)">16:00</div>
-                    </div>
-                </div>
-                <div class="footer">
-                    <button class="btn btn-gold" onclick="showScreen('confirmacao')">Confirmar Horário</button>
-                    <button class="btn btn-secondary" onclick="showScreen('agenda')">Cancelar</button>
-                </div>
-            </div>
-
-            <!-- TELA 7: CONFIRMAÇÃO -->
-            <div class="screen" id="confirmacao">
-                <div class="header">
-                    <button class="header-back" onclick="showScreen('horarios')">←</button>
-                    <div class="header-title">Confirmar Agendamento</div>
-                </div>
-                <div class="content">
-                    <div class="card">
-                        <div class="card-title">📅 Data</div>
-                        <p class="card-subtitle">Terça, 25 de Maio</p>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-title">⏰ Horário</div>
-                        <p class="card-subtitle">14:00</p>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-title">✂️ Serviço</div>
-                        <select class="input-field" style="margin: 0;">
-                            <option>Corte + Escova</option>
-                            <option>Manicure + Pedicure</option>
-                            <option>Coloração Completa</option>
-                            <option>Hidratação & Escova</option>
-                            <option>Maquiagem Social</option>
-                        </select>
-                    </div>
-
-                    <div class="tip-box">
-                        <p>📱 Lembrete no WhatsApp 30 min antes</p>
-                    </div>
-                </div>
-                <div class="footer">
-                    <button class="btn btn-gold" onclick="showScreen('sucesso')">Confirmar</button>
-                    <button class="btn btn-secondary" onclick="showScreen('horarios')">Cancelar</button>
-                </div>
-            </div>
-
-            <!-- TELA 8: SUCESSO -->
-            <div class="screen" id="sucesso">
-                <div class="content" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                    <div style="font-size: 80px; margin-bottom: 24px; animation: pulse 2s ease-in-out infinite;">✅</div>
-                    <h1 style="font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #d4af37 0%, #e5c158 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 12px;">Agendado!</h1>
-                    <p style="color: #b0b0b0; margin-bottom: 32px; text-align: center;">Seu horário foi marcado com sucesso</p>
-
-                    <div class="card" style="text-align: center; width: 100%;">
-                        <p style="color: #b0b0b0; font-size: 13px; margin-bottom: 8px;">📅 Terça, 25 de Maio</p>
-                        <p style="font-size: 36px; font-weight: 700; color: #d4af37; margin-bottom: 8px;">14:00</p>
-                        <p style="color: #b0b0b0; font-size: 13px;">Corte + Escova • 45 min</p>
-                    </div>
-
-                    <p style="color: #808080; font-size: 12px; margin-top: 24px; text-align: center;">Confira o WhatsApp para o lembrete!</p>
-                </div>
-                <div class="footer">
-                    <button class="btn btn-gold" onclick="showScreen('meus')">Ver Meus Agendamentos</button>
-                </div>
-            </div>
-
-            <!-- TELA 9: MEUS AGENDAMENTOS -->
-            <div class="screen" id="meus">
-                <div class="header">
-                    <button class="header-back" onclick="showScreen('agenda')">←</button>
-                    <div class="header-title">Meus Agendamentos</div>
-                </div>
-                <div class="content">
-                    <div class="card" style="border-left: 4px solid #22c55e;">
-                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
-                            <div class="card-title">Terça, 25 de Maio • 14:00</div>
-                            <span class="badge badge-success">✓ Confirmado</span>
-                        </div>
-                        <p class="card-subtitle">Corte + Escova • 45 min</p>
-                    </div>
-
-                    <div class="card" style="border-left: 4px solid #f59e0b;">
-                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
-                            <div class="card-title">Sexta, 28 de Maio • 10:00</div>
-                            <span class="badge badge-warning">⏱ Pendente</span>
-                        </div>
-                        <p class="card-subtitle">Hidratação & Escova • 40 min</p>
-                    </div>
-                </div>
-                <div class="footer">
-                    <button class="btn btn-secondary" onclick="showScreen('agenda')">← Voltar</button>
-                </div>
-            </div>
-
-            <!-- TELA 10: CAMPANHAS CLIENTE -->
-            <div class="screen" id="campanhas">
-                <div class="header">
-                    <button class="header-back" onclick="showScreen('agenda')">←</button>
-                    <div class="header-title">Campanhas</div>
-                </div>
-                <div class="content">
-                    <div class="template-card campaign-gradient-1">
-                        <div class="template-header">
-                            <p class="template-title">🎉 Desconto 20%</p>
-                        </div>
-                        <div class="template-preview">
-                            <p>Aproveite nosso desconto especial em todos os serviços! Válido até 30/05</p>
-                        </div>
-                    </div>
-
-                    <div class="template-card campaign-gradient-2">
-                        <div class="template-header">
-                            <p class="template-title">⭐ Especialista em Mechas</p>
-                        </div>
-                        <div class="template-preview">
-                            <p>Conheça nossa nova profissional especialista em mechas e coloração premium! Reserve já</p>
-                        </div>
-                    </div>
-
-                    <div class="template-card campaign-gradient-3">
-                        <div class="template-header">
-                            <p class="template-title">🎁 Programa Fidelidade</p>
-                        </div>
-                        <div class="template-preview">
-                            <p>A cada 5 cortes, ganhe 1 grátis! Cadastrado automaticamente</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="footer">
-                    <button class="btn btn-secondary" onclick="showScreen('agenda')">← Voltar</button>
-                </div>
-            </div>
-
-            <!-- TELA 11: LOGIN BARBEARIA -->
-            <div class="screen dark-bg" id="loginBarber">
-                <div class="content">
-                    <div class="welcome-hero">
-                        <div class="logo-circle">
-                            <img src="logo_d10.png" alt="+D10 Salão & Beleza">
-                        </div>
-                        <h1>+D10 Admin</h1>
-                        <p>Gerenciador +D10 Salão & Beleza</p>
-                        <div style="width: 100%; margin-top: 32px;">
-                            <input type="email" class="input-field" placeholder="admin@d10salao.com" value="admin@d10salao.com">
-                            <input type="password" class="input-field" placeholder="Senha">
-                        </div>
-                    </div>
-                </div>
-                <div class="footer">
-                    <button class="btn btn-gold" onclick="showScreen('dashboard')">Entrar</button>
-                    <button class="btn btn-secondary" onclick="showScreen('welcome')">← Voltar</button>
-                </div>
-            </div>
-
-            <!-- TELA 12: DASHBOARD -->
-            <div class="screen" id="dashboard">
-                <div class="header">
-                    <div class="header-title">📊 Dashboard</div>
-                </div>
-                <div class="content">
-                    <p style="color: #b0b0b0; font-size: 12px; margin-bottom: 20px; letter-spacing: 0.3px;">TERÇA, 25 DE MAIO</p>
-
-                    <div class="stats-grid">
-                        <div class="stat-box">
-                            <p class="stat-label">AGENDAMENTOS</p>
-                            <p class="stat-value">8</p>
-                        </div>
-                        <div class="stat-box">
-                            <p class="stat-label">CONFIRMADOS</p>
-                            <p class="stat-value">6</p>
-                        </div>
-                        <div class="stat-box">
-                            <p class="stat-label">PENDENTES</p>
-                            <p class="stat-value">2</p>
-                        </div>
-                        <div class="stat-box">
-                            <p class="stat-label">NÃO VIERAM</p>
-                            <p class="stat-value">1</p>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-title">📋 Agendamentos Hoje</div>
-                        <div style="margin-top: 12px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(212, 175, 55, 0.1);">
-                                <div>
-                                    <p class="card-title" style="margin: 0; font-size: 14px;">14:00 - João Silva</p>
-                                    <p class="card-subtitle" style="margin: 0;">Corte + Escova</p>
-                                </div>
-                                <span class="badge badge-success">✓</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0;">
-                                <div>
-                                    <p class="card-title" style="margin: 0; font-size: 14px;">15:00 - Maria Costa</p>
-                                    <p class="card-subtitle" style="margin: 0;">Manicure + Pedicure</p>
-                                </div>
-                                <span class="badge badge-warning">⏱</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="footer">
-                    <button class="btn btn-secondary" onclick="showScreen('templatesCampanhas')">📢 Campanhas Premium</button>
-                    <button class="btn btn-secondary" onclick="showScreen('gestao')">⚙️ Gestão</button>
-                    <button class="btn btn-secondary" onclick="showScreen('clientes')">👥 Clientes</button>
-                    <button class="btn btn-secondary" onclick="showScreen('welcome')">← Sair</button>
-                </div>
-            </div>
-
-            <!-- TELA 13: GESTÃO -->
-            <div class="screen" id="gestao">
-                <div class="header">
-                    <button class="header-back" onclick="showScreen('dashboard')">←</button>
-                    <div class="header-title">Gestão de Agenda</div>
-                </div>
-                <div class="content">
-                    <div class="card">
-                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
-                            <div class="card-title">14:00 - João Silva</div>
-                            <div style="display: flex; gap: 6px;">
-                                <button class="btn" style="padding: 6px 10px; background: #22c55e; color: white; font-size: 12px; font-weight: 700;">✓</button>
-                                <button class="btn" style="padding: 6px 10px; background: #ef4444; color: white; font-size: 12px; font-weight: 700;">✗</button>
-                            </div>
-                        </div>
-                        <p class="card-subtitle">Corte + Escova • 45 min</p>
-                    </div>
-
-                    <div class="card">
-                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
-                            <div class="card-title">15:00 - Maria Costa</div>
-                            <div style="display: flex; gap: 6px;">
-                                <button class="btn" style="padding: 6px 10px; background: #22c55e; color: white; font-size: 12px; font-weight: 700;">✓</button>
-                                <button class="btn" style="padding: 6px 10px; background: #ef4444; color: white; font-size: 12px; font-weight: 700;">✗</button>
-                            </div>
-                        </div>
-                        <p class="card-subtitle">Manicure + Pedicure • 40 min</p>
-                    </div>
-                </div>
-                <div class="footer">
-                    <button class="btn btn-secondary" onclick="showScreen('dashboard')">← Voltar</button>
-                </div>
-            </div>
-
             <!-- TELA 14: CLIENTES -->
             <div class="screen" id="clientes">
                 <div class="header">
                     <button class="header-back" onclick="showScreen('dashboard')">←</button>
-                    <div class="header-title">Lista de Clientes</div>
+                    <div class="header-title">👥 Clientes</div>
                 </div>
                 <div class="content">
                     <div class="card">
-                        <div class="card-title">João Silva</div>
-                        <p class="card-subtitle">(11) 98765-4321 • joao@email.com</p>
+                        <div class="card-title">Ana Luísa Ferreira</div>
+                        <p class="card-subtitle">(11) 98765-4321 • ana@email.com</p>
+                        <p class="card-subtitle" style="color:#d4af37;margin-top:4px;">⭐ 12 atendimentos</p>
                     </div>
-
                     <div class="card">
-                        <div class="card-title">Maria Costa</div>
-                        <p class="card-subtitle">(11) 99876-5432 • maria@email.com</p>
+                        <div class="card-title">Camila Reis</div>
+                        <p class="card-subtitle">(11) 99876-5432 • camila@email.com</p>
+                        <p class="card-subtitle" style="color:#d4af37;margin-top:4px;">⭐ 8 atendimentos</p>
                     </div>
-
                     <div class="card">
-                        <div class="card-title">Pedro Santos</div>
-                        <p class="card-subtitle">(11) 97654-3210 • pedro@email.com</p>
+                        <div class="card-title">Juliana Costa</div>
+                        <p class="card-subtitle">(11) 97654-3210 • juliana@email.com</p>
+                        <p class="card-subtitle" style="color:#d4af37;margin-top:4px;">⭐ 5 atendimentos</p>
                     </div>
                 </div>
                 <div class="footer">
@@ -1117,36 +766,176 @@
                     <button class="btn btn-secondary" onclick="showScreen('dashboard')">← Voltar</button>
                 </div>
             </div>
+
+            <!-- TELA 15: SUPORTE TÉCNICO (BLOQUEADA) -->
+            <div class="screen" id="suporte">
+                <div class="header">
+                    <button class="header-back" onclick="showScreen('dashboard')">←</button>
+                    <div class="header-title">🔧 Suporte Técnico</div>
+                </div>
+                <div class="content">
+                    <div class="tip-box" style="border-color:rgba(239,68,68,0.3);background:linear-gradient(135deg,rgba(239,68,68,0.1),rgba(239,68,68,0.05));">
+                        <p style="color:#ef4444;">🔒 Área restrita ao suporte técnico CConecta. Solicite acesso pelo WhatsApp.</p>
+                    </div>
+
+                    <!-- GOOGLE CALENDAR -->
+                    <div style="position:relative;margin-bottom:16px;">
+                        <div class="blur-overlay">
+                            <span>🔐 ACESSO RESTRITO</span>
+                        </div>
+                        <div class="card blurred-section">
+                            <div class="card-title">📅 Google Calendar API</div>
+                            <input type="text" class="input-field" placeholder="Client ID" value="xxxxxxxxx.apps.googleusercontent.com" disabled>
+                            <input type="text" class="input-field" placeholder="Client Secret" value="GOCSPX-xxxxxxxxxxxxxxx" disabled>
+                            <input type="text" class="input-field" placeholder="Calendar ID" value="studio.mireille@gmail.com" disabled>
+                            <div style="display:flex;gap:8px;">
+                                <span class="badge badge-success">✓ Conectado</span>
+                                <span class="badge badge-warning">Sincronização: 5min</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- EVOLUTION API -->
+                    <div style="position:relative;margin-bottom:16px;">
+                        <div class="blur-overlay">
+                            <span>🔐 ACESSO RESTRITO</span>
+                        </div>
+                        <div class="card blurred-section">
+                            <div class="card-title">📱 EvolutionAPI (WhatsApp)</div>
+                            <input type="text" class="input-field" placeholder="URL da Instância" value="https://api.evolution.xxxx.com" disabled>
+                            <input type="text" class="input-field" placeholder="API Key" value="evo_xxxxxxxxxxxxxxxxxx" disabled>
+                            <input type="text" class="input-field" placeholder="Nome da Instância" value="mireille-studio" disabled>
+                            <div style="display:flex;gap:8px;">
+                                <span class="badge badge-success">✓ Online</span>
+                                <span class="badge badge-rose">WhatsApp: +55 11 9xxxx</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- WEBHOOK -->
+                    <div style="position:relative;margin-bottom:16px;">
+                        <div class="blur-overlay">
+                            <span>🔐 ACESSO RESTRITO</span>
+                        </div>
+                        <div class="card blurred-section">
+                            <div class="card-title">🔗 Webhooks & Notificações</div>
+                            <input type="text" class="input-field" placeholder="Webhook URL" value="https://n8n.xxxxx.com/webhook/mireille" disabled>
+                            <div style="display:flex;gap:8px;">
+                                <span class="badge badge-success">✓ Ativo</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="border-color:rgba(212,175,55,0.3);">
+                        <div class="card-title">📞 Contato Suporte</div>
+                        <p class="card-subtitle">Para configurar ou alterar integrações, entre em contato com o suporte técnico CConecta.</p>
+                        <button class="btn btn-primary" style="margin-top:12px;" onclick="alert('📱 Abrindo WhatsApp do Suporte CConecta...')">💬 Chamar Suporte</button>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button class="btn btn-secondary" onclick="showScreen('dashboard')">← Voltar</button>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <script>
+        // ===== SERVIÇOS DINÂMICOS =====
+        let services = [
+            'Corte', 'Escova', 'Corte + Escova', 'Reflexo', 'Luzes',
+            'Hidratação Profunda', 'Tratamento Capilar', 'Coloração',
+            'Design de Sobrancelha', 'Maquiagem Social'
+        ];
+
+        function renderServices() {
+            const list = document.getElementById('servicesList');
+            if (!list) return;
+            list.innerHTML = services.map((s, i) => `
+                <div class="card" style="padding:14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
+                    <span style="color:#e0e0e0;font-size:14px;font-weight:500;">✂️ ${s}</span>
+                    <button class="btn btn-small btn-danger" onclick="removeService(${i})" style="padding:6px 10px;">✕</button>
+                </div>
+            `).join('');
+        }
+
+        function addService() {
+            const input = document.getElementById('newServiceName');
+            const name = input.value.trim();
+            if (!name) return alert('Digite o nome do serviço.');
+            if (services.includes(name)) return alert('Serviço já existe.');
+            services.push(name);
+            input.value = '';
+            renderServices();
+            renderClientServices();
+            alert(`✅ Serviço "${name}" adicionado com sucesso!`);
+        }
+
+        function removeService(index) {
+            const name = services[index];
+            if (confirm(`Remover o serviço "${name}"?`)) {
+                services.splice(index, 1);
+                renderServices();
+                renderClientServices();
+            }
+        }
+
+        function renderClientServices() {
+            const container = document.getElementById('serviceTagsClient');
+            if (!container) return;
+            container.innerHTML = services.map(s => `
+                <div class="service-tag" onclick="toggleServiceTag(this)">${s}</div>
+            `).join('');
+        }
+
+        function toggleServiceTag(el) {
+            el.classList.toggle('selected');
+        }
+
+        // ===== TEMPLATES DE CAMPANHA =====
         const templates = {
-            mães: {
-                title: '🌸 Dia das Mães',
-                message: 'Mãe: A mulher que cria, cuida e se dedica.\n\nNeste dia especial, ela merece se sentir tão linda quanto é.\n\n✨ Hidratação Profunda + Penteado & Escova\n💝 Brinde exclusivo + Mimo Especial\n📅 Agende agora - Vagas limitadas!'
+            beleza: {
+                title: '🌸 Dia da Beleza',
+                message: 'Você merece se sentir radiante!\n\nCombo Beleza Especial:\n✨ Corte + Escova + Hidratação Profunda\n💛 25% OFF exclusivo\n📅 Vagas limitadas!\n\nAgende pelo app ou chame no WhatsApp!'
             },
-            pais: {
+            namorados: {
                 title: '💝 Dia dos Namorados',
-                message: 'Surpreenda quem você ama neste Dia dos Namorados!\n\nUm visual impecável para celebrar o amor.\n\n✨ Combo Especial: Escova + Manicure + Design de Sobrancelha\n🥂 Espumante cortesia durante o atendimento\n🎁 Agende agora e ganhe um voucher surpresa!'
+                message: 'Surpreenda quem você ama!\n\nCombo Love:\n💇‍♀️ Escova + Maquiagem + Design de Sobrancelha\n🥂 Espumante cortesia no atendimento\n🎁 Agende e ganhe um voucher surpresa!'
             },
-            criancas: {
-                title: '👦 Dia das Crianças',
-                message: 'Infância é memória. Faça dela especial.\n\nSeu pequeno merece um visual divertido.\n\n✂️ Corte Infantil + Penteado Divertido (Trança/Gel Colorido)\n🎉 Brincadeira e Doces no Final\n🏆 Certificado de "Pequeno Estiloso" + Brinde!'
+            maes: {
+                title: '🌷 Dia das Mães',
+                message: 'Mãe merece o mundo!\n\nMimo Especial:\n✨ Hidratação Profunda + Escova + Mimo Premium\n💐 Café & ambiente especial\n📅 Agende agora - Vagas limitadíssimas!'
             },
-            custom1: { title: '', message: '' },
-            custom2: { title: '', message: '' }
+            custom: { title: '', message: '' }
         };
 
+        // ===== NAVEGAÇÃO =====
         function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
             document.getElementById('screenContainer').scrollTop = 0;
+            if (screenId === 'servicos') renderServices();
+            if (screenId === 'confirmacao') renderClientServices();
         }
 
         function selectTime(element) {
             document.querySelectorAll('.time-slot:not(.booked)').forEach(s => s.classList.remove('selected'));
             element.classList.add('selected');
+        }
+
+        function selectAddress(num) {
+            document.getElementById('addrCard1').style.borderColor = num === 1 ? '#d4af37' : 'rgba(212,175,55,0.15)';
+            document.getElementById('addrCard2').style.borderColor = num === 2 ? '#d4af37' : 'rgba(212,175,55,0.15)';
+            document.getElementById('addrCard1').style.boxShadow = num === 1 ? '0 0 15px rgba(212,175,55,0.2)' : 'none';
+            document.getElementById('addrCard2').style.boxShadow = num === 2 ? '0 0 15px rgba(212,175,55,0.2)' : 'none';
+        }
+
+        function assignUnit(btn, unit) {
+            const card = btn.closest('.card');
+            const statusEl = card.querySelector('.unit-status');
+            statusEl.textContent = `Unidade ${unit} ✓`;
+            statusEl.style.color = '#22c55e';
+            alert(`✅ Cliente notificada via WhatsApp!\n📍 Unidade: ${unit}`);
         }
 
         function editTemplate(templateId) {
@@ -1162,8 +951,12 @@
 
         function saveCampaign() {
             const title = document.getElementById('editCampTitle').value || 'Campanha';
-            alert(`✅ Campanha enviada!\n\n"${title}"\n\nPara 8 clientes via WhatsApp + Push`);
+            alert(`✅ Campanha enviada!\n\n"${title}"\n\nPara clientes via WhatsApp`);
             closeModal();
+            showScreen('dashboard');
+        }
+
+        function loginAdmin() {
             showScreen('dashboard');
         }
     </script>
