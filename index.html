@@ -771,7 +771,7 @@
                     <div class="card" id="supportLockCard" style="border-color:#d4af37;background:rgba(212,175,55,0.05);margin-bottom:20px;">
                         <div class="card-title" style="font-size:14px;color:#d4af37;">🔓 Desbloquear Painel de Suporte</div>
                         <p class="card-subtitle" style="margin-bottom:12px;">Digite a senha do Suporte Técnico CConecta para liberar a edição e controle de contas.</p>
-                        <input type="password" class="input-field" id="supportUnlockKey" placeholder="Senha do Suporte" onkeydown="if(event.key === 'Enter') unlockSupport()" style="margin-bottom:10px;">
+                        <input type="password" class="input-field" id="supportUnlockKey" placeholder="Senha do Suporte (suporte2026)" onkeydown="if(event.key === 'Enter') unlockSupport()" style="margin-bottom:10px;">
                         <button class="btn btn-gold" onclick="unlockSupport()">Entrar no Painel</button>
                     </div>
 
@@ -832,7 +832,7 @@
                     <div class="card" style="border-color:rgba(212,175,55,0.3);">
                         <div class="card-title">📞 Contato Suporte</div>
                         <p class="card-subtitle">Para configurar ou alterar integrações, entre em contato com o suporte técnico CConecta.</p>
-                        <button class="btn btn-primary" style="margin-top:12px;" onclick="alert('📱 Abrindo WhatsApp do Suporte CConecta...')">💬 Chamar Suporte</button>
+                        <button class="btn btn-primary" style="margin-top:12px;" onclick="window.open('https://api.whatsapp.com/send?phone=5511999999999&text=Olá! Preciso de suporte técnico para o aplicativo do Stúdio Mireille Marques.', '_blank')">💬 Chamar Suporte</button>
                     </div>
                 </div>
                 <div class="footer">
@@ -1334,7 +1334,7 @@
 
         function unlockSupport() {
             const key = document.getElementById('supportUnlockKey').value.trim();
-            if (key === 'cconecta2026') {
+            if (key === 'suporte2026') {
                 document.getElementById('supportContent').style.display = 'block';
                 document.getElementById('supportLockCard').innerHTML = `
                     <div class="card-title" style="font-size:14px;color:#22c55e;">🔓 Painel de Suporte Desbloqueado</div>
@@ -1630,7 +1630,7 @@
                 document.getElementById('supportLockCard').innerHTML = `
                     <div class="card-title" style="font-size:14px;color:#d4af37;">🔓 Desbloquear Painel de Suporte</div>
                     <p class="card-subtitle" style="margin-bottom:12px;">Digite a senha do Suporte Técnico CConecta para liberar a edição e controle de contas.</p>
-                    <input type="password" class="input-field" id="supportUnlockKey" placeholder="Senha do Suporte" onkeydown="if(event.key === 'Enter') unlockSupport()" style="margin-bottom:10px;">
+                    <input type="password" class="input-field" id="supportUnlockKey" placeholder="Senha do Suporte (suporte2026)" onkeydown="if(event.key === 'Enter') unlockSupport()" style="margin-bottom:10px;">
                     <button class="btn btn-gold" onclick="unlockSupport()">Entrar no Painel</button>
                 `;
             }
