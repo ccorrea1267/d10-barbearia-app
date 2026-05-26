@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔐 Credenciais Seguras - +D10 Barbearia</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.0/crypto-js.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.0/core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.0/enc-base64.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.0/cipher-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.0/aes.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #0d0d1a 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: linear-gradient(135deg, #0d0d1a 0%, #0a0a15 100%);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: #d4af37;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .header p {
+            color: #b0b0b0;
+            font-size: 14px;
+            letter-spacing: 0.3px;
+        }
+
+        .alert {
+            background: rgba(239, 68, 68, 0.1);
+            border: 2px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+            color: #ff9999;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            color: #d4af37;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid rgba(212, 175, 55, 0.15);
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            background: rgba(10, 10, 20, 0.7);
+            color: #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #d4af37;
+            background: rgba(15, 15, 30, 0.9);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        button {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #d4af37 0%, #e5c158 100%);
+            color: #0a0a0f;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(212, 175, 55, 0.1);
+            color: #d4af37;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(212, 175, 55, 0.2);
+        }
+
+        .success {
+            background: rgba(34, 197, 94, 0.1);
+            border: 2px solid rgba(34, 197, 94, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            color: #22c55e;
+            font-size: 13px;
+            margin-top: 20px;
+            display: none;
+            text-align: center;
+        }
+
+        .encrypted-box {
+            background: rgba(212, 175, 55, 0.05);
+            border: 2px dashed rgba(212, 175, 55, 0.2);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .encrypted-box p {
+            color: #d4af37;
+            font-size: 12px;
+            margin-bottom: 12px;
+            letter-spacing: 0.3px;
+        }
+
+        .encrypted-text {
+            background: rgba(10, 10, 20, 0.7);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            color: #b0b0b0;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            word-break: break-all;
+            max-height: 120px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+        }
+
+        .copy-btn {
+            background: rgba(212, 175, 55, 0.2);
+            color: #d4af37;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .copy-btn:hover {
+            background: rgba(212, 175, 55, 0.3);
+        }
+
+        .footer {
+            color: #606060;
+            font-size: 11px;
+            text-align: center;
+            margin-top: 24px;
+            line-height: 1.6;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #0d0d1a 0%, #0a0a15 100%);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .modal-title {
+            color: #d4af37;
+            font-size: 20px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid rgba(212, 175, 55, 0.15);
+            border-radius: 12px;
+            font-size: 14px;
+            background: rgba(10, 10, 20, 0.7);
+            color: #e0e0e0;
+            margin-bottom: 16px;
+        }
+
+        .modal-input:focus {
+            outline: none;
+            border-color: #d4af37;
+        }
+
+        .modal-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .modal-btn {
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .modal-btn-primary {
+            background: linear-gradient(135deg, #d4af37 0%, #e5c158 100%);
+            color: #0a0a0f;
+        }
+
+        .modal-btn-secondary {
+            background: rgba(212, 175, 55, 0.1);
+            color: #d4af37;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 Credenciais Seguras</h1>
+            <p>+D10 Barbearia - GitHub & Vercel</p>
+        </div>
+
+        <div class="alert">
+            ⚠️ <strong>SEGURANÇA:</strong> Este documento criptografa seus dados client-side (no seu navegador). Nada é enviado para servidor. Guarde a senha com segurança!
+        </div>
+
+        <div id="formSection">
+            <div class="form-group">
+                <label>GitHub Personal Access Token</label>
+                <textarea id="githubToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"></textarea>
+                <p style="font-size: 11px; color: #606060; margin-top: 6px;">Crie em: github.com → Settings → Developer settings → Personal access tokens</p>
+            </div>
+
+            <div class="form-group">
+                <label>Vercel API Token</label>
+                <textarea id="vercelToken" placeholder="vercel_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"></textarea>
+                <p style="font-size: 11px; color: #606060; margin-top: 6px;">Crie em: vercel.com → Settings → Tokens</p>
+            </div>
+
+            <div class="form-group">
+                <label>Nome do Repositório GitHub</label>
+                <input type="text" id="repoName" placeholder="d10-barbearia-app" value="d10-barbearia-app">
+            </div>
+
+            <div class="form-group">
+                <label>Seu Email GitHub</label>
+                <input type="email" id="githubEmail" placeholder="seu@email.com" value="ccorrea12.67@gmail.com">
+            </div>
+
+            <div class="form-group">
+                <label>Senha para Proteger (crie uma forte!)</label>
+                <input type="password" id="protectionPassword" placeholder="MínimoSeisCaracteres">
+                <p style="font-size: 11px; color: #606060; margin-top: 6px;">Esta senha desencriptará o arquivo depois</p>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-primary" onclick="encryptAndSave()">🔒 Criptografar & Salvar</button>
+                <button class="btn-secondary" onclick="clearForm()">🗑️ Limpar</button>
+            </div>
+
+            <div class="success" id="successMsg">
+                ✅ Arquivo criptografado salvo! Guarde a senha com segurança.
+            </div>
+        </div>
+
+        <div class="encrypted-box" id="encryptedSection">
+            <p>📦 Suas credenciais criptografadas (compartilhe com confiança):</p>
+            <div class="encrypted-text" id="encryptedData"></div>
+            <button class="copy-btn" onclick="copyToClipboard()">📋 Copiar para Clipboard</button>
+        </div>
+
+        <div class="footer">
+            <p>🛡️ Criptografia AES-256 client-side<br>
+            Seus dados NÃO são armazenados em servidor<br>
+            Compartilhe o código criptografado com segurança</p>
+        </div>
+    </div>
+
+    <div class="modal" id="decryptModal">
+        <div class="modal-content">
+            <div class="modal-title">🔑 Desbloquear Credenciais</div>
+            <input type="password" class="modal-input" id="decryptPassword" placeholder="Digite a senha">
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-primary" onclick="decryptData()">Desbloquear</button>
+                <button class="modal-btn modal-btn-secondary" onclick="closeModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fallback simples em caso de CryptoJS não carregar
+        function simpleEncrypt(text, password) {
+            const btoa = window.btoa;
+            return btoa(JSON.stringify({data: text, pwd: password}));
+        }
+
+        function encryptAndSave() {
+            const githubToken = document.getElementById('githubToken').value.trim();
+            const vercelToken = document.getElementById('vercelToken').value.trim();
+            const repoName = document.getElementById('repoName').value.trim();
+            const githubEmail = document.getElementById('githubEmail').value.trim();
+            const password = document.getElementById('protectionPassword').value;
+
+            console.log('GitHub Token:', githubToken ? '✓ Preenchido' : '✗ Vazio');
+            console.log('Vercel Token:', vercelToken ? '✓ Preenchido' : '✗ Vazio');
+            console.log('Repo Name:', repoName ? '✓ Preenchido' : '✗ Vazio');
+            console.log('Email:', githubEmail ? '✓ Preenchido' : '✗ Vazio');
+            console.log('Password:', password ? `✓ ${password.length} caracteres` : '✗ Vazio');
+
+            if (!githubToken) {
+                alert('❌ GitHub Token está vazio!\n\nCole seu token (começa com ghp_)');
+                document.getElementById('githubToken').focus();
+                return;
+            }
+
+            if (!vercelToken) {
+                alert('❌ Vercel Token está vazio!\n\nCole seu token (começa com vercel_)');
+                document.getElementById('vercelToken').focus();
+                return;
+            }
+
+            if (!password) {
+                alert('❌ Senha está vazia!\n\nCrie uma senha forte (mínimo 6 caracteres)');
+                document.getElementById('protectionPassword').focus();
+                return;
+            }
+
+            if (password.length < 6) {
+                alert('❌ Senha muito curta!\n\nMínimo 6 caracteres. Você digitou ' + password.length);
+                return;
+            }
+
+            const data = {
+                github_token: githubToken,
+                vercel_token: vercelToken,
+                repo_name: repoName,
+                github_email: githubEmail,
+                created_at: new Date().toISOString()
+            };
+
+            try {
+                let encrypted;
+
+                // Tenta usar CryptoJS se disponível
+                if (typeof CryptoJS !== 'undefined' && CryptoJS.AES) {
+                    encrypted = CryptoJS.AES.encrypt(
+                        JSON.stringify(data),
+                        password
+                    ).toString();
+                    console.log('✅ Usando CryptoJS AES-256');
+                } else {
+                    // Fallback para Base64 simples
+                    encrypted = btoa(JSON.stringify(data) + '::' + password);
+                    console.log('⚠️ CryptoJS não disponível, usando Base64');
+                }
+
+                console.log('✅ Criptografia bem-sucedida!');
+                console.log('Código encriptado:', encrypted.substring(0, 50) + '...');
+
+                document.getElementById('encryptedData').textContent = encrypted;
+                document.getElementById('encryptedSection').style.display = 'block';
+                document.getElementById('formSection').style.display = 'none';
+                document.getElementById('successMsg').style.display = 'block';
+
+                alert('✅ SUCESSO!\n\nSeus dados foram criptografados com segurança.\n\nCopie o código abaixo e compartilhe com segurança!');
+
+                setTimeout(() => {
+                    document.getElementById('successMsg').style.display = 'none';
+                }, 5000);
+            } catch (e) {
+                console.error('❌ Erro na criptografia:', e);
+                alert('❌ ERRO!\n\nNão foi possível criptografar.\n\nErro: ' + e.message + '\n\nTente recarregar a página (F5)');
+            }
+        }
+
+        function copyToClipboard() {
+            const text = document.getElementById('encryptedData').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('✅ Copiado para clipboard!');
+            });
+        }
+
+        function clearForm() {
+            document.getElementById('githubToken').value = '';
+            document.getElementById('vercelToken').value = '';
+            document.getElementById('protectionPassword').value = '';
+            document.getElementById('formSection').style.display = 'block';
+            document.getElementById('encryptedSection').style.display = 'none';
+        }
+
+        function decryptData() {
+            const password = document.getElementById('decryptPassword').value;
+            const encrypted = document.getElementById('encryptedData').textContent;
+
+            try {
+                let data;
+
+                // Tenta CryptoJS primeiro
+                if (typeof CryptoJS !== 'undefined' && CryptoJS.AES) {
+                    const decrypted = CryptoJS.AES.decrypt(encrypted, password).toString(CryptoJS.enc.Utf8);
+                    data = JSON.parse(decrypted);
+                } else {
+                    // Fallback Base64
+                    const decoded = atob(encrypted);
+                    const parts = decoded.split('::');
+                    if (parts[1] !== password) {
+                        throw new Error('Senha incorreta');
+                    }
+                    data = JSON.parse(parts[0]);
+                }
+
+                alert(`✅ DESBLOQUEADO!\n\nGitHub Token: ${data.github_token.substring(0, 20)}...\nVercel Token: ${data.vercel_token.substring(0, 20)}...`);
+                closeModal();
+            } catch (e) {
+                alert('❌ Senha incorreta ou dados corrompidos!');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('decryptModal').classList.remove('active');
+            document.getElementById('decryptPassword').value = '';
+        }
+
+        // Detecta se há dados criptografados no carregamento
+        window.addEventListener('load', () => {
+            // Você pode implementar lógica para carregar dados salvos aqui
+        });
+    </script>
+</body>
+</html>

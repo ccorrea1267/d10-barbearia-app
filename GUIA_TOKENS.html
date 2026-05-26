@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📖 Guia: Gerar Tokens - GitHub & Vercel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #0d0d1a 100%);
+            padding: 20px;
+            color: #e0e0e0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #0d0d1a 0%, #0a0a15 100%);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 20px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            color: #d4af37;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .header p {
+            color: #b0b0b0;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            background: rgba(10, 10, 20, 0.7);
+            color: #d4af37;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #d4af37 0%, #e5c158 100%);
+            color: #0a0a0f;
+            border-color: #d4af37;
+        }
+
+        .tab-btn:hover {
+            border-color: #d4af37;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .section {
+            background: linear-gradient(135deg, #0d0d1a 0%, #0a0a15 100%);
+            border: 2px solid rgba(212, 175, 55, 0.2);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 24px;
+        }
+
+        .step {
+            background: rgba(10, 10, 20, 0.8);
+            border-left: 4px solid #d4af37;
+            padding: 20px;
+            margin-bottom: 16px;
+            border-radius: 8px;
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #d4af37 0%, #e5c158 100%);
+            color: #0a0a0f;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+            font-weight: 700;
+            margin-right: 12px;
+            vertical-align: middle;
+        }
+
+        .step-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #d4af37;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .step-description {
+            color: #b0b0b0;
+            font-size: 14px;
+            line-height: 1.8;
+            margin-left: 44px;
+        }
+
+        .code-block {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            margin: 12px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #d4af37;
+            overflow-x: auto;
+            word-break: break-all;
+        }
+
+        .warning {
+            background: rgba(239, 68, 68, 0.1);
+            border: 2px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 16px 0;
+            color: #ff9999;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .success {
+            background: rgba(34, 197, 94, 0.1);
+            border: 2px solid rgba(34, 197, 94, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 16px 0;
+            color: #22c55e;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .info {
+            background: rgba(212, 175, 55, 0.1);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 16px 0;
+            color: #d4af37;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .link-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #d4af37 0%, #e5c158 100%);
+            color: #0a0a0f;
+            padding: 12px 24px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 8px 0;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .link-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(212, 175, 55, 0.4);
+        }
+
+        .checklist {
+            list-style: none;
+            margin: 12px 0;
+        }
+
+        .checklist li {
+            padding: 10px 0;
+            padding-left: 32px;
+            position: relative;
+            font-size: 14px;
+            color: #b0b0b0;
+        }
+
+        .checklist li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #22c55e;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #606060;
+            font-size: 12px;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 16px 0;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📖 Guia Completo: Gerar Tokens</h1>
+            <p>Passo a passo para gerar seus tokens do GitHub e Vercel</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('github')">🐙 GitHub Token</button>
+            <button class="tab-btn" onclick="switchTab('vercel')">⚡ Vercel Token</button>
+            <button class="tab-btn" onclick="switchTab('final')">✅ Próximos Passos</button>
+        </div>
+
+        <!-- TAB 1: GITHUB -->
+        <div id="github" class="tab-content active">
+            <div class="section">
+                <h2 style="color: #d4af37; margin-bottom: 24px; font-size: 22px;">🐙 Como Gerar Token GitHub</h2>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">1</span>
+                        Abra GitHub
+                    </div>
+                    <div class="step-description">
+                        Acesse <a href="https://github.com" target="_blank" class="link-btn">github.com</a> e faça login com sua conta
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">2</span>
+                        Clique na sua foto de perfil
+                    </div>
+                    <div class="step-description">
+                        Canto superior direito da página → Clique na sua foto/avatar
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">3</span>
+                        Acesse "Settings"
+                    </div>
+                    <div class="step-description">
+                        No menu que aparecer, clique em "Settings" (Configurações)
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">4</span>
+                        Vá para "Developer settings"
+                    </div>
+                    <div class="step-description">
+                        No menu esquerdo, desça até o final e clique em "Developer settings"
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">5</span>
+                        Acesse "Personal access tokens"
+                    </div>
+                    <div class="step-description">
+                        Clique em "Personal access tokens" → "Tokens (classic)"
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">6</span>
+                        Clique "Generate new token"
+                    </div>
+                    <div class="step-description">
+                        Botão azul "Generate new token" → "Generate new token (classic)"
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">7</span>
+                        Preencha as informações
+                    </div>
+                    <div class="step-description">
+                        <strong>Token name:</strong> <div class="code-block">d10-barbearia-deploy</div>
+
+                        <strong>Expiration:</strong> Selecione "90 days" (ou mais)
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">8</span>
+                        Selecione as permissões
+                    </div>
+                    <div class="step-description">
+                        Marque os checkboxes abaixo:
+                        <ul class="checklist">
+                            <li>repo (acesso completo aos repositórios)</li>
+                            <li>workflow (GitHub Actions)</li>
+                            <li>user (dados do usuário)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">9</span>
+                        Clique "Generate token"
+                    </div>
+                    <div class="step-description">
+                        Botão verde no final da página
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">10</span>
+                        Copie o token
+                    </div>
+                    <div class="step-description">
+                        Aparecerá um código longo começando com <strong>ghp_</strong><br>
+                        <strong>⚠️ COPIE IMEDIATAMENTE!</strong> Ele não aparecerá novamente!
+                    </div>
+                </div>
+
+                <div class="success">
+                    ✅ <strong>Pronto!</strong> Você tem seu token GitHub. Cole-o no arquivo CREDENCIAIS_SEGURAS.html
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: VERCEL -->
+        <div id="vercel" class="tab-content">
+            <div class="section">
+                <h2 style="color: #d4af37; margin-bottom: 24px; font-size: 22px;">⚡ Como Gerar Token Vercel</h2>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">1</span>
+                        Abra Vercel
+                    </div>
+                    <div class="step-description">
+                        Acesse <a href="https://vercel.com" target="_blank" class="link-btn">vercel.com</a> e faça login (pode usar GitHub login)
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">2</span>
+                        Clique na sua foto/iniciais
+                    </div>
+                    <div class="step-description">
+                        Canto inferior esquerdo (se em desktop) ou canto superior direito (mobile)
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">3</span>
+                        Selecione "Settings"
+                    </div>
+                    <div class="step-description">
+                        Clique em "Settings" no menu que aparecer
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">4</span>
+                        Vá para "Tokens"
+                    </div>
+                    <div class="step-description">
+                        No menu esquerdo, procure e clique em "Tokens"
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">5</span>
+                        Clique "Create Token"
+                    </div>
+                    <div class="step-description">
+                        Botão "Create" ou "New Token"
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">6</span>
+                        Preencha o nome
+                    </div>
+                    <div class="step-description">
+                        <strong>Token name:</strong> <div class="code-block">d10-barbearia-deploy</div>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">7</span>
+                        Defina expiração
+                    </div>
+                    <div class="step-description">
+                        <strong>Expiration:</strong> Selecione "90 days" (ou deixe sem expiração)
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">8</span>
+                        Clique "Create"
+                    </div>
+                    <div class="step-description">
+                        Botão para gerar o token
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">9</span>
+                        Copie o token
+                    </div>
+                    <div class="step-description">
+                        Aparecerá um código começando com <strong>vercel_</strong><br>
+                        <strong>⚠️ COPIE IMEDIATAMENTE!</strong> Ele não aparecerá novamente!
+                    </div>
+                </div>
+
+                <div class="success">
+                    ✅ <strong>Pronto!</strong> Você tem seu token Vercel. Cole-o no arquivo CREDENCIAIS_SEGURAS.html
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: PRÓXIMOS PASSOS -->
+        <div id="final" class="tab-content">
+            <div class="section">
+                <h2 style="color: #d4af37; margin-bottom: 24px; font-size: 22px;">✅ Próximos Passos</h2>
+
+                <div class="info">
+                    📋 Você já tem os dois tokens? Ótimo! Agora faça o seguinte:
+                </div>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">1</span>
+                        Abra CREDENCIAIS_SEGURAS.html
+                    </div>
+                    <div class="step-description">
+                        Arquivo que criamos anteriormente na pasta do projeto
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">2</span>
+                        Cole seus tokens
+                    </div>
+                    <div class="step-description">
+                        <ul class="checklist">
+                            <li>GitHub Personal Access Token (começa com ghp_)</li>
+                            <li>Vercel API Token (começa com vercel_)</li>
+                            <li>Seu email do GitHub</li>
+                            <li>Nome do repositório (d10-barbearia-app)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">3</span>
+                        Crie uma senha forte
+                    </div>
+                    <div class="step-description">
+                        Exemplo: <div class="code-block">D10@2026#Seguro!</div>
+                        Mínimo 6 caracteres (use maiúsculas, números, símbolos)
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">4</span>
+                        Clique "🔒 Criptografar & Salvar"
+                    </div>
+                    <div class="step-description">
+                        Seus dados serão criptografados no navegador
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">5</span>
+                        Copie o código criptografado
+                    </div>
+                    <div class="step-description">
+                        Botão "📋 Copiar para Clipboard"
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">6</span>
+                        Compartilhe comigo
+                    </div>
+                    <div class="step-description">
+                        <strong>Envie por CANAIS SEPARADOS:</strong><br>
+                        • Código criptografado via Slack/email<br>
+                        • Senha por WhatsApp/chat pessoal<br><br>
+                        Assim eu faço o deploy automático para você! 🚀
+                    </div>
+                </div>
+
+                <div class="warning">
+                    ⚠️ <strong>IMPORTANTE:</strong><br>
+                    • NUNCA compartilhe os tokens em texto plano<br>
+                    • NUNCA compartilhe código + senha no mesmo lugar<br>
+                    • Use o CREDENCIAIS_SEGURAS.html para criptografar<br>
+                    • Revogue os tokens depois (Settings → Tokens → Delete)
+                </div>
+
+                <div class="success">
+                    ✅ Depois que você me enviar os dados criptografados e a senha, vou:<br>
+                    1. Criar o repositório GitHub<br>
+                    2. Fazer push do código<br>
+                    3. Conectar à Vercel<br>
+                    4. Gerar o link público<br>
+                    5. Enviar para você apresentar ao cliente! 🎉
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>💡 Se tiver dúvidas, volte neste guia a qualquer hora<br>
+            📱 Está tudo seguro e criptografado<br>
+            🚀 Vamos colocar seu app na Vercel!</p>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            // Hide all tabs
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked button
+            event.target.classList.add('active');
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+    </script>
+</body>
+</html>
