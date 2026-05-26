@@ -21,7 +21,7 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    const { name, email, phone } = await req.json()
+    const { name, email, phone, resendApiKey, resendFrom } = await req.json()
 
     // Validação
     if (!name || !email || !phone) {
@@ -80,7 +80,8 @@ Deno.serve(async (req: Request) => {
     const confirmLink = linkData?.properties?.action_link ?? null
 
     // ── Envia e-mail via Resend ────────────────────────────────────
-    const resendKey = Deno.env.get('RESEND_API_KEY')
+    const resendKey = resendApiKey || Deno.env.get('RESEND_API_KEY')
+    const fromEmail = resendFrom || Deno.env.get('RESEND_FROM') || 'Studio Mireille Marques <onboarding@resend.dev>'
 
     if (resendKey) {
       const emailHtml = `
@@ -155,7 +156,7 @@ Deno.serve(async (req: Request) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: 'Stúdio Mireille Marques <noreply@cconecta.com.br>',
+          from: fromEmail,
           to: email,
           subject: '🌸 Bem-vinda! Seus dados de acesso ao Stúdio Mireille Marques',
           html: emailHtml,
@@ -167,7 +168,7 @@ Deno.serve(async (req: Request) => {
         console.error('Erro Resend:', resendError)
       }
     } else {
-      console.warn('RESEND_API_KEY não configurada. E-mail não enviado.')
+      console.warn('RESEND_API_KEY não configurada no corpo da requisição ou nas secrets. E-mail não enviado.')
     }
 
     return new Response(

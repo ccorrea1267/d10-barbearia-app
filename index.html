@@ -1361,6 +1361,12 @@
             // URL da Edge Function: deriva automaticamente da URL do Supabase
             const edgeFnUrl = supabaseUrl.replace(/\/+$/, '') + '/functions/v1/register-client';
 
+            const resConfig = localStorage.getItem('studio_resend_config')
+                ? JSON.parse(localStorage.getItem('studio_resend_config'))
+                : {};
+            const resendApiKey = resConfig.apiKey || '';
+            const resendFrom = resConfig.from || '';
+
             const originalText = btn ? btn.textContent : 'Criar Conta';
             if (btn) { btn.textContent = '⏳ Cadastrando...'; btn.disabled = true; }
 
@@ -1368,7 +1374,13 @@
                 const res = await fetch(edgeFnUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, email, phone })
+                    body: JSON.stringify({ 
+                        name, 
+                        email, 
+                        phone,
+                        resendApiKey,
+                        resendFrom
+                    })
                 });
 
                 const result = await res.json();
