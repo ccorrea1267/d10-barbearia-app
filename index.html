@@ -570,7 +570,7 @@
                 <div class="content">
                     <div class="card" style="margin-bottom:16px;text-align:center;">
                         <div class="card-title">🌸 Criar Conta de Cliente</div>
-                        <p class="card-subtitle" style="font-size:12px;margin-top:6px;">Preencha seus dados. O suporte irá aprovar seu cadastro e enviar sua senha randômica via WhatsApp para você acessar seu histórico.</p>
+                        <p class="card-subtitle" style="font-size:12px;margin-top:6px;" id="clientRegInfoText">Preencha seus dados. Um link de confirmação será enviado para seu e-mail. Após confirmar, sua conta estará ativa e liberada para login!</p>
                     </div>
 
                     <div class="card">
@@ -581,11 +581,14 @@
                         <input type="email" class="input-field" id="clientRegEmail" placeholder="seuemail@exemplo.com" style="margin-bottom:12px;">
 
                         <label style="color:#808080;font-size:11px;letter-spacing:0.3px;display:block;margin-bottom:4px;font-weight:600;">WHATSAPP COM DDD</label>
-                        <input type="tel" class="input-field" id="clientRegPhone" placeholder="Ex: (11) 99999-9999" style="margin-bottom:4px;">
+                        <input type="tel" class="input-field" id="clientRegPhone" placeholder="Ex: (11) 99999-9999" style="margin-bottom:12px;">
+
+                        <label style="color:#808080;font-size:11px;letter-spacing:0.3px;display:block;margin-bottom:4px;font-weight:600;">SENHA DE ACESSO</label>
+                        <input type="password" class="input-field" id="clientRegPass" placeholder="Mínimo 6 caracteres" style="margin-bottom:4px;">
                     </div>
                 </div>
                 <div class="footer">
-                    <button class="btn btn-gold" onclick="submitClientAccessRequest()">Solicitar Acesso</button>
+                    <button class="btn btn-gold" onclick="submitClientAccessRequest(this)">Criar Conta</button>
                     <button class="btn btn-secondary" onclick="showScreen('loginCliente')">Voltar ao Login</button>
                 </div>
             </div>
@@ -810,6 +813,18 @@
                             </div>
                         </div>
 
+                        <!-- SUPABASE DATABASE -->
+                        <div style="margin-bottom:16px;">
+                            <div class="card">
+                                <div class="card-title">⚡ Supabase Database</div>
+                                <label style="color:#808080;font-size:10px;display:block;margin-bottom:4px;font-weight:600;">SUPABASE URL</label>
+                                <input type="url" class="input-field" id="supSupabaseUrl" placeholder="https://xxxx.supabase.co">
+                                
+                                <label style="color:#808080;font-size:10px;display:block;margin-bottom:4px;font-weight:600;">SUPABASE ANON KEY</label>
+                                <input type="text" class="input-field" id="supSupabaseAnonKey" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...">
+                            </div>
+                        </div>
+
                         <!-- GERADOR DE SENHAS -->
                         <div style="margin-bottom:16px;">
                             <div class="card" style="border-color:rgba(212,175,55,0.25);">
@@ -874,6 +889,9 @@
         </div>
     </div>
 
+    <!-- SDK do Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <script>
         // ===== UNIDADES DINÂMICAS =====
         let defaultUnits = [
@@ -900,6 +918,38 @@
             : defaultUnits;
 
         let selectedUnitIdForGps = 1;
+
+        // ===== INTEGRACAO SUPABASE =====
+        let defaultSupabaseConfig = { url: '', anonKey: '' };
+        let supabaseConfig = localStorage.getItem('studio_supabase_config')
+            ? JSON.parse(localStorage.getItem('studio_supabase_config'))
+            : defaultSupabaseConfig;
+
+        let supabase = null;
+        function initSupabase() {
+            const config = localStorage.getItem('studio_supabase_config')
+                ? JSON.parse(localStorage.getItem('studio_supabase_config'))
+                : defaultSupabaseConfig;
+            if (config.url && config.anonKey) {
+                try {
+                    supabase = window.supabase.createClient(config.url, config.anonKey);
+                    
+                    const regText = document.getElementById('clientRegInfoText');
+                    if (regText) {
+                        regText.textContent = "Preencha seus dados. Um link de confirmação será enviado para seu e-mail. Após confirmar, sua conta estará ativa e liberada para login!";
+                    }
+                } catch(e) {
+                    console.error("Erro ao instanciar Supabase:", e);
+                    supabase = null;
+                }
+            } else {
+                supabase = null;
+                const regText = document.getElementById('clientRegInfoText');
+                if (regText) {
+                    regText.textContent = "Preencha seus dados. O suporte irá aprovar seu cadastro e enviar sua senha randômica via WhatsApp para você acessar seu histórico.";
+                }
+            }
+        }
 
         function renderUnits() {
             // Renderiza na tela do cliente
@@ -1137,39 +1187,102 @@
             }
         }
 
-        function loginCliente() {
+        async function loginCliente() {
             const email = document.getElementById('clientLoginEmail').value.trim();
             const pass = document.getElementById('clientLoginPass').value.trim();
             
             if (!email || !pass) {
                 return alert('Por favor, preencha o e-mail e a senha.');
             }
-            
-            const clients = localStorage.getItem('studio_clients')
-                ? JSON.parse(localStorage.getItem('studio_clients'))
-                : [];
-                  
-            const client = clients.find(c => c.email.toLowerCase() === email.toLowerCase() && c.pass === pass);
-            
-            if (client) {
-                loggedClient = client;
-                localStorage.setItem('logged_client', JSON.stringify(loggedClient));
-                alert(`✨ Bem-vinda, ${client.name}!`);
-                
-                document.getElementById('clientLoginEmail').value = '';
-                document.getElementById('clientLoginPass').value = '';
-                
-                updateWelcomeHeader();
-                
-                if (pendingRedirectScreen) {
-                    const screenTo = pendingRedirectScreen;
-                    pendingRedirectScreen = null;
-                    showScreen(screenTo);
-                } else {
-                    showScreen('welcome');
+
+            if (supabase) {
+                try {
+                    const btn = document.querySelector('#loginCliente .btn-gold');
+                    const originalText = btn.textContent;
+                    btn.textContent = 'Acessando...';
+                    btn.disabled = true;
+
+                    const { data, error } = await supabase.auth.signInWithPassword({
+                        email: email,
+                        password: pass
+                    });
+
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+
+                    if (error) {
+                        if (error.message.toLowerCase().includes('confirm') || error.message.toLowerCase().includes('verification')) {
+                            return alert('❌ Acesso pendente: confirme seu cadastro clicando no link enviado para o seu e-mail.');
+                        }
+                        return alert('❌ Erro no login: E-mail ou senha incorretos.');
+                    }
+
+                    if (data.user) {
+                        loggedClient = {
+                            name: data.user.user_metadata.name || data.user.email.split('@')[0],
+                            email: data.user.email,
+                            phone: data.user.user_metadata.phone || ''
+                        };
+                        localStorage.setItem('logged_client', JSON.stringify(loggedClient));
+
+                        const clients = localStorage.getItem('studio_clients')
+                            ? JSON.parse(localStorage.getItem('studio_clients'))
+                            : [];
+                        if (!clients.some(c => c.email.toLowerCase() === loggedClient.email.toLowerCase())) {
+                            clients.push({
+                                name: loggedClient.name,
+                                email: loggedClient.email,
+                                phone: loggedClient.phone,
+                                pass: 'Confirmado via e-mail'
+                            });
+                            localStorage.setItem('studio_clients', JSON.stringify(clients));
+                        }
+
+                        alert(`✨ Bem-vinda, ${loggedClient.name}!`);
+                        
+                        document.getElementById('clientLoginEmail').value = '';
+                        document.getElementById('clientLoginPass').value = '';
+                        
+                        updateWelcomeHeader();
+                        
+                        if (pendingRedirectScreen) {
+                            const screenTo = pendingRedirectScreen;
+                            pendingRedirectScreen = null;
+                            showScreen(screenTo);
+                        } else {
+                            showScreen('welcome');
+                        }
+                    }
+                } catch(err) {
+                    alert('❌ Ocorreu um erro no acesso: ' + err.message);
                 }
             } else {
-                alert('❌ E-mail ou senha incorretos, ou cadastro pendente de aprovação.');
+                const clients = localStorage.getItem('studio_clients')
+                    ? JSON.parse(localStorage.getItem('studio_clients'))
+                    : [];
+                      
+                const client = clients.find(c => c.email.toLowerCase() === email.toLowerCase() && c.pass === pass);
+                
+                if (client) {
+                    loggedClient = client;
+                    localStorage.setItem('logged_client', JSON.stringify(loggedClient));
+                    alert(`✨ Bem-vinda, ${client.name}! (Modo Offline)`);
+                    
+                    document.getElementById('clientLoginEmail').value = '';
+                    document.getElementById('clientLoginPass').value = '';
+                    
+                    updateWelcomeHeader();
+                    
+                    if (pendingRedirectScreen) {
+                        const screenTo = pendingRedirectScreen;
+                        pendingRedirectScreen = null;
+                        showScreen(screenTo);
+                    } else {
+                        showScreen('welcome');
+                    }
+                } else {
+                    alert('❌ E-mail ou senha incorretos, ou cadastro pendente de aprovação.');
+                }
             }
         }
 
@@ -1194,53 +1307,84 @@
             }
         }
 
-        function submitClientAccessRequest() {
+        async function submitClientAccessRequest(btn) {
             const name = document.getElementById('clientRegName').value.trim();
             const email = document.getElementById('clientRegEmail').value.trim();
             const phone = document.getElementById('clientRegPhone').value.trim();
-            
-            if (!name || !email || !phone) {
-                return alert('Por favor, preencha todos os campos.');
+            const pass = document.getElementById('clientRegPass').value.trim();
+
+            if (!name || !email || !phone || !pass) {
+                return alert('Por favor, preencha todos os campos, incluindo a senha.');
             }
-            
-            const requests = localStorage.getItem('studio_client_requests')
-                ? JSON.parse(localStorage.getItem('studio_client_requests'))
-                : [];
-                
-            const clients = localStorage.getItem('studio_clients')
-                ? JSON.parse(localStorage.getItem('studio_clients'))
-                : [
-                    {
-                        name: 'Ana Luísa Ferreira',
-                        email: 'ana@email.com',
-                        phone: '(11) 98765-4321',
-                        pass: 'ana2026'
-                    },
-                    {
-                        name: 'Camila Reis',
-                        email: 'camila@email.com',
-                        phone: '(11) 99876-5432',
-                        pass: 'camila2026'
+
+            if (pass.length < 6) {
+                return alert('A senha deve conter no mínimo 6 caracteres.');
+            }
+
+            if (supabase) {
+                try {
+                    const originalText = btn ? btn.textContent : 'Criar Conta';
+                    if (btn) {
+                        btn.textContent = 'Cadastrando...';
+                        btn.disabled = true;
                     }
-                  ];
-                
-            if (clients.some(c => c.email.toLowerCase() === email.toLowerCase())) {
-                return alert('Este e-mail já possui uma conta ativa.');
+
+                    const { data, error } = await supabase.auth.signUp({
+                        email: email,
+                        password: pass,
+                        options: {
+                            data: {
+                                name: name,
+                                phone: phone
+                            }
+                        }
+                    });
+
+                    if (btn) {
+                        btn.textContent = originalText;
+                        btn.disabled = false;
+                    }
+
+                    if (error) {
+                        return alert('❌ Erro ao cadastrar: ' + error.message);
+                    }
+
+                    alert(`✅ Cadastro realizado com sucesso!\n\nUm link de confirmação foi enviado para ${email}. Confirme o cadastro clicando no link recebido e em seguida faça o login.`);
+                    
+                    document.getElementById('clientRegName').value = '';
+                    document.getElementById('clientRegEmail').value = '';
+                    document.getElementById('clientRegPhone').value = '';
+                    document.getElementById('clientRegPass').value = '';
+                    
+                    showScreen('loginCliente');
+                } catch (err) {
+                    if (btn) {
+                        btn.textContent = 'Criar Conta';
+                        btn.disabled = false;
+                    }
+                    alert('❌ Ocorreu um erro no cadastro: ' + err.message);
+                }
+            } else {
+                // Modo offline
+                const requests = localStorage.getItem('studio_client_requests')
+                    ? JSON.parse(localStorage.getItem('studio_client_requests'))
+                    : [];
+
+                if (requests.some(r => r.email.toLowerCase() === email.toLowerCase())) {
+                    return alert('Já existe uma solicitação pendente para este e-mail.');
+                }
+
+                requests.push({ name, email, phone, pass });
+                localStorage.setItem('studio_client_requests', JSON.stringify(requests));
+
+                document.getElementById('clientRegName').value = '';
+                document.getElementById('clientRegEmail').value = '';
+                document.getElementById('clientRegPhone').value = '';
+                document.getElementById('clientRegPass').value = '';
+
+                alert('✅ Solicitação de cadastro enviada com sucesso!\n\nO suporte irá liberar seu acesso e enviar a senha via WhatsApp.');
+                showScreen('loginCliente');
             }
-            
-            if (requests.some(r => r.email.toLowerCase() === email.toLowerCase())) {
-                return alert('Já existe uma solicitação de cadastro pendente para este e-mail.');
-            }
-            
-            requests.push({ name, email, phone });
-            localStorage.setItem('studio_client_requests', JSON.stringify(requests));
-            
-            document.getElementById('clientRegName').value = '';
-            document.getElementById('clientRegEmail').value = '';
-            document.getElementById('clientRegPhone').value = '';
-            
-            alert('✅ Solicitação de cadastro enviada com sucesso!\n\nO suporte irá liberar seu acesso e enviar a senha via WhatsApp.');
-            showScreen('loginCliente');
         }
 
         function renderClientAppointments() {
@@ -1313,6 +1457,12 @@
             document.getElementById('supGoogleClientId').value = supportConfig.googleClientId;
             document.getElementById('supGoogleClientSecret').value = supportConfig.googleClientSecret;
             document.getElementById('supGoogleCalendarId').value = supportConfig.googleCalendarId;
+
+            const supConfig = localStorage.getItem('studio_supabase_config')
+                ? JSON.parse(localStorage.getItem('studio_supabase_config'))
+                : defaultSupabaseConfig;
+            document.getElementById('supSupabaseUrl').value = supConfig.url || '';
+            document.getElementById('supSupabaseAnonKey').value = supConfig.anonKey || '';
         }
 
         function saveSupportConfig() {
@@ -1322,6 +1472,16 @@
                 googleCalendarId: document.getElementById('supGoogleCalendarId').value.trim()
             };
             localStorage.setItem('studio_support_config', JSON.stringify(supportConfig));
+
+            const supabaseUrlVal = document.getElementById('supSupabaseUrl').value.trim();
+            const supabaseAnonKeyVal = document.getElementById('supSupabaseAnonKey').value.trim();
+            const supConfig = {
+                url: supabaseUrlVal,
+                anonKey: supabaseAnonKeyVal
+            };
+            localStorage.setItem('studio_supabase_config', JSON.stringify(supConfig));
+            initSupabase();
+
             alert('✅ Configurações de suporte salvas com sucesso!');
         }
 
@@ -1905,6 +2065,7 @@
             renderUnits();
             renderDashboard();
             updateWelcomeHeader();
+            initSupabase();
         });
     </script>
 
