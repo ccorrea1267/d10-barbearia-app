@@ -292,7 +292,7 @@
                     </div>
                 </div>
                 <div class="footer">
-                    <button class="btn btn-success" onclick="alert('🗺️ Abrindo Google Maps...')">↗️ Abrir GPS</button>
+                    <button class="btn btn-success" onclick="openGpsForSelectedUnit()">↗️ Abrir GPS</button>
                     <button class="btn btn-secondary" onclick="showScreen('agenda')">Agendar →</button>
                 </div>
             </div>
@@ -791,27 +791,29 @@
                             </div>
                         </div>
 
-                        <!-- EVOLUTION API -->
+                        <!-- GERADOR DE SENHAS -->
                         <div style="margin-bottom:16px;">
-                            <div class="card">
-                                <div class="card-title">📱 EvolutionAPI (WhatsApp)</div>
-                                <label style="color:#808080;font-size:10px;display:block;margin-bottom:4px;font-weight:600;">URL DA INSTÂNCIA</label>
-                                <input type="text" class="input-field" id="supEvolutionUrl" placeholder="URL da Instância">
+                            <div class="card" style="border-color:rgba(212,175,55,0.25);">
+                                <div class="card-title">🔐 Gerador de Senhas</div>
+                                <p class="card-subtitle" style="margin-bottom:12px;">Gere senhas seguras e aleatórias para clientes e profissionais.</p>
                                 
-                                <label style="color:#808080;font-size:10px;display:block;margin-bottom:4px;font-weight:600;">API KEY</label>
-                                <input type="text" class="input-field" id="supEvolutionApiKey" placeholder="API Key">
-                                
-                                <label style="color:#808080;font-size:10px;display:block;margin-bottom:4px;font-weight:600;">NOME DA INSTÂNCIA</label>
-                                <input type="text" class="input-field" id="supEvolutionInstanceName" placeholder="Nome da Instância">
-                            </div>
-                        </div>
+                                <label style="color:#808080;font-size:10px;display:block;margin-bottom:4px;font-weight:600;">PREFIXO (opcional)</label>
+                                <input type="text" class="input-field" id="passPrefix" placeholder="Ex: MM, CLI, PRO" value="MM" style="margin-bottom:10px;">
 
-                        <!-- WEBHOOK -->
-                        <div style="margin-bottom:16px;">
-                            <div class="card">
-                                <div class="card-title">🔗 Webhooks & Notificações</div>
-                                <label style="color:#808080;font-size:10px;display:block;margin-bottom:4px;font-weight:600;">WEBHOOK URL</label>
-                                <input type="text" class="input-field" id="supWebhookUrl" placeholder="Webhook URL">
+                                <label style="color:#808080;font-size:10px;display:block;margin-bottom:4px;font-weight:600;">TIPO DE SENHA</label>
+                                <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+                                    <button class="btn btn-small" id="passTypeAlpha" onclick="setPassType('alpha')" style="background:rgba(212,175,55,0.15);color:#d4af37;border:1px solid rgba(212,175,55,0.3);padding:8px 14px;font-size:11px;width:auto;">Alfanumérica</button>
+                                    <button class="btn btn-small" id="passTypeNum" onclick="setPassType('num')" style="background:rgba(255,255,255,0.05);color:#b0b0b0;border:1px solid rgba(255,255,255,0.1);padding:8px 14px;font-size:11px;width:auto;">Numérica</button>
+                                    <button class="btn btn-small" id="passTypeStrong" onclick="setPassType('strong')" style="background:rgba(255,255,255,0.05);color:#b0b0b0;border:1px solid rgba(255,255,255,0.1);padding:8px 14px;font-size:11px;width:auto;">Forte (especiais)</button>
+                                </div>
+
+                                <button class="btn btn-gold" onclick="generatePassword()" style="margin-bottom:12px;">⚡ Gerar Senha</button>
+                                
+                                <div id="generatedPassResult" style="display:none;background:rgba(0,0,0,0.4);border:1px solid rgba(212,175,55,0.3);border-radius:12px;padding:16px;text-align:center;">
+                                    <p style="color:#808080;font-size:10px;letter-spacing:1px;margin-bottom:8px;">SENHA GERADA</p>
+                                    <p id="generatedPassText" style="font-family:monospace;font-size:22px;color:#e5c158;font-weight:700;letter-spacing:2px;margin-bottom:10px;"></p>
+                                    <button class="btn btn-small btn-secondary" onclick="copyGeneratedPass()" style="width:auto;margin:0 auto;display:block;padding:8px 20px;font-size:11px;">📋 Copiar Senha</button>
+                                </div>
                             </div>
                         </div>
 
@@ -827,12 +829,6 @@
                         </div>
 
                         <button class="btn btn-gold" id="saveSupportConfigBtn" onclick="saveSupportConfig()" style="width:100%;margin-bottom:12px;">💾 Salvar Configurações</button>
-                    </div>
-
-                    <div class="card" style="border-color:rgba(212,175,55,0.3);">
-                        <div class="card-title">📞 Contato Suporte</div>
-                        <p class="card-subtitle">Para configurar ou alterar integrações, entre em contato com o suporte técnico CConecta.</p>
-                        <button class="btn btn-primary" style="margin-top:12px;" onclick="window.open('https://api.whatsapp.com/send?phone=5511999999999&text=Olá! Preciso de suporte técnico para o aplicativo do Stúdio Mireille Marques.', '_blank')">💬 Chamar Suporte</button>
                     </div>
                 </div>
                 <div class="footer">
@@ -867,14 +863,16 @@
                 name: 'Unidade 1 — Centro',
                 address: 'Rua das Flores, 123 • Centro',
                 weekdayHours: 'Seg-Sex: 08:00 - 19:00',
-                satHours: 'Sáb: 08:00 - 17:00'
+                satHours: 'Sáb: 08:00 - 17:00',
+                mapsUrl: ''
             },
             {
                 id: 2,
                 name: 'Unidade 2 — Jardins',
                 address: 'Av. dos Ipês, 456 • Jardins',
                 weekdayHours: 'Seg-Sex: 09:00 - 20:00',
-                satHours: 'Sáb: 09:00 - 16:00'
+                satHours: 'Sáb: 09:00 - 16:00',
+                mapsUrl: ''
             }
         ];
 
@@ -882,19 +880,34 @@
             ? JSON.parse(localStorage.getItem('studio_units'))
             : defaultUnits;
 
+        let selectedUnitIdForGps = 1;
+
         function renderUnits() {
             // Renderiza na tela do cliente
             const containerClient = document.getElementById('unitsContainerClient');
             if (containerClient) {
-                containerClient.innerHTML = units.map(u => `
-                    <div class="card" onclick="selectAddress(${u.id})" id="addrCard${u.id}" style="cursor:pointer;">
-                        <div class="card-title">📍 ${u.name}</div>
+                containerClient.innerHTML = units.map(u => {
+                    const mapsLink = u.mapsUrl
+                        ? u.mapsUrl
+                        : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('Stúdio Mireille Marques ' + u.address)}`;
+                    const isSelected = u.id === selectedUnitIdForGps;
+                    const borderStyle = isSelected ? 'border-color: #d4af37; box-shadow: 0 0 15px rgba(212,175,55,0.2);' : '';
+                    return `
+                    <div class="card" id="addrCard${u.id}" onclick="selectAddress(${u.id})" style="cursor:pointer; ${borderStyle}">
+                        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
+                            <div class="card-title" style="flex:1;">📍 ${u.name}</div>
+                            <button onclick="event.stopPropagation();window.open('${mapsLink}','_blank')" style="background:linear-gradient(135deg,#1a73e8,#0d5dbf);color:white;border:none;border-radius:10px;padding:6px 10px;font-size:10px;font-weight:600;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:4px;font-family:inherit;flex-shrink:0;" title="Abrir no Google Maps">
+                                🗺️ Maps
+                            </button>
+                        </div>
                         <p class="card-subtitle"><strong>Stúdio Mireille Marques</strong></p>
                         <p class="card-subtitle">${u.address}</p>
                         <p class="card-subtitle">${u.weekdayHours}</p>
                         <p class="card-subtitle">${u.satHours}</p>
+                        <p style="font-size:9px;color:#606060;margin-top:6px;">Toque no card para selecionar • Botão Maps para navegar</p>
                     </div>
-                `).join('');
+                    `;
+                }).join('');
             }
 
             // Renderiza na tela de edição da profissional
@@ -910,6 +923,10 @@
                         <label style="color:#808080;font-size:10px;letter-spacing:0.3px;display:block;margin-bottom:4px;font-weight:600;">ENDEREÇO</label>
                         <input type="text" class="input-field" id="editUnitAddr_${u.id}" value="${u.address}" style="margin-bottom:10px;">
                         
+                        <label style="color:#808080;font-size:10px;letter-spacing:0.3px;display:block;margin-bottom:4px;font-weight:600;">LINK DO GOOGLE MAPS</label>
+                        <input type="url" class="input-field" id="editUnitMaps_${u.id}" value="${u.mapsUrl || ''}" placeholder="Cole o link do Google Maps aqui" style="margin-bottom:10px;">
+                        <p style="color:#606060;font-size:9px;margin-top:-8px;margin-bottom:10px;">💡 Abra o Google Maps, pesquise seu salão, clique em Compartilhar e cole o link aqui.</p>
+
                         <label style="color:#808080;font-size:10px;letter-spacing:0.3px;display:block;margin-bottom:4px;font-weight:600;">HORÁRIO SEG-SEX</label>
                         <input type="text" class="input-field" id="editUnitWeekday_${u.id}" value="${u.weekdayHours}" style="margin-bottom:10px;">
                         
@@ -926,6 +943,7 @@
                     id: u.id,
                     name: document.getElementById(`editUnitName_${u.id}`).value.trim() || u.name,
                     address: document.getElementById(`editUnitAddr_${u.id}`).value.trim() || u.address,
+                    mapsUrl: document.getElementById(`editUnitMaps_${u.id}`) ? document.getElementById(`editUnitMaps_${u.id}`).value.trim() : (u.mapsUrl || ''),
                     weekdayHours: document.getElementById(`editUnitWeekday_${u.id}`).value.trim() || u.weekdayHours,
                     satHours: document.getElementById(`editUnitSat_${u.id}`).value.trim() || u.satHours
                 };
@@ -1297,11 +1315,7 @@
         let defaultSupportConfig = {
             googleClientId: 'xxxxxxxxx.apps.googleusercontent.com',
             googleClientSecret: 'GOCSPX-xxxxxxxxxxxxxxx',
-            googleCalendarId: 'studio.mireille@gmail.com',
-            evolutionUrl: 'https://api.evolution.xxxx.com',
-            evolutionApiKey: 'evo_xxxxxxxxxxxxxxxxxx',
-            evolutionInstanceName: 'mireille-studio',
-            webhookUrl: 'https://n8n.xxxxx.com/webhook/mireille'
+            googleCalendarId: 'studio.mireille@gmail.com'
         };
 
         let supportConfig = localStorage.getItem('studio_support_config')
@@ -1312,24 +1326,87 @@
             document.getElementById('supGoogleClientId').value = supportConfig.googleClientId;
             document.getElementById('supGoogleClientSecret').value = supportConfig.googleClientSecret;
             document.getElementById('supGoogleCalendarId').value = supportConfig.googleCalendarId;
-            document.getElementById('supEvolutionUrl').value = supportConfig.evolutionUrl;
-            document.getElementById('supEvolutionApiKey').value = supportConfig.evolutionApiKey;
-            document.getElementById('supEvolutionInstanceName').value = supportConfig.evolutionInstanceName;
-            document.getElementById('supWebhookUrl').value = supportConfig.webhookUrl;
         }
 
         function saveSupportConfig() {
             supportConfig = {
                 googleClientId: document.getElementById('supGoogleClientId').value.trim(),
                 googleClientSecret: document.getElementById('supGoogleClientSecret').value.trim(),
-                googleCalendarId: document.getElementById('supGoogleCalendarId').value.trim(),
-                evolutionUrl: document.getElementById('supEvolutionUrl').value.trim(),
-                evolutionApiKey: document.getElementById('supEvolutionApiKey').value.trim(),
-                evolutionInstanceName: document.getElementById('supEvolutionInstanceName').value.trim(),
-                webhookUrl: document.getElementById('supWebhookUrl').value.trim()
+                googleCalendarId: document.getElementById('supGoogleCalendarId').value.trim()
             };
             localStorage.setItem('studio_support_config', JSON.stringify(supportConfig));
             alert('✅ Configurações de suporte salvas com sucesso!');
+        }
+
+        // ===== GERADOR DE SENHAS =====
+        let currentPassType = 'alpha';
+
+        function setPassType(type) {
+            currentPassType = type;
+            const types = ['alpha', 'num', 'strong'];
+            types.forEach(t => {
+                const btn = document.getElementById('passType' + t.charAt(0).toUpperCase() + t.slice(1));
+                if (btn) {
+                    if (t === type) {
+                        btn.style.background = 'rgba(212,175,55,0.15)';
+                        btn.style.color = '#d4af37';
+                        btn.style.borderColor = 'rgba(212,175,55,0.3)';
+                    } else {
+                        btn.style.background = 'rgba(255,255,255,0.05)';
+                        btn.style.color = '#b0b0b0';
+                        btn.style.borderColor = 'rgba(255,255,255,0.1)';
+                    }
+                }
+            });
+        }
+
+        function generatePassword() {
+            const prefix = document.getElementById('passPrefix').value.trim();
+            let chars = '';
+            let length = 6;
+
+            switch (currentPassType) {
+                case 'alpha':
+                    chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz0123456789';
+                    length = 6;
+                    break;
+                case 'num':
+                    chars = '0123456789';
+                    length = 6;
+                    break;
+                case 'strong':
+                    chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz0123456789!@#$%&*';
+                    length = 10;
+                    break;
+            }
+
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+
+            const finalPass = prefix ? `${prefix}-${result}` : result;
+            
+            document.getElementById('generatedPassText').textContent = finalPass;
+            document.getElementById('generatedPassResult').style.display = 'block';
+            document.getElementById('generatedPassResult').style.animation = 'fadeIn 0.4s ease-in-out';
+        }
+
+        function copyGeneratedPass() {
+            const pass = document.getElementById('generatedPassText').textContent;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(pass).then(() => {
+                    alert('📋 Senha copiada: ' + pass);
+                });
+            } else {
+                const ta = document.createElement('textarea');
+                ta.value = pass;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                alert('📋 Senha copiada: ' + pass);
+            }
         }
 
         function unlockSupport() {
@@ -1642,6 +1719,7 @@
         }
 
         function selectAddress(num) {
+            selectedUnitIdForGps = num;
             units.forEach(u => {
                 const card = document.getElementById(`addrCard${u.id}`);
                 if (card) {
@@ -1649,6 +1727,15 @@
                     card.style.boxShadow = u.id === num ? '0 0 15px rgba(212,175,55,0.2)' : 'none';
                 }
             });
+        }
+
+        function openGpsForSelectedUnit() {
+            const u = units.find(unit => unit.id === selectedUnitIdForGps) || units[0];
+            if (!u) return alert('Nenhuma unidade encontrada.');
+            const mapsLink = u.mapsUrl
+                ? u.mapsUrl
+                : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('Stúdio Mireille Marques ' + u.address)}`;
+            window.open(mapsLink, '_blank');
         }
 
         function renderDashboard() {
