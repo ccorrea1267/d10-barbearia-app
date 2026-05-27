@@ -2228,7 +2228,25 @@
 
         function deleteProfessional(index) {
             const professionals = JSON.parse(localStorage.getItem('studio_professionals') || '[]');
-            const name = professionals[inde        // ===== TEMPLATES DE CAMPANHA =====
+            const name = professionals[index].name;
+            if (confirm(`Tem certeza que deseja excluir a conta de ${name}?`)) {
+                professionals.splice(index, 1);
+                localStorage.setItem('studio_professionals', JSON.stringify(professionals));
+                renderSupportData();
+            }
+        }
+
+        function deleteClient(index) {
+            const clients = JSON.parse(localStorage.getItem('studio_clients') || '[]');
+            const name = clients[index].name;
+            if (confirm(`Tem certeza que deseja excluir a conta de ${name}?`)) {
+                clients.splice(index, 1);
+                localStorage.setItem('studio_clients', JSON.stringify(clients));
+                renderSupportData();
+            }
+        }
+
+        // ===== TEMPLATES DE CAMPANHA =====
         const templates = {
             beleza: {
                 title: '🌸 Dia da Beleza',
@@ -2299,14 +2317,6 @@
             if (screenId === 'suporte') {
                 document.getElementById('supportUnlockKey').value = '';
                 document.getElementById('supportContent').style.display = 'none';
-                document.getElementById('supportLockCard').innerHTML = `
-                    <div class="card-title" style="font-size:14px;color:#d4af37;">🔓 Desbloquear Painel de Suporte</div>
-                    <p class="card-subtitle" style="margin-bottom:12px;">Digite a senha do Suporte Técnico CConecta para liberar a edição e controle de contas.</p>
-                    <input type="password" class="input-field" id="supportUnlockKey" placeholder="Senha do Suporte (suporte2026)" onkeydown="if(event.key === 'Enter') unlockSupport()" style="margin-bottom:10px;">
-                    <button class="btn btn-gold" onclick="unlockSupport()">Entrar no Painel</button>
-                `;
-            }
-        }       document.getElementById('supportContent').style.display = 'none';
                 document.getElementById('supportLockCard').innerHTML = `
                     <div class="card-title" style="font-size:14px;color:#d4af37;">🔓 Desbloquear Painel de Suporte</div>
                     <p class="card-subtitle" style="margin-bottom:12px;">Digite a senha do Suporte Técnico CConecta para liberar a edição e controle de contas.</p>
