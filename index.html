@@ -1193,6 +1193,9 @@
             const onlyPodologia = hasPodologia && svcArray.every(s => s.includes('podologia') || s.includes('pés'));
 
             if (onlyPodologia) {
+                if (clientSelectedUnit !== u1.name && clientSelectedUnit !== u2.name) {
+                    clientSelectedUnit = u1.name;
+                }
                 card.innerHTML = `
                     <div class="card-title">📍 Escolha a Unidade (Apenas para Podologia)</div>
                     <p class="card-subtitle" style="margin-bottom:12px;color:#808080;font-size:11px;">O serviço de podologia está disponível em ambas as unidades. Selecione onde prefere ser atendida:</p>
@@ -1228,7 +1231,7 @@
             const container = document.getElementById('serviceTagsClient');
             if (!container) return;
             container.innerHTML = services.map((s, idx) => `
-                <div class="service-tag ${idx === 0 ? 'selected' : ''}" onclick="toggleServiceTag(this)">${s}</div>
+                <div class="service-tag" onclick="toggleServiceTag(this)">${s}</div>
             `).join('');
 
             updateUnitSelectionBasedOnServices();
@@ -1731,29 +1734,45 @@
 
             if (supabaseClient) {
                 try {
-                    const { data, error } = await supabaseClient
-                        .from('studio_appointments')
-                        .select('*, customers(name, phone)')
-                        .order('date_slot', { ascending: false });
+                    // 1) Busca o customer_id da cliente logada
+                    const { data: custData, error: custErr } = await supabaseClient
+                        .from('studio_customers')
+                        .select('id')
+                        .eq('email', loggedClient.email)
+                        .limit(1);
 
-                    if (!error && data) {
-                        myApps = data.map(app => {
-                            const [year, month, day] = app.date_slot.split('-');
-                            const formattedDate = `${day}/${month}`;
-                            const shortTime = app.time_slot.substring(0, 5);
-                            return {
-                                clientEmail: loggedClient.email,
-                                clientName: loggedClient.name,
-                                clientPhone: loggedClient.phone,
-                                dateTime: `Agendado • ${formattedDate} às ${shortTime}`,
-                                services: app.service,
-                                unit: app.status === 'confirmed' ? (app.notes || 'Unidade Definida') : 'Aguardando definição de unidade',
-                                status: app.status === 'confirmed' ? 'Confirmado' : 'Pendente'
-                            };
-                        });
+                    if (custErr || !custData || custData.length === 0) {
+                        // Sem registro de cliente ainda
+                        myApps = [];
                     } else {
-                        console.error('Erro ao ler agendamentos do Supabase:', error?.message);
-                        myApps = appointments.filter(app => app.clientEmail.toLowerCase() === loggedClient.email.toLowerCase());
+                        const customerId = custData[0].id;
+
+                        // 2) Busca apenas os agendamentos desta cliente
+                        const { data, error } = await supabaseClient
+                            .from('studio_appointments')
+                            .select('*, studio_customers!studio_appointments_customer_id_fkey(name, phone)')
+                            .eq('customer_id', customerId)
+                            .order('date_slot', { ascending: false });
+
+                        if (!error && data) {
+                            myApps = data.map(app => {
+                                const [year, month, day] = app.date_slot.split('-');
+                                const formattedDate = `${day}/${month}`;
+                                const shortTime = app.time_slot.substring(0, 5);
+                                return {
+                                    clientEmail: loggedClient.email,
+                                    clientName: loggedClient.name,
+                                    clientPhone: loggedClient.phone,
+                                    dateTime: `Agendado • ${formattedDate} às ${shortTime}`,
+                                    services: app.service,
+                                    unit: app.status === 'confirmed' ? (app.notes || 'Unidade Definida') : 'Aguardando definição de unidade',
+                                    status: app.status === 'confirmed' ? 'Confirmado' : 'Pendente'
+                                };
+                            });
+                        } else {
+                            console.error('Erro ao ler agendamentos do Supabase:', error?.message);
+                            myApps = appointments.filter(app => app.clientEmail.toLowerCase() === loggedClient.email.toLowerCase());
+                        }
                     }
                 } catch(e) {
                     console.error('Erro na consulta de agendamentos:', e);
@@ -1884,6 +1903,31 @@
             activePromotion = null;
             
             showScreen('sucesso');
+
+            // ── Disparo automático do WhatsApp para a Mireille ────────────
+            // (Aguarda 1.5s para a tela de sucesso estar visível antes de abrir o WhatsApp)
+            setTimeout(() => {
+                const professionals = JSON.parse(localStorage.getItem('studio_professionals') || '[]');
+                const pro = professionals.find(p => p.email === 'mireille@studio.com') || professionals[0];
+                let professionalPhone = '24992486888'; // Fallback CConecta
+                if (pro && pro.phone) {
+                    const cleanNum = pro.phone.replace(/\D/g, '');
+                    if (cleanNum && cleanNum.length >= 8) {
+                        professionalPhone = cleanNum;
+                    }
+                }
+
+                const clientNameAuto = loggedClient ? loggedClient.name : 'Cliente';
+                const clientPhoneAuto = loggedClient ? loggedClient.phone : '';
+                const servicesAuto = servicesText || 'Serviço Personalizado';
+                const dateTimeAuto = `${selectedDateText || shortDay} às ${time}`;
+
+                const autoMsg = encodeURIComponent(
+                    `🔔 *Novo Agendamento!*\n\n👤 Cliente: ${clientNameAuto}\n📱 WhatsApp: ${clientPhoneAuto}\n✂️ Serviço: ${servicesAuto}\n📅 Data/Hora: ${dateTimeAuto}\n📍 Unidade: ${clientSelectedUnit}\n\n_Agendamento realizado pelo app Stúdio Mireille Marques_ ✨`
+                );
+                const autoLink = `https://api.whatsapp.com/send?phone=55${professionalPhone}&text=${autoMsg}`;
+                window.open(autoLink, '_blank');
+            }, 1500);
         }
 
         // ===== CONFIGURAÇÃO DE SUPORTE DINÂMICA =====
@@ -2984,14 +3028,27 @@
             
             const selectedSvcEls = document.querySelectorAll('.service-tag.selected');
             const svcArray = Array.from(selectedSvcEls).map(el => el.textContent.trim());
-            const servicesText = svcArray.length > 0 ? svcArray.join(', ') : 'Serviço Personalizado';
+            let servicesText = svcArray.length > 0 ? svcArray.join(', ') : 'Serviço Personalizado';
+            if (activePromotion) {
+                servicesText += ` [Promo: ${activePromotion.title}]`;
+            }
             
-            // Celular de Mireille Marques para recebimento de alertas
-            const professionalPhone = "24992486888";
+            // Busca o telefone dinâmico da Mireille do localStorage de profissionais
+            const professionals = JSON.parse(localStorage.getItem('studio_professionals') || '[]');
+            const pro = professionals.find(p => p.email === 'mireille@studio.com') || professionals[0];
+            let professionalPhone = "24992486888"; // Fallback seguro
+            if (pro && pro.phone) {
+                const cleanNum = pro.phone.replace(/\D/g, '');
+                if (cleanNum && cleanNum.length >= 8) {
+                    professionalPhone = cleanNum;
+                }
+            }
+            
             const clientName = loggedClient ? loggedClient.name : 'Cliente';
+            const clientPhone = loggedClient ? loggedClient.phone : '';
             
             const message = encodeURIComponent(
-                `Olá, Mireille! Acabei de realizar um agendamento de ${servicesText} para o dia ${selectedDateText || shortDay} às ${time} na ${clientSelectedUnit} pelo aplicativo. ✨`
+                `Olá, Mireille! Acabei de realizar um agendamento de ${servicesText} para o dia ${selectedDateText || shortDay} às ${time} na ${clientSelectedUnit} pelo aplicativo. ✨\n\n👤 Cliente: ${clientName}\n📱 WhatsApp: ${clientPhone}`
             );
             const whatsappLink = `https://api.whatsapp.com/send?phone=55${professionalPhone}&text=${message}`;
             window.open(whatsappLink, '_blank');
