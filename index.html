@@ -268,7 +268,7 @@
                 <div class="content">
                     <div class="welcome-hero">
                         <div id="clientUserInfo" style="display:none;width:100%;margin-bottom:20px;align-items:center;justify-content:space-between;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.2);padding:10px 14px;border-radius:12px;">
-                            <span style="font-size:12px;color:#d4af37;font-weight:600;">Olá, <span id="loggedClientName">Cliente</span>! ✨</span>
+                            <span style="font-size:12px;color:#d4af37;font-weight:600;">Oláá, <span id="loggedClientName">Cliente</span>! ✨</span>
                             <a href="#" onclick="logoutClient()" style="font-size:11px;color:#ef4444;text-decoration:none;font-weight:600;">Sair</a>
                         </div>
                         <div class="logo-circle">
@@ -307,7 +307,7 @@
                     </div>
 
                     <div class="tip-box">
-                        <p>💡 A profissional Mireille definirá a unidade ideal para seu atendimento na confirmação!</p>
+                        <p>💡 A profissional Mireille definiráá a unidade ideal para seu atendimento na confirmação!</p>
                     </div>
                 </div>
                 <div class="footer">
@@ -342,18 +342,8 @@
                 <div class="content">
                     <p style="color:#b0b0b0;font-size:13px;margin-bottom:20px;" id="selectedDayLabel">Dia Selecionado</p>
 
-                    <p style="font-size:12px;color:#808080;margin-bottom:12px;letter-spacing:0.3px;">MANHÃ</p>
-                    <div class="time-grid">
-                        <div class="time-slot" onclick="selectTime(this)">08:00</div>
-                        <div class="time-slot" onclick="selectTime(this)">09:00</div>
-                        <div class="time-slot booked">10:00</div>
-                    </div>
-
-                    <p style="font-size:12px;color:#808080;margin-bottom:12px;letter-spacing:0.3px;">TARDE</p>
-                    <div class="time-grid">
-                        <div class="time-slot" onclick="selectTime(this)">14:00</div>
-                        <div class="time-slot" onclick="selectTime(this)">15:00</div>
-                        <div class="time-slot" onclick="selectTime(this)">16:00</div>
+                    <div id="dynamicTimeSlotsContainer">
+                        <!-- Os horários de 75min de diferença serão gerados e exibidos dinamicamente aqui -->
                     </div>
                 </div>
                 <div class="footer">
@@ -374,14 +364,21 @@
                         <p class="card-subtitle" id="confirmDateTimeLabel">Dia e Hora Selecionados</p>
                     </div>
 
+                    <div class="card" id="appliedPromoCard" style="display:none; border-color:#e5c158; background:rgba(212,175,55,0.08);">
+                        <div class="card-title" style="color:#e5c158; display:flex; align-items:center; gap:6px;">
+                            <span>🎁 Promoção Aplicada</span>
+                        </div>
+                        <p class="card-subtitle" id="appliedPromoName" style="color:white; font-weight:600;"></p>
+                        <p style="font-size:10px; color:#a0a0a0; margin-top:4px;">✨ Desconto e condições aplicados no fechamento.</p>
+                    </div>
+
                     <div class="card">
                         <div class="card-title">✂️ Serviço</div>
                         <div id="serviceTagsClient" style="display:flex;flex-wrap:wrap;margin-top:8px;"></div>
                     </div>
 
-                    <div class="card">
-                        <div class="card-title">📍 Unidade (a confirmar)</div>
-                        <p class="card-subtitle" style="color:#f59e0b;">A profissional Mireille confirmará a unidade ideal para o seu atendimento via WhatsApp</p>
+                    <div class="card" id="clientUnitSelectionCard">
+                        <!-- Gerado dinamicamente via updateUnitSelectionBasedOnServices() -->
                     </div>
 
                     <div class="card">
@@ -410,14 +407,19 @@
                     <div class="card" style="text-align:center;width:100%;">
                         <p style="color:#b0b0b0;font-size:13px;margin-bottom:8px;" id="successDateDisplay">Dia Selecionado</p>
                         <p style="font-size:36px;font-weight:700;color:#d4af37;margin-bottom:8px;" id="successTimeDisplay">14:00</p>
-                        <p style="color:#b0b0b0;font-size:13px;">Mireille confirmará a unidade em breve</p>
+                        <p style="color:#b0b0b0;font-size:13px;" id="successUnitDisplay">Definindo unidade...</p>
                     </div>
 
                     <p style="color:#808080;font-size:12px;margin-top:24px;text-align:center;">Fique de olho no WhatsApp! 💛</p>
                 </div>
-                <div class="footer">
-                    <button class="btn btn-gold" onclick="showScreen('meus')">Ver Meu Histórico</button>
-                    <button class="btn btn-secondary" onclick="showScreen('welcome')">← Início</button>
+                <div class="footer" style="display:flex;flex-direction:column;gap:10px;width:100%;">
+                    <button class="btn btn-gold" onclick="sendProfessionalNotification()" style="background:#22c55e;border-color:#22c55e;color:white;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:600;">
+                        💬 Notificar Mireille no WhatsApp
+                    </button>
+                    <div style="display:flex;gap:10px;width:100%;">
+                        <button class="btn btn-secondary" onclick="showScreen('meus')" style="flex:1;font-size:11px;">Ver Meu Histórico</button>
+                        <button class="btn btn-secondary" onclick="showScreen('welcome')" style="flex:1;font-size:11px;">← Início</button>
+                    </div>
                 </div>
             </div>
 
@@ -441,33 +443,8 @@
                     <button class="header-back" onclick="showScreen('agenda')">←</button>
                     <div class="header-title">Promoções</div>
                 </div>
-                <div class="content">
-                    <div class="template-card campaign-gradient-1">
-                        <div class="template-header">
-                            <p class="template-title">🌸 Dia da Beleza</p>
-                        </div>
-                        <div class="template-preview">
-                            <p>Combo especial: Corte + Escova + Hidratação Profunda com 25% de desconto! Válido até 15/06</p>
-                        </div>
-                    </div>
-
-                    <div class="template-card campaign-gradient-2">
-                        <div class="template-header">
-                            <p class="template-title">⭐ Indicou, Ganhou!</p>
-                        </div>
-                        <div class="template-preview">
-                            <p>Indique uma amiga e ganhe 15% de desconto no seu próximo procedimento. Ela também ganha!</p>
-                        </div>
-                    </div>
-
-                    <div class="template-card campaign-gradient-3">
-                        <div class="template-header">
-                            <p class="template-title">💝 Programa Fidelidade</p>
-                        </div>
-                        <div class="template-preview">
-                            <p>A cada 5 procedimentos, ganhe uma Hidratação Profunda grátis! Pontos acumulados automaticamente</p>
-                        </div>
-                    </div>
+                <div class="content" id="clientCampaignsList">
+                    <!-- Gerado dinamicamente via renderClientCampaigns() -->
                 </div>
                 <div class="footer">
                     <button class="btn btn-secondary" onclick="showScreen('agenda')">← Voltar</button>
@@ -663,7 +640,7 @@
                     <div id="gestaoAppointmentsList"></div>
                     
                     <div class="tip-box">
-                        <p>💡 Ao definir a unidade, a cliente receberá automaticamente a confirmação via WhatsApp com o endereço!</p>
+                        <p>💡 Ao definirá a unidade, a cliente receberá automaticamente a confirmação via WhatsApp com o endereço!</p>
                     </div>
                 </div>
                 <div class="footer">
@@ -753,6 +730,12 @@
                 <div class="modal-content">
                     <p style="font-size:11px;color:#808080;text-align:center;margin-bottom:16px;letter-spacing:1px;">CUSTOMIZAR CAMPANHA</p>
                     <input type="text" class="input-field" id="editCampTitle" placeholder="Título da campanha">
+                    <label style="color:#808080;font-size:10px;letter-spacing:0.3px;display:block;margin-bottom:4px;font-weight:600;text-align:left;">TIPO DE PROMOÇÃO / REGRAS</label>
+                    <select class="input-field" id="editCampType" style="margin-bottom:12px;">
+                        <option value="tratamento">🌸 Tratamento (Limite de 1 uso a cada 3 meses)</option>
+                        <option value="indicacao">⭐ Indicação (Liberado sem limite de tempo)</option>
+                        <option value="fidelidade">💝 Programa Fidelidade (Liberado sem limite de tempo)</option>
+                    </select>
                     <textarea class="input-field" id="editCampMessage" placeholder="Sua mensagem..." style="height:120px;resize:none;"></textarea>
                     <div class="tip-box">
                         <p>💡 Use emojis, urgência e CTAs fortes para converter!</p>
@@ -760,6 +743,64 @@
                     <div class="modal-buttons">
                         <button class="btn btn-gold" onclick="saveCampaign()">Enviar para Clientes</button>
                         <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL: SUCESSO DE CADASTRO COM SENHA -->
+            <div class="modal" id="clientSuccessModal">
+                <div class="modal-content" style="text-align: center; border-color: #22c55e;">
+                    <div style="font-size: 50px; margin-bottom: 12px; animation: pulse 2s ease-in-out infinite;">🎉</div>
+                    <div class="modal-title" style="color: #22c55e; font-size: 22px;">Conta Criada!</div>
+                    <p class="modal-text" style="font-size: 13px; color: #b0b0b0; margin-bottom: 16px;">
+                        Sua conta de cliente no Stúdio Mireille Marques foi criada e já está **ativa**!
+                    </p>
+                    
+                    <div style="background: rgba(34, 197, 94, 0.08); border: 2px dashed rgba(34, 197, 94, 0.4); border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+                        <p style="color: #808080; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; font-weight: 600;">E-mail de Login</p>
+                        <p id="successClientEmail" style="color: white; font-size: 14px; font-weight: 600; font-family: monospace; margin-bottom: 12px; word-break: break-all;"></p>
+                        <hr style="border: none; border-top: 1px solid rgba(34, 197, 94, 0.2); margin-bottom: 12px;">
+                        <p style="color: #808080; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; font-weight: 600;">Sua Senha Temporária</p>
+                        <p id="successClientPassword" style="color: #e5c158; font-size: 24px; font-weight: 700; letter-spacing: 2px; font-family: monospace; word-break: break-all; margin-bottom: 10px;"></p>
+                        <button class="btn btn-secondary btn-small" onclick="copyClientPassword()" style="font-size: 11px; padding: 6px 12px; border-color: rgba(212,175,55,0.4); background: rgba(212,175,55,0.05); color: #d4af37; width: 100%;">📋 Copiar Senha</button>
+                    </div>
+
+                    <p style="color: #808080; font-size: 11px; margin-bottom: 20px; line-height: 1.5;">
+                        💡 Copie e guarde sua senha. Você já pode fazer login imediatamente clicando no botão abaixo!
+                    </p>
+
+                    <button class="btn btn-gold" onclick="closeClientSuccessModal()">Ir para o Login →</button>
+                </div>
+            </div>
+
+            <!-- MODAL: REDEFINIÇÃO DE SENHA OBRIGATÓRIA COM TIMER -->
+            <div class="modal" id="forcePasswordResetModal">
+                <div class="modal-content" style="text-align: center; border-color: #d4af37; max-width: 400px;">
+                    <div style="font-size: 50px; margin-bottom: 12px;">🔒</div>
+                    <div class="modal-title" style="color: #d4af37; font-size: 20px;">Alterar Senha Obrigatório</div>
+                    <p class="modal-text" style="font-size: 13px; color: #b0b0b0; margin-bottom: 16px; line-height: 1.5;">
+                        Você entrou usando uma senha temporária. Para a sua segurança, você deve cadastrar uma nova senha definitiva agora.
+                    </p>
+                    
+                    <!-- Timer Contagem Regressiva -->
+                    <div style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 10px; padding: 10px; margin-bottom: 20px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%;">
+                        <span style="font-size: 14px;">⏱️</span>
+                        <span style="color: #f87171; font-weight: 700; font-size: 15px; font-family: monospace;" id="resetCountdownTimer">15:00</span>
+                        <span style="color: #808080; font-size: 11px;">restantes</span>
+                    </div>
+
+                    <!-- Campos de senha -->
+                    <div style="text-align: left; margin-bottom: 20px;">
+                        <label style="color:#808080;font-size:10px;letter-spacing:0.3px;display:block;margin-bottom:6px;font-weight:600;">NOVA SENHA DEFINITIVA</label>
+                        <input type="password" class="input-field" id="newClientResetPass" placeholder="Nova senha (mín. 6 caracteres)" style="margin-bottom:12px;">
+                        
+                        <label style="color:#808080;font-size:10px;letter-spacing:0.3px;display:block;margin-bottom:6px;font-weight:600;">CONFIRMAR NOVA SENHA</label>
+                        <input type="password" class="input-field" id="newClientResetPassConfirm" placeholder="Confirme a nova senha">
+                    </div>
+
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-gold" onclick="submitForcePasswordReset()" style="flex: 1;">Definir Senha</button>
+                        <button class="btn btn-secondary" onclick="cancelForcePasswordReset()" style="flex: 1;">Sair</button>
                     </div>
                 </div>
             </div>
@@ -1066,7 +1107,8 @@
         let defaultServices = [
             'Corte', 'Escova', 'Corte + Escova', 'Reflexo', 'Luzes',
             'Hidratação Profunda', 'Tratamento Capilar', 'Coloração',
-            'Design de Sobrancelha', 'Maquiagem Social'
+            'Design de Sobrancelha', 'Maquiagem Social',
+            'Podologia Clínica', 'Podologia Preventiva', 'Spa dos Pés (Podologia)'
         ];
 
         let services = localStorage.getItem('studio_services')
@@ -1107,16 +1149,94 @@
             }
         }
 
+        let clientSelectedUnit = 'Unidade 1 — Centro';
+
+        function selectClientUnitOption(unitName, btnEl) {
+            clientSelectedUnit = unitName;
+            document.querySelectorAll('.unit-option-btn').forEach(b => {
+                b.style.borderColor = 'rgba(212,175,55,0.2)';
+                b.style.background = 'transparent';
+                b.style.color = '#fff';
+            });
+            btnEl.style.borderColor = '#d4af37';
+            btnEl.style.background = 'linear-gradient(135deg, rgba(212,175,55,0.1), rgba(212,175,55,0.2))';
+            btnEl.style.color = '#d4af37';
+        }
+
+        function updateUnitSelectionBasedOnServices() {
+            const card = document.getElementById('clientUnitSelectionCard');
+            if (!card) return;
+
+            const u1 = units[0] || defaultUnits[0];
+            const u2 = units[1] || defaultUnits[1];
+
+            const selectedSvcEls = document.querySelectorAll('.service-tag.selected');
+            const svcArray = Array.from(selectedSvcEls).map(el => el.textContent.trim().toLowerCase());
+
+            if (svcArray.length === 0) {
+                clientSelectedUnit = u1.name;
+                card.innerHTML = `
+                    <div class="card-title">📍 Unidade de Atendimento</div>
+                    <p class="card-subtitle" style="color:#d4af37;font-weight:600;">${u1.name}</p>
+                    <p style="font-size:10px;color:#808080;margin-top:4px;">Por favor, selecione pelo menos um serviço acima.</p>
+                `;
+                return;
+            }
+
+            const hasCabelo = svcArray.some(s => 
+                s.includes('corte') || s.includes('escova') || s.includes('reflexo') || 
+                s.includes('luzes') || s.includes('hidratação') || s.includes('tratamento') || 
+                s.includes('coloração') || s.includes('cabelo')
+            );
+
+            const hasPodologia = svcArray.some(s => s.includes('podologia') || s.includes('pés'));
+            const onlyPodologia = hasPodologia && svcArray.every(s => s.includes('podologia') || s.includes('pés'));
+
+            if (onlyPodologia) {
+                card.innerHTML = `
+                    <div class="card-title">📍 Escolha a Unidade (Apenas para Podologia)</div>
+                    <p class="card-subtitle" style="margin-bottom:12px;color:#808080;font-size:11px;">O serviço de podologia está disponível em ambas as unidades. Selecione onde prefere ser atendida:</p>
+                    <div style="display:flex;gap:10px;margin-top:6px;">
+                        <button class="unit-option-btn" onclick="selectClientUnitOption('${u1.name}', this)" style="flex:1;padding:10px;background:${clientSelectedUnit === u1.name ? 'linear-gradient(135deg, rgba(212,175,55,0.1), rgba(212,175,55,0.2))' : 'transparent'};border:1px solid ${clientSelectedUnit === u1.name ? '#d4af37' : 'rgba(212,175,55,0.2)'};border-radius:10px;color:${clientSelectedUnit === u1.name ? '#d4af37' : '#fff'};font-size:11px;font-weight:600;cursor:pointer;transition:all 0.3s;font-family:inherit;">
+                            🏫 ${u1.name.split('—')[0].trim() || u1.name.split('-')[0].trim() || 'Unidade 1'}<br><span style="font-size:9px;color:#808080;font-weight:normal;">${u1.address}</span>
+                        </button>
+                        <button class="unit-option-btn" onclick="selectClientUnitOption('${u2.name}', this)" style="flex:1;padding:10px;background:${clientSelectedUnit === u2.name ? 'linear-gradient(135deg, rgba(212,175,55,0.1), rgba(212,175,55,0.2))' : 'transparent'};border:1px solid ${clientSelectedUnit === u2.name ? '#d4af37' : 'rgba(212,175,55,0.2)'};border-radius:10px;color:${clientSelectedUnit === u2.name ? '#d4af37' : '#fff'};font-size:11px;font-weight:600;cursor:pointer;transition:all 0.3s;font-family:inherit;">
+                            🌿 ${u2.name.split('—')[0].trim() || u2.name.split('-')[0].trim() || 'Unidade 2'}<br><span style="font-size:9px;color:#808080;font-weight:normal;">${u2.address}</span>
+                        </button>
+                    </div>
+                `;
+            } else if (hasCabelo) {
+                clientSelectedUnit = u2.name;
+                card.innerHTML = `
+                    <div class="card-title">📍 Unidade de Atendimento</div>
+                    <p class="card-subtitle" style="color:#d4af37;font-weight:600;">${u2.name}</p>
+                    <p class="card-subtitle" style="font-size:11px;color:#808080;margin-top:4px;">📍 Endereço: ${u2.address}</p>
+                    <p style="font-size:10px;color:#808080;margin-top:4px;">✨ Definida automaticamente: Todos os procedimentos capilares são realizados na sofisticada Unidade Jardins.</p>
+                `;
+            } else {
+                clientSelectedUnit = u1.name;
+                card.innerHTML = `
+                    <div class="card-title">📍 Unidade de Atendimento</div>
+                    <p class="card-subtitle" style="color:#d4af37;font-weight:600;">${u1.name}</p>
+                    <p class="card-subtitle" style="font-size:11px;color:#808080;margin-top:4px;">📍 Endereço: ${u1.address}</p>
+                    <p style="font-size:10px;color:#808080;margin-top:4px;">✨ Definida automaticamente para a Unidade do Centro.</p>
+                `;
+            }
+        }
+
         function renderClientServices() {
             const container = document.getElementById('serviceTagsClient');
             if (!container) return;
-            container.innerHTML = services.map(s => `
-                <div class="service-tag" onclick="toggleServiceTag(this)">${s}</div>
+            container.innerHTML = services.map((s, idx) => `
+                <div class="service-tag ${idx === 0 ? 'selected' : ''}" onclick="toggleServiceTag(this)">${s}</div>
             `).join('');
+
+            updateUnitSelectionBasedOnServices();
         }
 
         function toggleServiceTag(el) {
             el.classList.toggle('selected');
+            updateUnitSelectionBasedOnServices();
         }
 
         // ===== CLIENTE LOGADA & AGENDAMENTOS =====
@@ -1141,6 +1261,7 @@
             const today = new Date();
             let count = 0;
             let current = new Date(today);
+            const currentYear = today.getFullYear();
 
             // Gerar os próximos 7 dias úteis (terça a sábado)
             while (count < 7) {
@@ -1167,25 +1288,82 @@
                 const dayStr = String(dayNum).padStart(2, '0');
                 const monthStr = String(current.getMonth() + 1).padStart(2, '0');
                 const dateValue = `${dayStr}/${monthStr}`;
-
-                let slotsText = '✓ 4 horários disponíveis';
-                if (count % 3 === 0) slotsText = '✓ 5 horários disponíveis';
-                if (count % 4 === 0) slotsText = '✓ 3 horários disponíveis';
+                const dateSlotValue = `${currentYear}-${monthStr}-${dayStr}`;
 
                 daysList.push({
                     text: dateText,
                     value: dateValue,
-                    slotsText: slotsText
+                    dateSlotValue: dateSlotValue,
+                    slotsText: '⏳ Carregando vagas...'
                 });
                 count++;
             }
 
-            container.innerHTML = daysList.map(d => `
-                <div class="card" onclick="selectClientDay('${d.text}', '${d.value}')" style="cursor:pointer;">
-                    <div class="card-title">📅 ${d.text}</div>
-                    <div class="card-subtitle">${d.slotsText}</div>
-                </div>
-            `).join('');
+            const renderHtml = (list) => {
+                container.innerHTML = list.map(d => `
+                    <div class="card" onclick="selectClientDay('${d.text}', '${d.value}')" style="cursor:pointer;">
+                        <div class="card-title">📅 ${d.text}</div>
+                        <div class="card-subtitle" id="slots_label_${d.value}">${d.slotsText}</div>
+                    </div>
+                `).join('');
+            };
+
+            renderHtml(daysList);
+
+            (async () => {
+                let bookedCounts = {};
+                
+                if (supabaseClient) {
+                    try {
+                        const datesArray = daysList.map(d => d.dateSlotValue);
+                        const { data, error } = await supabaseClient
+                            .from('appointments')
+                            .select('date_slot')
+                            .in('date_slot', datesArray);
+                        
+                        if (!error && data) {
+                            data.forEach(app => {
+                                bookedCounts[app.date_slot] = (bookedCounts[app.date_slot] || 0) + 1;
+                            });
+                        }
+                    } catch (e) {
+                        console.error("Erro ao carregar vagas reais do Supabase:", e);
+                    }
+                } else {
+                    const localApps = localStorage.getItem('studio_appointments')
+                        ? JSON.parse(localStorage.getItem('studio_appointments'))
+                        : [];
+                    localApps.forEach(app => {
+                        if (app.dateTime) {
+                            const matches = app.dateTime.match(/(\d{2})\/(\d{2})/);
+                            if (matches) {
+                                const dayStr = matches[1];
+                                const monthStr = matches[2];
+                                const dateSlot = `${currentYear}-${monthStr}-${dayStr}`;
+                                bookedCounts[dateSlot] = (bookedCounts[dateSlot] || 0) + 1;
+                            }
+                        }
+                    });
+                }
+
+                daysList.forEach(d => {
+                    const ocupados = bookedCounts[d.dateSlotValue] || 0;
+                    const livres = Math.max(0, 9 - ocupados);
+                    
+                    if (livres === 0) {
+                        d.slotsText = '<span style="color:#ef4444;font-weight:600;">🚫 Esgotado hoje</span>';
+                    } else if (livres === 1) {
+                        d.slotsText = '<span style="color:#f59e0b;font-weight:600;">⚠️ Apenas 1 vaga restante</span>';
+                    } else {
+                        d.slotsText = `<span style="color:#22c55e;font-weight:600;">✓ ${livres} vagas disponíveis</span>`;
+                    }
+
+                    const labelEl = document.getElementById(`slots_label_${d.value}`);
+                    if (labelEl) {
+                        labelEl.innerHTML = d.slotsText;
+                    }
+                });
+            })();
         }
 
         function selectClientDay(text, value) {
@@ -1245,6 +1423,22 @@
                     }
 
                     if (data.user) {
+                        // Verifica se é senha temporária
+                        if (data.user.user_metadata && data.user.user_metadata.is_temporary_password === true) {
+                            document.getElementById('clientLoginEmail').value = '';
+                            document.getElementById('clientLoginPass').value = '';
+                            
+                            // Cria dados temporários em loggedClient para podermos realizar o updateUser
+                            loggedClient = {
+                                name: data.user.user_metadata.full_name || data.user.user_metadata.name || data.user.email.split('@')[0],
+                                email: data.user.email,
+                                phone: data.user.user_metadata.phone || ''
+                            };
+                            
+                            triggerForcePasswordReset();
+                            return;
+                        }
+
                         loggedClient = {
                             name: data.user.user_metadata.full_name || data.user.user_metadata.name || data.user.email.split('@')[0],
                             email: data.user.email,
@@ -1373,7 +1567,10 @@
             try {
                 const res = await fetch(edgeFnUrl, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${supConfig.anonKey || ''}`
+                    },
                     body: JSON.stringify({ 
                         name, 
                         email, 
@@ -1396,16 +1593,10 @@
                 document.getElementById('clientRegEmail').value = '';
                 document.getElementById('clientRegPhone').value = '';
 
-                const msg = `✅ Cadastro realizado com sucesso!
-
-📧 E-mail: ${email}
-
-📩 Sua senha provisória e o link de ativação foram enviados para o seu e-mail!
-⚠️ Importante: Verifique também a pasta de SPAM ou Lixo Eletrônico.
-
-Após clicar no link de ativação enviado, faça login com o seu e-mail e a senha recebida!`;
-                alert(msg);
-                showScreen('loginCliente');
+                // Exibe os dados no modal dourado premium de sucesso
+                document.getElementById('successClientEmail').textContent = email;
+                document.getElementById('successClientPassword').textContent = result.password || 'Mireille-1234';
+                document.getElementById('clientSuccessModal').classList.add('active');
             } catch (err) {
                 if (btn) {
                     btn.textContent = originalText;
@@ -1415,11 +1606,162 @@ Após clicar no link de ativação enviado, faça login com o seu e-mail e a sen
             }
         }
 
-        function renderClientAppointments() {
+        function copyClientPassword() {
+            const password = document.getElementById('successClientPassword').textContent;
+            navigator.clipboard.writeText(password).then(() => {
+                alert('📋 Senha temporária copiada!');
+            });
+        }
+
+        function closeClientSuccessModal() {
+            document.getElementById('clientSuccessModal').classList.remove('active');
+            showScreen('loginCliente');
+        }
+
+        // ===== REDEFINIÇÃO DE SENHA OBRIGATÓRIA COM TIMER =====
+        let forceResetTimerInterval = null;
+        let forceResetTimeLeft = 900; // 15 minutos = 900s
+
+        function startForceResetTimer() {
+            forceResetTimeLeft = 900;
+            if (forceResetTimerInterval) clearInterval(forceResetTimerInterval);
+            
+            const display = document.getElementById('resetCountdownTimer');
+            if (display) display.textContent = '15:00';
+
+            forceResetTimerInterval = setInterval(() => {
+                forceResetTimeLeft--;
+                
+                if (forceResetTimeLeft <= 0) {
+                    clearInterval(forceResetTimerInterval);
+                    document.getElementById('forcePasswordResetModal').classList.remove('active');
+                    logoutClient();
+                    alert('⏱️ Tempo limite de segurança esgotado! Por motivos de segurança, você foi deslogada. Acesse novamente com a sua senha provisória e redefina-a dentro do prazo.');
+                } else {
+                    const mins = Math.floor(forceResetTimeLeft / 60);
+                    const secs = forceResetTimeLeft % 60;
+                    if (display) {
+                        display.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+                    }
+                }
+            }, 1000);
+        }
+
+        function triggerForcePasswordReset() {
+            document.getElementById('newClientResetPass').value = '';
+            document.getElementById('newClientResetPassConfirm').value = '';
+            document.getElementById('forcePasswordResetModal').classList.add('active');
+            startForceResetTimer();
+        }
+
+        async function submitForcePasswordReset() {
+            const pass = document.getElementById('newClientResetPass').value.trim();
+            const confirmPass = document.getElementById('newClientResetPassConfirm').value.trim();
+
+            if (!pass || !confirmPass) {
+                return alert('Por favor, preencha a nova senha e a confirmação.');
+            }
+
+            if (pass.length < 6) {
+                return alert('🔒 A nova senha deve conter pelo menos 6 caracteres.');
+            }
+
+            if (pass !== confirmPass) {
+                return alert('❌ As senhas digitadas não coincidem.');
+            }
+
+            try {
+                if (supabaseClient) {
+                    const { error } = await supabaseClient.auth.updateUser({
+                        password: pass,
+                        data: { is_temporary_password: false }
+                    });
+
+                    if (error) {
+                        return alert('❌ Erro ao atualizar senha no Supabase: ' + error.message);
+                    }
+
+                    // Sucesso!
+                    if (forceResetTimerInterval) clearInterval(forceResetTimerInterval);
+                    document.getElementById('forcePasswordResetModal').classList.remove('active');
+                    
+                    // Salva o logged_client definitivo
+                    localStorage.setItem('logged_client', JSON.stringify(loggedClient));
+                    updateWelcomeHeader();
+
+                    alert('✨ Senha redefinida com sucesso! Sua conta está 100% segura e pronta para uso.');
+                    
+                    if (pendingRedirectScreen) {
+                        const screenTo = pendingRedirectScreen;
+                        pendingRedirectScreen = null;
+                        showScreen(screenTo);
+                    } else {
+                        showScreen('welcome');
+                    }
+                } else {
+                    alert('Erro: Supabase não está configurado.');
+                }
+            } catch (err) {
+                alert('❌ Ocorreu um erro ao atualizar a senha: ' + err.message);
+            }
+        }
+
+        function cancelForcePasswordReset() {
+            if (forceResetTimerInterval) clearInterval(forceResetTimerInterval);
+            document.getElementById('forcePasswordResetModal').classList.remove('active');
+            
+            // Força o logout total do cliente
+            loggedClient = null;
+            localStorage.removeItem('logged_client');
+            if (supabaseClient) {
+                supabaseClient.auth.signOut();
+            }
+            updateWelcomeHeader();
+            alert('Você saiu do fluxo de redefinição de senha e foi deslogado.');
+            showScreen('welcome');
+        }
+
+        async function renderClientAppointments() {
             const container = document.getElementById('clientAppointmentsList');
             if (!container || !loggedClient) return;
             
-            const myApps = appointments.filter(app => app.clientEmail.toLowerCase() === loggedClient.email.toLowerCase());
+            container.innerHTML = `<p style="color:#808080;font-size:13px;text-align:center;margin-top:40px;">⏳ Carregando agendamentos...</p>`;
+
+            let myApps = [];
+
+            if (supabaseClient) {
+                try {
+                    const { data, error } = await supabaseClient
+                        .from('appointments')
+                        .select('*, customers(name, phone)')
+                        .order('date_slot', { ascending: false });
+
+                    if (!error && data) {
+                        myApps = data.map(app => {
+                            const [year, month, day] = app.date_slot.split('-');
+                            const formattedDate = `${day}/${month}`;
+                            const shortTime = app.time_slot.substring(0, 5);
+                            return {
+                                clientEmail: loggedClient.email,
+                                clientName: loggedClient.name,
+                                clientPhone: loggedClient.phone,
+                                dateTime: `Agendado • ${formattedDate} às ${shortTime}`,
+                                services: app.service,
+                                unit: app.status === 'confirmed' ? (app.notes || 'Unidade Definida') : 'Aguardando definição de unidade',
+                                status: app.status === 'confirmed' ? 'Confirmado' : 'Pendente'
+                            };
+                        });
+                    } else {
+                        console.error('Erro ao ler agendamentos do Supabase:', error?.message);
+                        myApps = appointments.filter(app => app.clientEmail.toLowerCase() === loggedClient.email.toLowerCase());
+                    }
+                } catch(e) {
+                    console.error('Erro na consulta de agendamentos:', e);
+                    myApps = appointments.filter(app => app.clientEmail.toLowerCase() === loggedClient.email.toLowerCase());
+                }
+            } else {
+                myApps = appointments.filter(app => app.clientEmail.toLowerCase() === loggedClient.email.toLowerCase());
+            }
             
             if (myApps.length === 0) {
                 container.innerHTML = `<p style="color:#808080;font-size:13px;text-align:center;margin-top:40px;">Você ainda não possui atendimentos no histórico. ✨</p>`;
@@ -1437,14 +1779,23 @@ Após clicar no link de ativação enviado, faça login com o seu e-mail e a sen
             }
         }
 
-        function createAppointment() {
+        async function createAppointment() {
             const time = selectedTimeValue || '14:00';
             const shortDay = selectedDateValue || '27/05';
             const weekday = selectedDateText ? selectedDateText.split(' - ')[0].substring(0,3) : 'Ter';
             
             const selectedSvcEls = document.querySelectorAll('.service-tag.selected');
+            if (selectedSvcEls.length === 0) {
+                return alert('❌ Por favor, selecione pelo menos um serviço antes de confirmar o agendamento.');
+            }
             const svcArray = Array.from(selectedSvcEls).map(el => el.textContent.trim());
-            const servicesText = svcArray.length > 0 ? svcArray.join(', ') : 'Serviço Personalizado';
+            let servicesText = svcArray.join(', ');
+            
+            let notesValue = clientSelectedUnit;
+            if (activePromotion) {
+                servicesText += ` [Promo: ${activePromotion.title}]`;
+                notesValue += ` (Promo: ${activePromotion.title})`;
+            }
             
             const newApp = {
                 clientEmail: loggedClient ? loggedClient.email : 'anonimo@email.com',
@@ -1452,12 +1803,69 @@ Após clicar no link de ativação enviado, faça login com o seu e-mail e a sen
                 clientName: loggedClient ? loggedClient.name : 'Cliente Anônimo',
                 dateTime: `${weekday} ${shortDay} • ${time}`,
                 services: servicesText,
-                unit: 'Aguardando confirmação',
-                status: 'Pendente'
+                unit: notesValue,
+                status: 'Confirmado'
             };
             
             appointments.push(newApp);
             localStorage.setItem('studio_appointments', JSON.stringify(appointments));
+
+            // Sincroniza com o Supabase em tempo real se o cliente estiver logado e online
+            if (supabaseClient && loggedClient) {
+                try {
+                    const { data: custData, error: custErr } = await supabaseClient
+                        .from('customers')
+                        .select('id')
+                        .eq('email', loggedClient.email)
+                        .limit(1);
+
+                    let customerId = null;
+                    if (!custErr && custData && custData.length > 0) {
+                        customerId = custData[0].id;
+                    } else {
+                        // Registra o customer preventivamente
+                        const { data: newCust, error: createCustErr } = await supabaseClient
+                            .from('customers')
+                            .insert([{
+                                tenant_id: 'bfbe574d-34f5-7080-1bce-0b9200bc42bf',
+                                name: loggedClient.name,
+                                email: loggedClient.email,
+                                phone: loggedClient.phone
+                            }])
+                            .select('id');
+                        if (!createCustErr && newCust && newCust.length > 0) {
+                            customerId = newCust[0].id;
+                        }
+                    }
+
+                    if (customerId) {
+                        const currentYear = new Date().getFullYear();
+                        const [day, month] = shortDay.split('/');
+                        const dateSlot = `${currentYear}-${month}-${day}`;
+
+                        const { error: appErr } = await supabaseClient
+                            .from('appointments')
+                            .insert([{
+                                tenant_id: 'bfbe574d-34f5-7080-1bce-0b9200bc42bf',
+                                customer_id: customerId,
+                                date_slot: dateSlot,
+                                time_slot: time,
+                                barber: 'Mireille Marques',
+                                service: servicesText,
+                                status: 'confirmed',
+                                notes: notesValue
+                            }]);
+
+                        if (appErr) {
+                            console.error('Erro ao sincronizar agendamento no Supabase:', appErr.message);
+                        } else {
+                            console.log('✅ Agendamento sincronizado com o Supabase!');
+                        }
+                    }
+                } catch(e) {
+                    console.error('Erro na sincronização de agendamento:', e);
+                }
+            }
             
             const successTime = document.getElementById('successTimeDisplay');
             if (successTime) successTime.textContent = time;
@@ -1466,6 +1874,14 @@ Após clicar no link de ativação enviado, faça login com o seu e-mail e a sen
             if (successDate) {
                 successDate.textContent = selectedDateText || 'Terça, 27 de Maio';
             }
+
+            const successUnit = document.getElementById('successUnitDisplay');
+            if (successUnit) {
+                successUnit.innerHTML = `Confirmado na <strong style="color:#d4af37;">${clientSelectedUnit}</strong>`;
+            }
+            
+            // Limpa a promoção ativa após uso bem-sucedido
+            activePromotion = null;
             
             showScreen('sucesso');
         }
@@ -1770,7 +2186,7 @@ Após clicar no link de ativação enviado, faça login com o seu e-mail e a sen
             
             renderSupportData();
             
-            const message = encodeURIComponent(`Olá ${r.name}! Sua solicitação de acesso para o Stúdio Mireille Marques foi aprovada com sucesso!\n\nSeus dados de login são:\n📧 E-mail: ${r.email}\n🔑 Senha: ${generatedPassword}\n\nAcesse no link do app! 💇‍♀️✨`);
+            const message = encodeURIComponent(`Oláá ${r.name}! Sua solicitação de acesso para o Stúdio Mireille Marques foi aprovada com sucesso!\n\nSeus dados de login são:\n📧 E-mail: ${r.email}\n🔑 Senha: ${generatedPassword}\n\nAcesse no link do app! 💇‍♀️✨`);
             const cleanPhone = r.phone.replace(/\D/g, '');
             const whatsappLink = `https://api.whatsapp.com/send?phone=55${cleanPhone}&text=${message}`;
             
@@ -1802,7 +2218,7 @@ Após clicar no link de ativação enviado, faça login com o seu e-mail e a sen
             
             renderSupportData();
             
-            const message = encodeURIComponent(`Olá ${r.name}! Seu cadastro de cliente no Stúdio Mireille Marques foi aprovada com sucesso!\n\nSeus dados de login são:\n📧 E-mail: ${r.email}\n🔑 Senha: ${generatedPassword}\n\nAcesse no link do app para agendar e ver seu histórico! ✨`);
+            const message = encodeURIComponent(`Oláá ${r.name}! Seu cadastro de cliente no Stúdio Mireille Marques foi aprovada com sucesso!\n\nSeus dados de login são:\n📧 E-mail: ${r.email}\n🔑 Senha: ${generatedPassword}\n\nAcesse no link do app para agendar e ver seu histórico! ✨`);
             const cleanPhone = r.phone.replace(/\D/g, '');
             const whatsappLink = `https://api.whatsapp.com/send?phone=55${cleanPhone}&text=${message}`;
             
@@ -1812,39 +2228,24 @@ Após clicar no link de ativação enviado, faça login com o seu e-mail e a sen
 
         function deleteProfessional(index) {
             const professionals = JSON.parse(localStorage.getItem('studio_professionals') || '[]');
-            const name = professionals[index].name;
-            if (confirm(`Tem certeza que deseja excluir a conta de ${name}?`)) {
-                professionals.splice(index, 1);
-                localStorage.setItem('studio_professionals', JSON.stringify(professionals));
-                renderSupportData();
-            }
-        }
-
-        function deleteClient(index) {
-            const clients = JSON.parse(localStorage.getItem('studio_clients') || '[]');
-            const name = clients[index].name;
-            if (confirm(`Tem certeza que deseja excluir a conta de ${name}?`)) {
-                clients.splice(index, 1);
-                localStorage.setItem('studio_clients', JSON.stringify(clients));
-                renderSupportData();
-            }
-        }
-
-        // ===== TEMPLATES DE CAMPANHA =====
+            const name = professionals[inde        // ===== TEMPLATES DE CAMPANHA =====
         const templates = {
             beleza: {
                 title: '🌸 Dia da Beleza',
+                type: 'tratamento',
                 message: 'Você merece se sentir radiante!\n\nCombo Beleza Especial:\n✨ Corte + Escova + Hidratação Profunda\n💛 25% OFF exclusivo\n📅 Vagas limitadas!\n\nAgende pelo app ou chame no WhatsApp!'
             },
             namorados: {
                 title: '💝 Dia dos Namorados',
+                type: 'tratamento',
                 message: 'Surpreenda quem você ama!\n\nCombo Love:\n💇‍♀️ Escova + Maquiagem + Design de Sobrancelha\n🥂 Espumante cortesia no atendimento\n🎁 Agende e ganhe um voucher surpresa!'
             },
             maes: {
                 title: '🌷 Dia das Mães',
-                message: 'Mãe merece o world!\n\nMimo Especial:\n✨ Hidratação Profunda + Escova + Mimo Premium\n💐 Café & ambiente especial\n📅 Agende agora - Vagas limitadíssimas!'
+                type: 'tratamento',
+                message: 'Mãe merece o mundo!\n\nMimo Especial:\n✨ Hidratação Profunda + Escova + Mimo Premium\n💐 Café & ambiente especial\n📅 Agende agora - Vagas limitadíssimas!'
             },
-            custom: { title: '', message: '' }
+            custom: { title: '', type: 'tratamento', message: '' }
         };
 
         // ===== NAVEGAÇÃO =====
@@ -1853,13 +2254,14 @@ Após clicar no link de ativação enviado, faça login com o seu e-mail e a sen
             document.getElementById(screenId).classList.add('active');
             document.getElementById('screenContainer').scrollTop = 0;
             if (screenId === 'agenda') renderClientDays();
+            if (screenId === 'campanhas') renderClientCampaigns();
             if (screenId === 'horarios') {
                 const label = document.getElementById('selectedDayLabel');
                 if (label) {
                     label.textContent = selectedDateText || 'Dia Selecionado';
                 }
-                document.querySelectorAll('.time-slot:not(.booked)').forEach(s => s.classList.remove('selected'));
                 selectedTimeValue = '';
+                renderTimeSlots();
             }
             if (screenId === 'servicos') renderServices();
             if (screenId === 'confirmacao') {
@@ -1874,6 +2276,18 @@ Após clicar no link de ativação enviado, faça login com o seu e-mail e a sen
                 if (dateTimeLabel) {
                     const shortDayText = selectedDateText ? selectedDateText.split(' - ')[1] : 'Sem Data';
                     dateTimeLabel.textContent = `${shortDayText} • ${selectedTimeValue}`;
+                }
+
+                // Promoção Aplicada Card
+                const promoCard = document.getElementById('appliedPromoCard');
+                const promoName = document.getElementById('appliedPromoName');
+                if (activePromotion) {
+                    if (promoCard && promoName) {
+                        promoCard.style.display = 'block';
+                        promoName.textContent = activePromotion.title;
+                    }
+                } else {
+                    if (promoCard) promoCard.style.display = 'none';
                 }
             }
             if (screenId === 'map') renderUnits();
@@ -1892,11 +2306,74 @@ Após clicar no link de ativação enviado, faça login com o seu e-mail e a sen
                     <button class="btn btn-gold" onclick="unlockSupport()">Entrar no Painel</button>
                 `;
             }
+        }       document.getElementById('supportContent').style.display = 'none';
+                document.getElementById('supportLockCard').innerHTML = `
+                    <div class="card-title" style="font-size:14px;color:#d4af37;">🔓 Desbloquear Painel de Suporte</div>
+                    <p class="card-subtitle" style="margin-bottom:12px;">Digite a senha do Suporte Técnico CConecta para liberar a edição e controle de contas.</p>
+                    <input type="password" class="input-field" id="supportUnlockKey" placeholder="Senha do Suporte (suporte2026)" onkeydown="if(event.key === 'Enter') unlockSupport()" style="margin-bottom:10px;">
+                    <button class="btn btn-gold" onclick="unlockSupport()">Entrar no Painel</button>
+                `;
+            }
         }
 
         function selectTime(element) {
             document.querySelectorAll('.time-slot:not(.booked)').forEach(s => s.classList.remove('selected'));
             element.classList.add('selected');
+            selectedTimeValue = element.textContent.trim();
+        }
+
+        function renderTimeSlots() {
+            const container = document.getElementById('dynamicTimeSlotsContainer');
+            if (!container) return;
+
+            container.innerHTML = `<p style="color:#808080;font-size:13px;text-align:center;margin-top:20px;">⏳ Buscando horários disponíveis...</p>`;
+
+            (async () => {
+                let bookedTimes = [];
+                if (supabaseClient && selectedDateValue) {
+                    const currentYear = new Date().getFullYear();
+                    const [day, month] = selectedDateValue.split('/');
+                    const dateSlot = `${currentYear}-${month}-${day}`;
+
+                    try {
+                        const { data, error } = await supabaseClient
+                            .from('appointments')
+                            .select('time_slot')
+                            .eq('date_slot', dateSlot);
+                        if (!error && data) {
+                            bookedTimes = data.map(app => app.time_slot.substring(0, 5));
+                        }
+                    } catch (e) {
+                        console.error("Erro ao buscar horários ocupados:", e);
+                    }
+                }
+
+                const morningHours = ['08:00', '09:15', '10:30', '11:45'];
+                const afternoonHours = ['13:00', '14:15', '15:30', '16:45', '18:00'];
+
+                const renderGrid = (hours) => {
+                    return `
+                    <div class="time-grid">
+                        ${hours.map(h => {
+                            const isBooked = bookedTimes.includes(h);
+                            if (isBooked) {
+                                return `<div class="time-slot booked">${h}</div>`;
+                            } else {
+                                return `<div class="time-slot" onclick="selectTime(this)">${h}</div>`;
+                            }
+                        }).join('')}
+                    </div>
+                    `;
+                };
+
+                container.innerHTML = `
+                    <p style="font-size:12px;color:#808080;margin-bottom:12px;letter-spacing:0.3px;margin-top:20px;">MANHÃ (Intervalos de 75min)</p>
+                    ${renderGrid(morningHours)}
+
+                    <p style="font-size:12px;color:#808080;margin-bottom:12px;letter-spacing:0.3px;margin-top:20px;">TARDE / NOITE (Intervalos de 75min)</p>
+                    ${renderGrid(afternoonHours)}
+                `;
+            })();
         }
 
         function selectAddress(num) {
@@ -1919,11 +2396,51 @@ Após clicar no link de ativação enviado, faça login com o seu e-mail e a sen
             window.open(mapsLink, '_blank');
         }
 
-        function renderDashboard() {
-            const total = appointments.length;
-            const confirmed = appointments.filter(a => a.status === 'Confirmado').length;
-            const pending = appointments.filter(a => a.status === 'Pendente').length;
-            const missed = appointments.filter(a => a.status === 'Faltou').length;
+        async function renderDashboard() {
+            let total = 0;
+            let confirmed = 0;
+            let pending = 0;
+            let missed = 0;
+            let recentApps = [];
+
+            if (supabaseClient) {
+                try {
+                    const { data, error } = await supabaseClient
+                        .from('appointments')
+                        .select('*, customers(name, email, phone)');
+
+                    if (!error && data) {
+                        total = data.length;
+                        confirmed = data.filter(a => a.status === 'confirmed').length;
+                        pending = data.filter(a => a.status === 'pending').length;
+                        missed = data.filter(a => a.status === 'missed').length;
+
+                        recentApps = data.map(app => {
+                            const [year, month, day] = app.date_slot.split('-');
+                            return {
+                                clientName: app.customers?.name || 'Cliente',
+                                services: app.service,
+                                dateTime: `${day}/${month} às ${app.time_slot.substring(0, 5)}`,
+                                status: app.status === 'confirmed' ? 'Confirmado' : 'Pendente',
+                                id: app.id
+                            };
+                        });
+                    }
+                } catch(e) {
+                    console.error('Erro ao ler Dashboard no Supabase:', e);
+                }
+            } else {
+                total = appointments.length;
+                confirmed = appointments.filter(a => a.status === 'Confirmado').length;
+                pending = appointments.filter(a => a.status === 'Pendente').length;
+                missed = appointments.filter(a => a.status === 'Faltou').length;
+                recentApps = appointments.map(app => ({
+                    clientName: app.clientName,
+                    services: app.services,
+                    dateTime: app.dateTime.includes('•') ? app.dateTime.split(' • ')[1] : app.dateTime,
+                    status: app.status
+                }));
+            }
 
             const totalEl = document.getElementById('statTotalApps');
             const confirmedEl = document.getElementById('statConfirmedApps');
@@ -1946,10 +2463,10 @@ Após clicar no link de ativação enviado, faça login com o seu e-mail e a sen
 
             const listEl = document.getElementById('dashboardAppointmentsList');
             if (listEl) {
-                if (appointments.length === 0) {
+                if (recentApps.length === 0) {
                     listEl.innerHTML = `<p style="color:#808080;font-size:12px;text-align:center;margin-top:20px;">Nenhum agendamento recente.</p>`;
                 } else {
-                    listEl.innerHTML = appointments.slice(-4).reverse().map(app => {
+                    listEl.innerHTML = recentApps.slice(-4).reverse().map(app => {
                         let badgeClass = 'badge-warning';
                         let badgeIcon = '⏱';
                         if (app.status === 'Confirmado') {
@@ -1959,8 +2476,8 @@ Após clicar no link de ativação enviado, faça login com o seu e-mail e a sen
                         return `
                             <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(212,175,55,0.1);">
                                 <div>
-                                    <p class="card-title" style="margin:0;font-size:14px;">${app.dateTime.includes('•') ? app.dateTime.split(' • ')[1] : app.dateTime} - ${app.clientName || 'Cliente'}</p>
-                                    <p class="card-subtitle" style="margin:0;">${app.services} (${app.dateTime.includes('•') ? app.dateTime.split(' • ')[0] : ''})</p>
+                                    <p class="card-title" style="margin:0;font-size:14px;">${app.dateTime} - ${app.clientName}</p>
+                                    <p class="card-subtitle" style="margin:0;">${app.services}</p>
                                 </div>
                                 <span class="badge ${badgeClass}" title="${app.status}">${badgeIcon}</span>
                             </div>
@@ -1970,16 +2487,57 @@ Após clicar no link de ativação enviado, faça login com o seu e-mail e a sen
             }
         }
 
-        function renderGestao() {
+        async function renderGestao() {
             const listEl = document.getElementById('gestaoAppointmentsList');
             if (!listEl) return;
 
-            if (appointments.length === 0) {
+            let displayApps = [];
+
+            if (supabaseClient) {
+                try {
+                    const { data, error } = await supabaseClient
+                        .from('appointments')
+                        .select('*, customers(name, email, phone)')
+                        .order('date_slot', { ascending: true });
+
+                    if (!error && data) {
+                        displayApps = data.map(app => {
+                            const [year, month, day] = app.date_slot.split('-');
+                            return {
+                                id: app.id,
+                                clientName: app.customers?.name || 'Cliente',
+                                clientPhone: app.customers?.phone || '(11) 99999-9999',
+                                clientEmail: app.customers?.email || '',
+                                dateTime: `${day}/${month} às ${app.time_slot.substring(0, 5)}`,
+                                services: app.service,
+                                unit: app.status === 'confirmed' ? (app.notes || 'Unidade Definida') : 'Aguardando',
+                                status: app.status === 'confirmed' ? 'Confirmado' : 'Pendente'
+                            };
+                        });
+                    }
+                } catch(e) {
+                    console.error('Erro ao buscar agendamentos na gestão:', e);
+                }
+            } else {
+                displayApps = appointments.map((app, index) => ({
+                    localIndex: index,
+                    clientName: app.clientName,
+                    clientPhone: app.clientPhone,
+                    clientEmail: app.clientEmail,
+                    dateTime: app.dateTime,
+                    services: app.services,
+                    unit: app.unit,
+                    status: app.status
+                }));
+            }
+
+            if (displayApps.length === 0) {
                 listEl.innerHTML = `<p style="color:#808080;font-size:12px;text-align:center;margin-top:40px;">Nenhum agendamento para gerenciar.</p>`;
             } else {
-                listEl.innerHTML = appointments.map((app, index) => {
+                listEl.innerHTML = displayApps.map(app => {
                     let unitStatusHtml = '';
-                    if (app.status === 'Confirmado') {
+                    let isConfirmed = app.status === 'Confirmado';
+                    if (isConfirmed) {
                         unitStatusHtml = `<span style="color:#22c55e;">📍 Unidade ${app.unit} ✓</span>`;
                     } else {
                         unitStatusHtml = `<span style="color:#808080;">📍 Aguardando</span>`;
@@ -1988,7 +2546,7 @@ Após clicar no link de ativação enviado, faça login com o seu e-mail e a sen
                     const buttonsHtml = units.map(u => {
                         const shortName = u.name.split('—')[1]?.trim() || u.name.split('-')[1]?.trim() || u.name.split('Unidade')[1]?.trim() || u.name;
                         return `
-                            <button class="btn btn-small" style="background:${u.id === 1 ? '#22c55e' : '#3b82f6'};color:white;padding:6px 12px;font-size:10px;width:auto;" onclick="assignUnit(${index}, '${shortName}')">${shortName}</button>
+                            <button class="btn btn-small" style="background:${u.id === 1 ? '#22c55e' : '#3b82f6'};color:white;padding:6px 12px;font-size:10px;width:auto;" onclick="assignUnit('${app.id || ''}', ${app.localIndex !== undefined ? app.localIndex : -1}, '${shortName}')">${shortName}</button>
                         `;
                     }).join('');
 
@@ -1996,12 +2554,19 @@ Após clicar no link de ativação enviado, faça login com o seu e-mail e a sen
                         <div class="card" style="margin-bottom:12px;">
                             <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
                                 <div>
-                                    <div class="card-title" style="font-size:14px;margin-bottom:2px;">${app.dateTime} - ${app.clientName || 'Cliente'}</div>
+                                    <div class="card-title" style="font-size:14px;margin-bottom:2px;">${app.dateTime} - ${app.clientName}</div>
                                     <p class="card-subtitle" style="margin-bottom:2px;">Serviços: ${app.services}</p>
                                     <p class="card-subtitle" style="font-size:11px;color:#808080;">WhatsApp: ${app.clientPhone}</p>
                                 </div>
                                 <div style="display:flex;gap:4px;">
-                                    ${app.status === 'Pendente' ? buttonsHtml : `<span class="badge badge-success">✓ Confirmado</span>`}
+                                    ${!isConfirmed ? buttonsHtml : `
+                                        <div style="display:flex;flex-direction:column;align-items:end;gap:4px;">
+                                            <span class="badge badge-success" style="margin-bottom:2px;">✓ Confirmado</span>
+                                            <button class="btn btn-small" style="background:#22c55e;color:white;padding:5px 8px;font-size:9px;width:auto;display:flex;align-items:center;gap:3px;border-color:#22c55e;" onclick="sendClientReminder('${app.clientName}', '${app.clientPhone}', '${app.dateTime}', '${app.unit}', '${app.services}')">
+                                                💬 Lembrete
+                                            </button>
+                                        </div>
+                                    `}
                                 </div>
                             </div>
                             <p class="card-subtitle" style="color:#808080;margin-top:6px;">Status: ${unitStatusHtml}</p>
@@ -2011,55 +2576,130 @@ Após clicar no link de ativação enviado, faça login com o seu e-mail e a sen
             }
         }
 
-        function assignUnit(index, unitName) {
-            const app = appointments[index];
-            app.status = 'Confirmado';
-            app.unit = unitName;
-            
-            localStorage.setItem('studio_appointments', JSON.stringify(appointments));
-            
+        async function assignUnit(appId, localIndex, unitName) {
+            let clientName = 'Cliente';
+            let clientPhone = '';
+            let dateTime = '';
+            let services = '';
+
+            if (supabaseClient && appId) {
+                try {
+                    const { data, error: fetchErr } = await supabaseClient
+                        .from('appointments')
+                        .select('*, customers(name, phone)')
+                        .eq('id', appId)
+                        .single();
+
+                    if (!fetchErr && data) {
+                        clientName = data.customers?.name || 'Cliente';
+                        clientPhone = data.customers?.phone || '';
+                        const [year, month, day] = data.date_slot.split('-');
+                        dateTime = `${day}/${month} às ${data.time_slot.substring(0, 5)}`;
+                        services = data.service;
+
+                        const { error: updateErr } = await supabaseClient
+                            .from('appointments')
+                            .update({
+                                status: 'confirmed',
+                                notes: unitName
+                            })
+                            .eq('id', appId);
+
+                        if (updateErr) {
+                            alert('Erro ao atualizar banco: ' + updateErr.message);
+                            return;
+                        }
+                    }
+                } catch(e) {
+                    console.error('Erro ao confirmar unidade no Supabase:', e);
+                }
+            } else if (localIndex !== -1) {
+                const app = appointments[localIndex];
+                app.status = 'Confirmado';
+                app.unit = unitName;
+                localStorage.setItem('studio_appointments', JSON.stringify(appointments));
+                
+                clientName = app.clientName;
+                clientPhone = app.clientPhone;
+                dateTime = app.dateTime;
+                services = app.services;
+            }
+
             renderGestao();
             renderDashboard();
-            
-            const message = encodeURIComponent(`Olá ${app.clientName || 'Cliente'}! Seu agendamento para o Stúdio Mireille Marques foi confirmado com sucesso!\n\n📅 Horário: ${app.dateTime}\n✂️ Serviços: ${app.services}\n📍 Unidade definida: ${unitName}\n\nTe aguardamos com muito carinho! ✨💇‍♀️`);
-            const cleanPhone = app.clientPhone.replace(/\D/g, '');
-            const whatsappLink = `https://api.whatsapp.com/send?phone=55${cleanPhone}&text=${message}`;
-            
-            alert(`✅ Agendamento confirmado na Unidade ${unitName}!\n\nEnviando confirmação no WhatsApp da cliente...`);
-            window.open(whatsappLink, '_blank');
+
+            if (clientPhone) {
+                const message = encodeURIComponent(`Oláá ${clientName}! Seu agendamento para o Stúdio Mireille Marques foi confirmado com sucesso!\n\n📅 Horário: ${dateTime}\n✂️ Serviços: ${services}\n📍 Unidade definida: ${unitName}\n\nTe aguardamos com muito carinho! ✨💇‍♀️`);
+                const cleanPhone = clientPhone.replace(/\D/g, '');
+                const whatsappLink = `https://api.whatsapp.com/send?phone=55${cleanPhone}&text=${message}`;
+                
+                alert(`✅ Agendamento confirmado na Unidade ${unitName}!\n\nEnviando confirmação no WhatsApp da cliente...`);
+                window.open(whatsappLink, '_blank');
+            } else {
+                alert(`✅ Agendamento confirmado na Unidade ${unitName}!`);
+            }
         }
 
-        function renderClientsAdmin() {
+        async function renderClientsAdmin() {
             const listEl = document.getElementById('adminClientsList');
             if (!listEl) return;
 
-            const clients = localStorage.getItem('studio_clients')
-                ? JSON.parse(localStorage.getItem('studio_clients'))
-                : [];
-            if (!localStorage.getItem('studio_clients')) {
-                localStorage.setItem('studio_clients', JSON.stringify(clients));
+            let clientsList = [];
+
+            if (supabaseClient) {
+                try {
+                    const { data, error } = await supabaseClient
+                        .from('customers')
+                        .select('*, appointments(id)');
+
+                    if (!error && data) {
+                        clientsList = data.map(c => ({
+                            name: c.name,
+                            phone: c.phone || 'Sem celular',
+                            email: c.email || '',
+                            count: c.appointments?.length || 0
+                        }));
+                    }
+                } catch(e) {
+                    console.error('Erro ao buscar clientes no Supabase:', e);
+                }
+            } else {
+                const localClients = localStorage.getItem('studio_clients')
+                    ? JSON.parse(localStorage.getItem('studio_clients'))
+                    : [];
+                clientsList = localClients.map(c => {
+                    const count = appointments.filter(app => app.clientEmail.toLowerCase() === c.email.toLowerCase()).length;
+                    return {
+                        name: c.name,
+                        phone: c.phone,
+                        email: c.email,
+                        count: count
+                    };
+                });
             }
 
-            if (clients.length === 0) {
+            if (clientsList.length === 0) {
                 listEl.innerHTML = `<p style="color:#808080;font-size:12px;text-align:center;margin-top:40px;">Nenhuma cliente cadastrada.</p>`;
             } else {
-                listEl.innerHTML = clients.map(c => {
-                    const count = appointments.filter(app => app.clientEmail.toLowerCase() === c.email.toLowerCase()).length;
-                    return `
-                        <div class="card" style="margin-bottom:12px;">
-                            <div class="card-title">${c.name}</div>
-                            <p class="card-subtitle">${c.phone} • ${c.email}</p>
-                            <p class="card-subtitle" style="color:#d4af37;margin-top:6px;font-weight:600;">⭐ ${count} ${count === 1 ? 'atendimento' : 'atendimentos'}</p>
-                        </div>
-                    `;
-                }).join('');
+                listEl.innerHTML = clientsList.map(c => `
+                    <div class="card" style="margin-bottom:12px;">
+                        <div class="card-title">${c.name}</div>
+                        <p class="card-subtitle">${c.phone} • ${c.email}</p>
+                        <p class="card-subtitle" style="color:#d4af37;margin-top:6px;font-weight:600;">⭐ ${c.count} ${c.count === 1 ? 'atendimento' : 'atendimentos'}</p>
+                    </div>
+                `).join('');
             }
         }
 
+        let activeTemplateId = 'custom';
+        let activePromotion = null; // Guarda a promoção ativa selecionada
+
         function editTemplate(templateId) {
+            activeTemplateId = templateId;
             const template = templates[templateId];
             document.getElementById('editCampTitle').value = template.title || '';
             document.getElementById('editCampMessage').value = template.message || '';
+            document.getElementById('editCampType').value = template.type || 'tratamento';
             document.getElementById('editTemplateModal').classList.add('active');
         }
 
@@ -2067,11 +2707,295 @@ Após clicar no link de ativação enviado, faça login com o seu e-mail e a sen
             document.getElementById('editTemplateModal').classList.remove('active');
         }
 
-        function saveCampaign() {
-            const title = document.getElementById('editCampTitle').value || 'Campanha';
-            alert(`✅ Campanha enviada!\n\n"${title}"\n\nPara clientes via WhatsApp`);
+        async function saveCampaign() {
+            const title = document.getElementById('editCampTitle').value.trim();
+            const message = document.getElementById('editCampMessage').value.trim();
+            const type = document.getElementById('editCampType').value;
+
+            if (!title || !message) {
+                return alert('Por favor, preencha o título e a mensagem da campanha.');
+            }
+
+            const originalBtnText = document.querySelector('#editTemplateModal .btn-gold').textContent;
+            document.querySelector('#editTemplateModal .btn-gold').textContent = '⏳ Salvando...';
+            document.querySelector('#editTemplateModal .btn-gold').disabled = true;
+
+            if (supabaseClient) {
+                try {
+                    const { error } = await supabaseClient
+                        .from('campaigns')
+                        .insert([{
+                            tenant_id: 'bfbe574d-34f5-7080-1bce-0b9200bc42bf',
+                            title: title,
+                            message: message,
+                            campaign_type: type,
+                            status: 'active',
+                            sent_date: new Date().toISOString()
+                        }]);
+
+                    if (error) {
+                        console.error("Erro ao salvar campanha no Supabase:", error.message);
+                        alert("❌ Erro ao salvar no banco: " + error.message);
+                    } else {
+                        alert(`✅ Campanha "${title}" cadastrada no Supabase com sucesso!`);
+                    }
+                } catch (e) {
+                    console.error("Erro na requisição da campanha:", e);
+                    alert("❌ Ocorreu um erro ao salvar a campanha: " + e.message);
+                }
+            } else {
+                const localCampaigns = localStorage.getItem('studio_local_campaigns')
+                    ? JSON.parse(localStorage.getItem('studio_local_campaigns'))
+                    : [];
+                localCampaigns.push({
+                    id: Date.now().toString(),
+                    title: title,
+                    message: message,
+                    campaign_type: type,
+                    status: 'active'
+                });
+                localStorage.setItem('studio_local_campaigns', JSON.stringify(localCampaigns));
+                alert(`✅ Campanha "${title}" cadastrada localmente com sucesso!`);
+            }
+
+            document.querySelector('#editTemplateModal .btn-gold').textContent = originalBtnText;
+            document.querySelector('#editTemplateModal .btn-gold').disabled = false;
             closeModal();
             showScreen('dashboard');
+        }
+
+        async function renderClientCampaigns() {
+            const container = document.getElementById('clientCampaignsList');
+            if (!container) return;
+
+            container.innerHTML = `<p style="color:#808080;font-size:13px;text-align:center;margin-top:40px;">⏳ Buscando promoções disponíveis...</p>`;
+
+            let list = [];
+
+            const defaultPromos = [
+                {
+                    id: 'promo_beleza',
+                    title: '🌸 Dia da Beleza',
+                    message: 'Combo especial: Corte + Escova + Hidratação Profunda com 25% de desconto!',
+                    campaign_type: 'tratamento'
+                },
+                {
+                    id: 'promo_indicou',
+                    title: '⭐ Indicou, Ganhou!',
+                    message: 'Indique uma amiga e ganhe 15% de desconto no seu próximo procedimento. Ela também ganha!',
+                    campaign_type: 'indicacao'
+                },
+                {
+                    id: 'promo_fidelidade',
+                    title: '💝 Programa Fidelidade',
+                    message: 'A cada 5 procedimentos, ganhe uma Hidratação Profunda grátis! Pontos acumulados automaticamente',
+                    campaign_type: 'fidelidade'
+                }
+            ];
+
+            if (supabaseClient) {
+                try {
+                    const { data, error } = await supabaseClient
+                        .from('campaigns')
+                        .select('*')
+                        .eq('status', 'active');
+                    
+                    if (!error && data && data.length > 0) {
+                        list = data.map(camp => ({
+                            id: camp.id,
+                            title: camp.title,
+                            message: camp.message,
+                            campaign_type: camp.campaign_type || 'tratamento'
+                        }));
+                    } else {
+                        list = defaultPromos;
+                    }
+                } catch (e) {
+                    console.error("Erro ao buscar campanhas dinâmicas:", e);
+                    list = defaultPromos;
+                }
+            } else {
+                const localCamp = localStorage.getItem('studio_local_campaigns')
+                    ? JSON.parse(localStorage.getItem('studio_local_campaigns'))
+                    : [];
+                if (localCamp.length > 0) {
+                    list = localCamp;
+                } else {
+                    list = defaultPromos;
+                }
+            }
+
+            container.innerHTML = list.map((c, index) => {
+                let gradClass = 'campaign-gradient-1';
+                if (index % 3 === 1) gradClass = 'campaign-gradient-2';
+                if (index % 3 === 2) gradClass = 'campaign-gradient-3';
+
+                let ruleLabel = '';
+                if (c.campaign_type === 'tratamento') {
+                    ruleLabel = `<span style="font-size: 9px; color: #f472b6; border: 1px solid rgba(244,114,182,0.3); background: rgba(244,114,182,0.1); padding: 2px 6px; border-radius: 10px; margin-top: 4px; display: inline-block;">🌸 Tratamento • Limite 3 meses</span>`;
+                } else if (c.campaign_type === 'indicacao') {
+                    ruleLabel = `<span style="font-size: 9px; color: #60a5fa; border: 1px solid rgba(96,165,250,0.3); background: rgba(96,165,250,0.1); padding: 2px 6px; border-radius: 10px; margin-top: 4px; display: inline-block;">⭐ Indicação • Liberado</span>`;
+                } else {
+                    ruleLabel = `<span style="font-size: 9px; color: #34d399; border: 1px solid rgba(52,211,153,0.3); background: rgba(52,211,153,0.1); padding: 2px 6px; border-radius: 10px; margin-top: 4px; display: inline-block;">💝 Fidelidade • Liberado</span>`;
+                }
+
+                return `
+                    <div class="template-card ${gradClass}">
+                        <div class="template-header" style="text-align: left; padding: 16px 20px;">
+                            <p class="template-title" style="font-size: 16px; margin: 0;">${c.title}</p>
+                            ${ruleLabel}
+                        </div>
+                        <div class="template-preview" style="display: block; padding: 16px 20px; background: rgba(10,10,15,0.5);">
+                            <p style="margin-bottom: 14px; font-size: 13px; line-height: 1.5; color: #e0e0e0;">${c.message.replace(/\n/g, '<br>')}</p>
+                            <button class="btn btn-gold btn-small" onclick="selectCampaignForBooking('${c.id}', '${c.title.replace(/'/g, "\\'")}', '${c.campaign_type}')" style="width: 100%; font-size: 11px; padding: 8px 12px; font-weight: 700;">
+                                🎁 Quero esta Promoção!
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function selectCampaignForBooking(promoId, promoTitle, promoType) {
+            if (!loggedClient) {
+                pendingRedirectScreen = 'campanhas';
+                alert('🔑 Para usufruir das promoções, por favor faça login ou crie sua conta de cliente.');
+                showScreen('loginCliente');
+                return;
+            }
+
+            if (promoType === 'tratamento') {
+                let alreadyUsed = false;
+                let lastUsedDate = '';
+
+                if (supabaseClient) {
+                    try {
+                        const ninetyDaysAgo = new Date();
+                        ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+                        const isoDateLimit = ninetyDaysAgo.toISOString().split('T')[0];
+
+                        const { data: custData } = await supabaseClient
+                            .from('customers')
+                            .select('id')
+                            .eq('email', loggedClient.email)
+                            .limit(1);
+
+                        if (custData && custData.length > 0) {
+                            const customerId = custData[0].id;
+
+                            const { data: appData, error: appErr } = await supabaseClient
+                                .from('appointments')
+                                .select('date_slot, service, notes')
+                                .eq('customer_id', customerId)
+                                .gte('date_slot', isoDateLimit);
+
+                            if (!appErr && appData) {
+                                alreadyUsed = appData.some(app => {
+                                    const serviceStr = (app.service || '').toLowerCase();
+                                    const notesStr = (app.notes || '').toLowerCase();
+                                    
+                                    const hasPromo = serviceStr.includes('[promo:') || notesStr.includes('(promo:');
+                                    const isFreePromo = serviceStr.includes('indicou') || serviceStr.includes('fidelidade') ||
+                                                         notesStr.includes('indicou') || notesStr.includes('fidelidade');
+                                    
+                                    if (hasPromo && !isFreePromo) {
+                                        const [year, month, day] = app.date_slot.split('-');
+                                        lastUsedDate = `${day}/${month}/${year}`;
+                                        return true;
+                                    }
+                                    return false;
+                                });
+                            }
+                        }
+                    } catch (e) {
+                        console.error("Erro ao validar elegibilidade no Supabase:", e);
+                    }
+                } else {
+                    const ninetyDaysAgo = Date.now() - (90 * 24 * 60 * 60 * 1000);
+                    const localApps = localStorage.getItem('studio_appointments')
+                        ? JSON.parse(localStorage.getItem('studio_appointments'))
+                        : [];
+                    
+                    const myApps = localApps.filter(app => app.clientEmail.toLowerCase() === loggedClient.email.toLowerCase());
+                    
+                    alreadyUsed = myApps.some(app => {
+                        const matches = app.dateTime.match(/(\d{2})\/(\d{2})/);
+                        if (matches) {
+                            const day = parseInt(matches[1]);
+                            const month = parseInt(matches[2]) - 1;
+                            const appTime = new Date(new Date().getFullYear(), month, day).getTime();
+                            
+                            if (appTime >= ninetyDaysAgo) {
+                                const serviceStr = (app.services || '').toLowerCase();
+                                const notesStr = (app.unit || '').toLowerCase();
+                                const hasPromo = serviceStr.includes('[promo:') || notesStr.includes('(promo:');
+                                const isFreePromo = serviceStr.includes('indicou') || serviceStr.includes('fidelidade') ||
+                                                     notesStr.includes('indicou') || notesStr.includes('fidelidade');
+                                if (hasPromo && !isFreePromo) {
+                                    lastUsedDate = `${String(day).padStart(2, '0')}/${String(month + 1).padStart(2, '0')}/${new Date().getFullYear()}`;
+                                    return true;
+                                }
+                            }
+                        }
+                        return false;
+                    });
+                }
+
+                if (alreadyUsed) {
+                    return alert(`🔒 Desculpe, ${loggedClient.name}!\n\nAs promoções de tratamentos são exclusivas e limitadas a 1 uso a cada 3 meses por cliente.\n\nSua última ativação de tratamento foi em ${lastUsedDate}.\n\nAs promoções "Indicou, Ganhou!" e "Programa Fidelidade" estão livres e podem ser usadas por você! ⭐💝`);
+                }
+            }
+
+            activePromotion = { id: promoId, title: promoTitle, type: promoType };
+            alert(`🎁 Promoção "${promoTitle}" aplicada ao seu agendamento com sucesso!\n\nVamos redirecionar você para escolher o melhor dia e horário.`);
+
+            if (promoId === 'promo_beleza' || promoTitle.toLowerCase().includes('dia da beleza')) {
+                setTimeout(() => {
+                    const tags = document.querySelectorAll('.service-tag');
+                    tags.forEach(tag => {
+                        const name = tag.textContent.trim().toLowerCase();
+                        if (name === 'corte' || name === 'escova' || name === 'hidratação profunda') {
+                            tag.classList.add('selected');
+                        } else {
+                            tag.classList.remove('selected');
+                        }
+                    });
+                    updateUnitSelectionBasedOnServices();
+                }, 100);
+            }
+
+            showScreen('agenda');
+        }
+
+        // ===== ENVIO DE NOTIFICAÇÕES VIA WHATSAPP (CLIENTE & PROFISSIONAL) =====
+        function sendProfessionalNotification() {
+            const time = selectedTimeValue || '14:00';
+            const shortDay = selectedDateValue || '28/05';
+            
+            const selectedSvcEls = document.querySelectorAll('.service-tag.selected');
+            const svcArray = Array.from(selectedSvcEls).map(el => el.textContent.trim());
+            const servicesText = svcArray.length > 0 ? svcArray.join(', ') : 'Serviço Personalizado';
+            
+            // Celular de Mireille Marques para recebimento de alertas
+            const professionalPhone = "24992486888";
+            const clientName = loggedClient ? loggedClient.name : 'Cliente';
+            
+            const message = encodeURIComponent(
+                `Olá, Mireille! Acabei de realizar um agendamento de ${servicesText} para o dia ${selectedDateText || shortDay} às ${time} na ${clientSelectedUnit} pelo aplicativo. ✨`
+            );
+            const whatsappLink = `https://api.whatsapp.com/send?phone=55${professionalPhone}&text=${message}`;
+            window.open(whatsappLink, '_blank');
+        }
+
+        function sendClientReminder(name, phone, dateTime, unitName, services) {
+            const cleanPhone = phone.replace(/\D/g, '');
+            if (!cleanPhone) return alert('Número de WhatsApp da cliente inválido ou não informado.');
+            
+            const message = encodeURIComponent(
+                `Olá, ${name}! Passando para lembrar do seu atendimento de ${services} no Stúdio Mireille Marques, agendado para ${dateTime} na ${unitName}. Aguardamos você! 🌸`
+            );
+            const whatsappLink = `https://api.whatsapp.com/send?phone=55${cleanPhone}&text=${message}`;
+            window.open(whatsappLink, '_blank');
         }
 
         function loginAdmin() {
@@ -2118,7 +3042,7 @@ Após clicar no link de ativação enviado, faça login com o seu e-mail e a sen
 
     <div style="text-align: center; font-size: 11px; color: rgba(255,255,255,0.35); display: flex; align-items: center; justify-content: center; gap: 6px; z-index: 10; font-family: 'Poppins', sans-serif;">
         <span>Desenvolvido por</span>
-        <a href="https://wa.me/5524992486888?text=Olá! Vim pelo site do Stúdio Mireille Marques e gostaria de mais informações." target="_blank" style="display: inline-flex; align-items: center; transition: all 0.3s;" onmouseover="this.style.opacity='0.8'; this.style.transform='scale(1.05)';" onmouseout="this.style.opacity='1'; this.style.transform='scale(1)';">
+        <a href="https://wa.me/5524992486888?text=Oláá! Vim pelo site do Stúdio Mireille Marques e gostaria de mais informações." target="_blank" style="display: inline-flex; align-items: center; transition: all 0.3s;" onmouseover="this.style.opacity='0.8'; this.style.transform='scale(1.05)';" onmouseout="this.style.opacity='1'; this.style.transform='scale(1)';">
             <img src="logo_cconecta.png" alt="CConecta" style="height: 18px; width: auto; object-fit: contain;">
         </a>
     </div>
