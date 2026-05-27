@@ -1317,7 +1317,7 @@
                     try {
                         const datesArray = daysList.map(d => d.dateSlotValue);
                         const { data, error } = await supabaseClient
-                            .from('appointments')
+                            .from('studio_appointments')
                             .select('date_slot')
                             .in('date_slot', datesArray);
                         
@@ -1732,7 +1732,7 @@
             if (supabaseClient) {
                 try {
                     const { data, error } = await supabaseClient
-                        .from('appointments')
+                        .from('studio_appointments')
                         .select('*, customers(name, phone)')
                         .order('date_slot', { ascending: false });
 
@@ -1814,7 +1814,7 @@
             if (supabaseClient && loggedClient) {
                 try {
                     const { data: custData, error: custErr } = await supabaseClient
-                        .from('customers')
+                        .from('studio_customers')
                         .select('id')
                         .eq('email', loggedClient.email)
                         .limit(1);
@@ -1825,7 +1825,7 @@
                     } else {
                         // Registra o customer preventivamente
                         const { data: newCust, error: createCustErr } = await supabaseClient
-                            .from('customers')
+                            .from('studio_customers')
                             .insert([{
                                 tenant_id: 'bfbe574d-34f5-7080-1bce-0b9200bc42bf',
                                 name: loggedClient.name,
@@ -1844,7 +1844,7 @@
                         const dateSlot = `${currentYear}-${month}-${day}`;
 
                         const { error: appErr } = await supabaseClient
-                            .from('appointments')
+                            .from('studio_appointments')
                             .insert([{
                                 tenant_id: 'bfbe574d-34f5-7080-1bce-0b9200bc42bf',
                                 customer_id: customerId,
@@ -2347,7 +2347,7 @@
 
                     try {
                         const { data, error } = await supabaseClient
-                            .from('appointments')
+                            .from('studio_appointments')
                             .select('time_slot')
                             .eq('date_slot', dateSlot);
                         if (!error && data) {
@@ -2416,7 +2416,7 @@
             if (supabaseClient) {
                 try {
                     const { data, error } = await supabaseClient
-                        .from('appointments')
+                        .from('studio_appointments')
                         .select('*, customers(name, email, phone)');
 
                     if (!error && data) {
@@ -2506,7 +2506,7 @@
             if (supabaseClient) {
                 try {
                     const { data, error } = await supabaseClient
-                        .from('appointments')
+                        .from('studio_appointments')
                         .select('*, customers(name, email, phone)')
                         .order('date_slot', { ascending: true });
 
@@ -2595,7 +2595,7 @@
             if (supabaseClient && appId) {
                 try {
                     const { data, error: fetchErr } = await supabaseClient
-                        .from('appointments')
+                        .from('studio_appointments')
                         .select('*, customers(name, phone)')
                         .eq('id', appId)
                         .single();
@@ -2608,7 +2608,7 @@
                         services = data.service;
 
                         const { error: updateErr } = await supabaseClient
-                            .from('appointments')
+                            .from('studio_appointments')
                             .update({
                                 status: 'confirmed',
                                 notes: unitName
@@ -2659,7 +2659,7 @@
             if (supabaseClient) {
                 try {
                     const { data, error } = await supabaseClient
-                        .from('customers')
+                        .from('studio_customers')
                         .select('*, appointments(id)');
 
                     if (!error && data) {
@@ -2733,7 +2733,7 @@
             if (supabaseClient) {
                 try {
                     const { error } = await supabaseClient
-                        .from('campaigns')
+                        .from('studio_campaigns')
                         .insert([{
                             tenant_id: 'bfbe574d-34f5-7080-1bce-0b9200bc42bf',
                             title: title,
@@ -2806,7 +2806,7 @@
             if (supabaseClient) {
                 try {
                     const { data, error } = await supabaseClient
-                        .from('campaigns')
+                        .from('studio_campaigns')
                         .select('*')
                         .eq('status', 'active');
                     
@@ -2885,7 +2885,7 @@
                         const isoDateLimit = ninetyDaysAgo.toISOString().split('T')[0];
 
                         const { data: custData } = await supabaseClient
-                            .from('customers')
+                            .from('studio_customers')
                             .select('id')
                             .eq('email', loggedClient.email)
                             .limit(1);
@@ -2894,7 +2894,7 @@
                             const customerId = custData[0].id;
 
                             const { data: appData, error: appErr } = await supabaseClient
-                                .from('appointments')
+                                .from('studio_appointments')
                                 .select('date_slot, service, notes')
                                 .eq('customer_id', customerId)
                                 .gte('date_slot', isoDateLimit);

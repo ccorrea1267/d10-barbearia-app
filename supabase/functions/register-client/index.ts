@@ -38,17 +38,32 @@ Deno.serve(async (req: Request) => {
       { auth: { autoRefreshToken: false, persistSession: false } }
     )
 
+    // Verifica se já existe um cliente com o mesmo telefone na tabela studio_customers
+    const { data: existingCustomer, error: checkError } = await supabaseAdmin
+      .from('studio_customers')
+      .select('id')
+      .eq('phone', phone)
+      .limit(1)
+
+    if (existingCustomer && existingCustomer.length > 0) {
+      return new Response(
+        JSON.stringify({ error: 'Este número de WhatsApp já está cadastrado em outra conta.' }),
+        { status: 409, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
     // Gera senha aleatória segura
     const password = generatePassword()
 
-    // Cria o usuário no Supabase Auth
+    // Cria o usuário no Supabase Auth (confirmado por padrão)
     const { data: userData, error: createError } = await supabaseAdmin.auth.admin.createUser({
       email,
       password,
-      email_confirm: false, // Exige confirmação de e-mail
+      email_confirm: true, // Cadastro imediato sem travas de e-mail
       user_metadata: {
         full_name: name,
         phone,
+        is_temporary_password: true
       }
     })
 
@@ -70,14 +85,22 @@ Deno.serve(async (req: Request) => {
       )
     }
 
-    // Gera link de confirmação de e-mail
-    const { data: linkData } = await supabaseAdmin.auth.admin.generateLink({
-      type: 'signup',
-      email,
-      password,
-    })
+    // Insere o cliente na tabela public.studio_customers do banco de dados
+    if (userData?.user) {
+      const { error: customerError } = await supabaseAdmin
+        .from('studio_customers')
+        .insert([{
+          tenant_id: 'bfbe574d-34f5-7080-1bce-0b9200bc42bf',
+          name: name,
+          email: email,
+          phone: phone
+        }])
+      if (customerError) {
+        console.error('Erro ao registrar em public.customers:', customerError.message)
+      }
+    }
 
-    const confirmLink = linkData?.properties?.action_link ?? null
+    const confirmLink = null
 
     // ── Envia e-mail via Resend ────────────────────────────────────
     const resendKey = resendApiKey || Deno.env.get('RESEND_API_KEY')
@@ -174,8 +197,9 @@ Deno.serve(async (req: Request) => {
     return new Response(
       JSON.stringify({
         success: true,
-        message: `Cadastro realizado! Verifique o e-mail ${email} para sua senha e o link de confirmação.`,
-        emailSent: !!resendKey
+        message: `Cadastro realizado!`,
+        emailSent: !!resendKey,
+        password: password // Devolve a senha para exibição na tela
       }),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
