@@ -831,7 +831,7 @@
                     <div class="card" id="supportLockCard" style="border-color:#d4af37;background:rgba(212,175,55,0.05);margin-bottom:20px;">
                         <div class="card-title" style="font-size:14px;color:#d4af37;">🔓 Desbloquear Painel de Suporte</div>
                         <p class="card-subtitle" style="margin-bottom:12px;">Digite a senha do Suporte Técnico CConecta para liberar a edição e controle de contas.</p>
-                        <input type="password" class="input-field" id="supportUnlockKey" placeholder="Senha do Suporte (suporte2026)" onkeydown="if(event.key === 'Enter') unlockSupport()" style="margin-bottom:10px;">
+                        <input type="password" class="input-field" id="supportUnlockKey" placeholder="Digite a senha de acesso" onkeydown="if(event.key === 'Enter') unlockSupport()" style="margin-bottom:10px;">
                         <button class="btn btn-gold" onclick="unlockSupport()">Entrar no Painel</button>
                     </div>
 
@@ -2468,7 +2468,7 @@
                 document.getElementById('supportLockCard').innerHTML = `
                     <div class="card-title" style="font-size:14px;color:#d4af37;">🔓 Desbloquear Painel de Suporte</div>
                     <p class="card-subtitle" style="margin-bottom:12px;">Digite a senha do Suporte Técnico CConecta para liberar a edição e controle de contas.</p>
-                    <input type="password" class="input-field" id="supportUnlockKey" placeholder="Senha do Suporte (suporte2026)" onkeydown="if(event.key === 'Enter') unlockSupport()" style="margin-bottom:10px;">
+                    <input type="password" class="input-field" id="supportUnlockKey" placeholder="Digite a senha de acesso" onkeydown="if(event.key === 'Enter') unlockSupport()" style="margin-bottom:10px;">
                     <button class="btn btn-gold" onclick="unlockSupport()">Entrar no Painel</button>
                 `;
             }
