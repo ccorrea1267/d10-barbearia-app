@@ -907,9 +907,35 @@
                             <div id="supportRequestsList"></div>
                         </div>
 
+
                         <div class="card" style="margin-bottom:16px;">
                             <div class="card-title" style="color:#d4af37;border-bottom:1px solid rgba(212,175,55,0.2);padding-bottom:6px;margin-bottom:12px;">👥 Profissionais Cadastrados</div>
                             <div id="supportProfessionalsList"></div>
+                        </div>
+
+                        <div class="card" style="margin-bottom:16px;border-color:rgba(212,175,55,0.35);">
+                            <div class="card-title" style="color:#d4af37;border-bottom:1px solid rgba(212,175,55,0.2);padding-bottom:6px;margin-bottom:12px;">➕ Adicionar Novo Profissional</div>
+                            <p style="color:#808080;font-size:10px;margin-bottom:12px;line-height:1.5;">Crie o acesso diretamente sem precisar de solicitação. Um aviso com senha será enviado via WhatsApp.</p>
+
+                            <label style="color:#808080;font-size:9px;letter-spacing:0.5px;font-weight:600;display:block;margin-bottom:3px;">NOME COMPLETO</label>
+                            <input type="text" id="newProfName" class="input-field" placeholder="Ex: Ana Lima" style="margin-bottom:8px;padding:8px 10px;font-size:12px;">
+
+                            <label style="color:#808080;font-size:9px;letter-spacing:0.5px;font-weight:600;display:block;margin-bottom:3px;">E-MAIL</label>
+                            <input type="email" id="newProfEmail" class="input-field" placeholder="Ex: ana@studio.com" style="margin-bottom:8px;padding:8px 10px;font-size:12px;">
+
+                            <label style="color:#808080;font-size:9px;letter-spacing:0.5px;font-weight:600;display:block;margin-bottom:3px;">WHATSAPP (com DDD)</label>
+                            <input type="tel" id="newProfPhone" class="input-field" placeholder="Ex: (24) 99999-9999" style="margin-bottom:8px;padding:8px 10px;font-size:12px;">
+
+                            <label style="color:#808080;font-size:9px;letter-spacing:0.5px;font-weight:600;display:block;margin-bottom:3px;">UNIDADE</label>
+                            <select id="newProfUnit" class="input-field" style="margin-bottom:8px;padding:8px 10px;font-size:12px;">
+                                <option value="Unidade 1 — Centro">Unidade 1 — Centro</option>
+                                <option value="Unidade 2 — Aterrado">Unidade 2 — Aterrado</option>
+                            </select>
+
+                            <label style="color:#808080;font-size:9px;letter-spacing:0.5px;font-weight:600;display:block;margin-bottom:3px;">SENHA (deixe vazio para gerar automática)</label>
+                            <input type="text" id="newProfPass" class="input-field" placeholder="Ex: MM-2024 (opcional)" style="margin-bottom:12px;padding:8px 10px;font-size:12px;">
+
+                            <button class="btn btn-gold" onclick="addProfessionalDirect()" style="width:100%;padding:10px;font-size:12px;">✅ Cadastrar Profissional</button>
                         </div>
 
                         <button class="btn btn-gold" id="saveSupportConfigBtn" onclick="saveSupportConfig()" style="width:100%;margin-bottom:12px;">💾 Salvar Configurações</button>
@@ -2165,7 +2191,7 @@
                     {
                         name: 'Mireille Marques',
                         email: 'mireille@studio.com',
-                        phone: '(11) 99999-9999',
+                        phone: '', // Sem mock — deve ser cadastrado pelo suporte
                         unit: 'Unidade 1 — Centro',
                         pass: 'mireille2026'
                     }
@@ -2188,6 +2214,21 @@
                     <p style="color:white;font-size:12px;font-weight:600;">${p.name}</p>
                     <p style="color:#b0b0b0;font-size:10px;margin:2px 0;">Email: ${p.email}</p>
                     <p style="color:#d4af37;font-size:11px;font-weight:600;margin-top:2px;">Senha: <span style="font-family:monospace;background:rgba(0,0,0,0.3);padding:2px 4px;border-radius:4px;color:#e5c158;">${p.pass}</span></p>
+
+                    <!-- Campo editável de WhatsApp -->
+                    <div style="margin-top:8px;border-top:1px solid rgba(212,175,55,0.15);padding-top:8px;">
+                        <p style="color:#808080;font-size:9px;letter-spacing:0.5px;font-weight:600;margin-bottom:4px;">📱 WHATSAPP PROFISSIONAL</p>
+                        <div style="display:flex;gap:6px;align-items:center;">
+                            <input type="tel" id="profPhone_${i}"
+                                value="${p.phone || ''}"
+                                placeholder="Ex: (24) 99999-9999"
+                                style="flex:1;padding:6px 8px;border:1px solid rgba(212,175,55,0.3);border-radius:8px;background:rgba(0,0,0,0.4);color:#e0e0e0;font-size:11px;font-family:inherit;"
+                            >
+                            <button onclick="updateProfessionalPhone(${i})" style="background:linear-gradient(135deg,#d4af37,#e5c158);color:#0a0a0f;border:none;border-radius:8px;padding:6px 10px;font-size:10px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit;">💾 Salvar</button>
+                        </div>
+                        ${p.phone ? `<p style="color:#22c55e;font-size:9px;margin-top:4px;">✓ Ativo: ${p.phone}</p>` : `<p style="color:#ef4444;font-size:9px;margin-top:4px;">⚠️ Nenhum número cadastrado — avisos irão para a CConecta!</p>`}
+                    </div>
+
                     ${p.email !== 'mireille@studio.com' ? `<button class="btn btn-small btn-danger" onclick="deleteProfessional(${i})" style="margin-top:4px;padding:2px 6px;font-size:9px;">Excluir</button>` : ''}
                 </div>
             `).join('');
@@ -2278,6 +2319,69 @@
                 localStorage.setItem('studio_professionals', JSON.stringify(professionals));
                 renderSupportData();
             }
+        }
+
+        // Atualiza o WhatsApp de um profissional pelo índice
+        function updateProfessionalPhone(index) {
+            const input = document.getElementById(`profPhone_${index}`);
+            if (!input) return;
+            const newPhone = input.value.trim();
+            if (!newPhone) {
+                return alert('⚠️ Digite o número de WhatsApp antes de salvar.');
+            }
+            const professionals = JSON.parse(localStorage.getItem('studio_professionals') || '[]');
+            if (!professionals[index]) return;
+            professionals[index].phone = newPhone;
+            localStorage.setItem('studio_professionals', JSON.stringify(professionals));
+            renderSupportData();
+            alert(`✅ WhatsApp de ${professionals[index].name} atualizado para ${newPhone}!`);
+        }
+
+        // Adiciona um novo profissional diretamente pelo suporte (sem solicitação)
+        function addProfessionalDirect() {
+            const name  = document.getElementById('newProfName').value.trim();
+            const email = document.getElementById('newProfEmail').value.trim();
+            const phone = document.getElementById('newProfPhone').value.trim();
+            const unit  = document.getElementById('newProfUnit').value;
+            let   pass  = document.getElementById('newProfPass').value.trim();
+
+            if (!name || !email || !phone) {
+                return alert('⚠️ Preencha nome, e-mail e WhatsApp.');
+            }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                return alert('E-mail inválido. Verifique e tente novamente.');
+            }
+
+            const professionals = JSON.parse(localStorage.getItem('studio_professionals') || '[]');
+
+            if (professionals.some(p => p.email.toLowerCase() === email.toLowerCase())) {
+                return alert('Já existe um profissional com este e-mail.');
+            }
+
+            // Gera senha automática se não fornecida
+            if (!pass) {
+                const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+                pass = 'MM-' + Array.from({length: 6}, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+            }
+
+            professionals.push({ name, email, phone, unit, pass });
+            localStorage.setItem('studio_professionals', JSON.stringify(professionals));
+
+            // Limpa os campos
+            document.getElementById('newProfName').value = '';
+            document.getElementById('newProfEmail').value = '';
+            document.getElementById('newProfPhone').value = '';
+            document.getElementById('newProfPass').value = '';
+
+            renderSupportData();
+
+            // Envia WhatsApp com os dados de acesso
+            const cleanPhone = phone.replace(/\D/g, '');
+            const msg = encodeURIComponent(
+                `Olá, ${name}! 🌸\n\nSeu acesso ao *Stúdio Mireille Marques* foi criado pelo suporte CConecta!\n\n📧 E-mail: ${email}\n🔑 Senha: ${pass}\n🏢 Unidade: ${unit}\n\nAcesse o app e faça login. Na primeira entrada, você será solicitada a cadastrar uma nova senha. ✨`
+            );
+            alert(`✅ Profissional ${name} cadastrado com sucesso!\n\nSenha: ${pass}\n\nAbrindo WhatsApp para enviar os dados de acesso...`);
+            window.open(`https://api.whatsapp.com/send?phone=55${cleanPhone}&text=${msg}`, '_blank');
         }
 
         function deleteClient(index) {
