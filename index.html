@@ -1770,6 +1770,17 @@
             container.innerHTML = `<p style="color:#808080;font-size:13px;text-align:center;margin-top:40px;">⏳ Carregando agendamentos...</p>`;
 
             let myApps = [];
+            let localApps = [];
+
+            // Pega sempre os locais primeiro como garantia
+            try {
+                const appointments = localStorage.getItem('studio_appointments')
+                    ? JSON.parse(localStorage.getItem('studio_appointments'))
+                    : [];
+                localApps = appointments.filter(app => app.clientEmail.toLowerCase() === loggedClient.email.toLowerCase());
+            } catch (e) {
+                console.error("Erro ao ler agendamentos locais:", e);
+            }
 
             if (supabaseClient) {
                 try {
@@ -1781,8 +1792,7 @@
                         .limit(1);
 
                     if (custErr || !custData || custData.length === 0) {
-                        // Sem registro de cliente ainda
-                        myApps = [];
+                        myApps = localApps;
                     } else {
                         const customerId = custData[0].id;
 
@@ -1794,7 +1804,7 @@
                             .order('date_slot', { ascending: false });
 
                         if (!error && data) {
-                            myApps = data.map(app => {
+                            const supabaseApps = data.map(app => {
                                 const [year, month, day] = app.date_slot.split('-');
                                 const formattedDate = `${day}/${month}`;
                                 const shortTime = app.time_slot.substring(0, 5);
@@ -1808,17 +1818,28 @@
                                     status: app.status === 'confirmed' ? 'Confirmado' : 'Pendente'
                                 };
                             });
+
+                            // Mescla os agendamentos do Supabase com os locais, evitando duplicados por data/hora
+                            myApps = [...supabaseApps];
+                            localApps.forEach(localApp => {
+                                const isDuplicate = myApps.some(app => 
+                                    app.dateTime.includes(localApp.dateTime.split(' • ')[1] || localApp.dateTime)
+                                );
+                                if (!isDuplicate) {
+                                    myApps.push(localApp);
+                                }
+                            });
                         } else {
                             console.error('Erro ao ler agendamentos do Supabase:', error?.message);
-                            myApps = appointments.filter(app => app.clientEmail.toLowerCase() === loggedClient.email.toLowerCase());
+                            myApps = localApps;
                         }
                     }
                 } catch(e) {
                     console.error('Erro na consulta de agendamentos:', e);
-                    myApps = appointments.filter(app => app.clientEmail.toLowerCase() === loggedClient.email.toLowerCase());
+                    myApps = localApps;
                 }
             } else {
-                myApps = appointments.filter(app => app.clientEmail.toLowerCase() === loggedClient.email.toLowerCase());
+                myApps = localApps;
             }
             
             if (myApps.length === 0) {
@@ -2569,43 +2590,79 @@
             let missed = 0;
             let recentApps = [];
 
+            // Carrega sempre os locais primeiro como garantia
+            let localApps = [];
+            try {
+                const appointments = localStorage.getItem('studio_appointments')
+                    ? JSON.parse(localStorage.getItem('studio_appointments'))
+                    : [];
+                localApps = appointments.map(app => ({
+                    clientName: app.clientName,
+                    services: app.services,
+                    dateTime: app.dateTime.includes(' • ') ? app.dateTime.split(' • ')[1] : app.dateTime,
+                    status: app.status
+                }));
+            } catch (e) {
+                console.error("Erro ao ler agendamentos locais para dashboard:", e);
+            }
+
             if (supabaseClient) {
                 try {
                     const { data, error } = await supabaseClient
                         .from('studio_appointments')
-                        .select('*, customers(name, email, phone)');
+                        .select('*, studio_customers!studio_appointments_customer_id_fkey(name, email, phone)');
 
                     if (!error && data) {
-                        total = data.length;
-                        confirmed = data.filter(a => a.status === 'confirmed').length;
-                        pending = data.filter(a => a.status === 'pending').length;
-                        missed = data.filter(a => a.status === 'missed').length;
-
-                        recentApps = data.map(app => {
+                        const supabaseApps = data.map(app => {
                             const [year, month, day] = app.date_slot.split('-');
                             return {
-                                clientName: app.customers?.name || 'Cliente',
+                                clientName: app.studio_customers?.name || 'Cliente',
                                 services: app.service,
                                 dateTime: `${day}/${month} às ${app.time_slot.substring(0, 5)}`,
                                 status: app.status === 'confirmed' ? 'Confirmado' : 'Pendente',
                                 id: app.id
                             };
                         });
+
+                        // Mescla para o dashboard
+                        recentApps = [...supabaseApps];
+                        localApps.forEach(localApp => {
+                            const isDuplicate = recentApps.some(app => 
+                                app.dateTime.includes(localApp.dateTime) && app.clientName === localApp.clientName
+                            );
+                            if (!isDuplicate) {
+                                recentApps.push({
+                                    clientName: localApp.clientName,
+                                    services: localApp.services,
+                                    dateTime: localApp.dateTime,
+                                    status: localApp.status === 'Confirmado' ? 'Confirmado' : 'Pendente'
+                                });
+                            }
+                        });
+                        
+                        // Atualiza totais com a mescla
+                        total = recentApps.length;
+                        confirmed = recentApps.filter(a => a.status === 'Confirmado').length;
+                        pending = recentApps.filter(a => a.status === 'Pendente').length;
+                    } else {
+                        console.error('Erro na consulta do Supabase para dashboard:', error?.message);
+                        recentApps = localApps;
+                        total = localApps.length;
+                        confirmed = localApps.filter(a => a.status === 'Confirmado').length;
+                        pending = localApps.filter(a => a.status === 'Pendente').length;
                     }
                 } catch(e) {
                     console.error('Erro ao ler Dashboard no Supabase:', e);
+                    recentApps = localApps;
+                    total = localApps.length;
+                    confirmed = localApps.filter(a => a.status === 'Confirmado').length;
+                    pending = localApps.filter(a => a.status === 'Pendente').length;
                 }
             } else {
-                total = appointments.length;
-                confirmed = appointments.filter(a => a.status === 'Confirmado').length;
-                pending = appointments.filter(a => a.status === 'Pendente').length;
-                missed = appointments.filter(a => a.status === 'Faltou').length;
-                recentApps = appointments.map(app => ({
-                    clientName: app.clientName,
-                    services: app.services,
-                    dateTime: app.dateTime.includes('•') ? app.dateTime.split(' • ')[1] : app.dateTime,
-                    status: app.status
-                }));
+                recentApps = localApps;
+                total = localApps.length;
+                confirmed = localApps.filter(a => a.status === 'Confirmado').length;
+                pending = localApps.filter(a => a.status === 'Pendente').length;
             }
 
             const totalEl = document.getElementById('statTotalApps');
@@ -2659,33 +2716,13 @@
 
             let displayApps = [];
 
-            if (supabaseClient) {
-                try {
-                    const { data, error } = await supabaseClient
-                        .from('studio_appointments')
-                        .select('*, customers(name, email, phone)')
-                        .order('date_slot', { ascending: true });
-
-                    if (!error && data) {
-                        displayApps = data.map(app => {
-                            const [year, month, day] = app.date_slot.split('-');
-                            return {
-                                id: app.id,
-                                clientName: app.customers?.name || 'Cliente',
-                                clientPhone: app.customers?.phone || '(11) 99999-9999',
-                                clientEmail: app.customers?.email || '',
-                                dateTime: `${day}/${month} às ${app.time_slot.substring(0, 5)}`,
-                                services: app.service,
-                                unit: app.status === 'confirmed' ? (app.notes || 'Unidade Definida') : 'Aguardando',
-                                status: app.status === 'confirmed' ? 'Confirmado' : 'Pendente'
-                            };
-                        });
-                    }
-                } catch(e) {
-                    console.error('Erro ao buscar agendamentos na gestão:', e);
-                }
-            } else {
-                displayApps = appointments.map((app, index) => ({
+            // Carrega sempre os locais primeiro como garantia
+            let localApps = [];
+            try {
+                const appointments = localStorage.getItem('studio_appointments')
+                    ? JSON.parse(localStorage.getItem('studio_appointments'))
+                    : [];
+                localApps = appointments.map((app, index) => ({
                     localIndex: index,
                     clientName: app.clientName,
                     clientPhone: app.clientPhone,
@@ -2695,6 +2732,61 @@
                     unit: app.unit,
                     status: app.status
                 }));
+            } catch (e) {
+                console.error("Erro ao ler agendamentos locais para gestao:", e);
+            }
+
+            if (supabaseClient) {
+                try {
+                    const { data, error } = await supabaseClient
+                        .from('studio_appointments')
+                        .select('*, studio_customers!studio_appointments_customer_id_fkey(name, email, phone)')
+                        .order('date_slot', { ascending: true });
+
+                    if (!error && data) {
+                        const supabaseApps = data.map(app => {
+                            const [year, month, day] = app.date_slot.split('-');
+                            return {
+                                id: app.id,
+                                clientName: app.studio_customers?.name || 'Cliente',
+                                clientPhone: app.studio_customers?.phone || '(11) 99999-9999',
+                                clientEmail: app.studio_customers?.email || '',
+                                dateTime: `${day}/${month} às ${app.time_slot.substring(0, 5)}`,
+                                services: app.service,
+                                unit: app.status === 'confirmed' ? (app.notes || 'Unidade Definida') : 'Aguardando',
+                                status: app.status === 'confirmed' ? 'Confirmado' : 'Pendente'
+                            };
+                        });
+
+                        // Mescla com os locais
+                        displayApps = [...supabaseApps];
+                        localApps.forEach(localApp => {
+                            const isDuplicate = displayApps.some(app => 
+                                app.dateTime.includes(localApp.dateTime.split(' • ')[1] || localApp.dateTime) && app.clientName === localApp.clientName
+                            );
+                            if (!isDuplicate) {
+                                displayApps.push({
+                                    localIndex: localApp.localIndex,
+                                    clientName: localApp.clientName,
+                                    clientPhone: localApp.clientPhone,
+                                    clientEmail: localApp.clientEmail,
+                                    dateTime: localApp.dateTime,
+                                    services: localApp.services,
+                                    unit: localApp.unit,
+                                    status: localApp.status
+                                });
+                            }
+                        });
+                    } else {
+                        console.error('Erro na consulta de gestao do Supabase:', error?.message);
+                        displayApps = localApps;
+                    }
+                } catch(e) {
+                    console.error('Erro ao buscar agendamentos na gestão:', e);
+                    displayApps = localApps;
+                }
+            } else {
+                displayApps = localApps;
             }
 
             if (displayApps.length === 0) {
