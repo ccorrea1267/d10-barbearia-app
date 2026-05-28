@@ -30,14 +30,10 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #000000 0%, #0d0d1a 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            background: #000000;
             margin: 0;
             padding: 0;
+            min-height: 100vh;
         }
 
         .phone {
@@ -52,18 +48,21 @@
             border-radius: 0;
         }
 
-        /* Em telas maiores (Desktop/Tablet), centraliza o app em um container premium vertical */
+        /* Em telas maiores (Desktop/Tablet), integra o app de cima a baixo centralizado na tela */
         @media (min-width: 481px) {
             body {
-                padding: 20px 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: linear-gradient(135deg, #000000 0%, #0d0d1a 100%);
             }
             .phone {
-                width: 430px;
-                height: 900px;
-                max-height: calc(100vh - 40px);
-                border: 2px solid rgba(212, 175, 55, 0.3);
-                border-radius: 32px;
-                box-shadow: 0 25px 50px rgba(0,0,0,0.9), 0 0 100px rgba(212,175,55,0.1);
+                width: 100%;
+                max-width: 460px;
+                height: 100vh;
+                border-left: 1px solid rgba(212, 175, 55, 0.15);
+                border-right: 1px solid rgba(212, 175, 55, 0.15);
+                box-shadow: 0 0 60px rgba(0, 0, 0, 0.8);
             }
         }
 
@@ -428,13 +427,12 @@
                     <p style="color:#808080;font-size:12px;margin-top:24px;text-align:center;">Fique de olho no WhatsApp! 💛</p>
                 </div>
                 <div class="footer" style="display:flex;flex-direction:column;gap:10px;width:100%;">
-                    <button class="btn btn-gold" onclick="sendProfessionalNotification()" style="background:#22c55e;border-color:#22c55e;color:white;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:600;">
-                        💬 Notificar Mireille no WhatsApp
+                    <button class="btn btn-gold" onclick="showScreen('welcome')" style="font-weight:700;">
+                        Concluir & Voltar ao Início
                     </button>
-                    <div style="display:flex;gap:10px;width:100%;">
-                        <button class="btn btn-secondary" onclick="showScreen('meus')" style="flex:1;font-size:11px;">Ver Meu Histórico</button>
-                        <button class="btn btn-secondary" onclick="showScreen('welcome')" style="flex:1;font-size:11px;">← Início</button>
-                    </div>
+                    <button class="btn btn-secondary" onclick="showScreen('meus')" style="font-size:12px;">
+                        Ver Meus Agendamentos
+                    </button>
                 </div>
             </div>
 
@@ -1944,31 +1942,6 @@
             activePromotion = null;
             
             showScreen('sucesso');
-
-            // ── Disparo automático do WhatsApp para a Mireille ────────────
-            // (Aguarda 1.5s para a tela de sucesso estar visível antes de abrir o WhatsApp)
-            setTimeout(() => {
-                const professionals = JSON.parse(localStorage.getItem('studio_professionals') || '[]');
-                const pro = professionals.find(p => p.email === 'mireille@studio.com') || professionals[0];
-                let professionalPhone = '24992486888'; // Fallback CConecta
-                if (pro && pro.phone) {
-                    const cleanNum = pro.phone.replace(/\D/g, '');
-                    if (cleanNum && cleanNum.length >= 8) {
-                        professionalPhone = cleanNum;
-                    }
-                }
-
-                const clientNameAuto = loggedClient ? loggedClient.name : 'Cliente';
-                const clientPhoneAuto = loggedClient ? loggedClient.phone : '';
-                const servicesAuto = servicesText || 'Serviço Personalizado';
-                const dateTimeAuto = `${selectedDateText || shortDay} às ${time}`;
-
-                const autoMsg = encodeURIComponent(
-                    `🔔 *Novo Agendamento!*\n\n👤 Cliente: ${clientNameAuto}\n📱 WhatsApp: ${clientPhoneAuto}\n✂️ Serviço: ${servicesAuto}\n📅 Data/Hora: ${dateTimeAuto}\n📍 Unidade: ${clientSelectedUnit}\n\n_Agendamento realizado pelo app Stúdio Mireille Marques_ ✨`
-                );
-                const autoLink = `https://api.whatsapp.com/send?phone=55${professionalPhone}&text=${autoMsg}`;
-                window.open(autoLink, '_blank');
-            }, 1500);
         }
 
         // ===== CONFIGURAÇÃO DE SUPORTE DINÂMICA =====
